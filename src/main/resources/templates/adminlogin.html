@@ -1,101 +1,167 @@
-<!doctype html>
-<html lang="en">
-
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    
-    <title>Admin Login</title>
-    <a class="navbar-logo" href="/">
-        <img src="images/logo.png" alt="Logo">
-    </a>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Admin Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        @import url('http://fonts.googleapis.com/css2?family=poppins:wght@200&display=swap');
-
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(75,14,154,1) 35%, rgba(0,212,255,1) 100%);
-            font-family: "poppins", sans-serif;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            background: linear-gradient(135deg, #e6f7ff, #99cbf4);
         }
 
-        .navbar-logo img {
-            width: 300px;
-            height: 100px;
-            margin-left: 30px;
+        .container {
+            display: flex;
+            height: 90vh; /* Maximized height */
+            width: 80%;
+            max-width: 1200px;
+            background-color: #99cbf4;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        form {
-            width: 24%;
-            background-color: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin: auto;
+        /* Left form container maximized */
+        .form-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
 
-        .btn-primary {
+        /* Form content centered */
+        .form-content {
+            width: 80%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 30px;
+            color: #013389;
+        }
+
+        /* Input fields */
+        .input-group {
             width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            font-size: 1em;
+        }
+
+        /* Forgot password link */
+        .options {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .options a {
+            color: #2575fc;
+            text-decoration: none;
+        }
+
+        /* Login button */
+        .login-btn {
+            width: 100%;
+            max-width: 200px;
+            padding: 12px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
             border: none;
             border-radius: 50px;
-            background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(75,14,154,1) 35%, rgba(0,212,255,1) 100%);
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
 
-        .font-control {
-            color: rgba(0,0,0,.87);
-            border-bottom-color: rgba(0,0,0,.42);
-            box-shadow: none !important;
-            border: none;
-            border-bottom: 1px solid;
-            border-radius: 4px 4px 0 0;
+        .login-btn:hover {
+            background: linear-gradient(135deg, #2575fc, #6a11cb);
         }
 
-        h4 {
-            font-size: 2rem !important;
-            font-weight: 700;
+        /* Right side styling */
+        .right-content {
+            flex: 1;
+            position: relative;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff, #ffffff);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .font-label {
-            font-family: 800 !important;
+        /* Logo positioned at the top */
+        .logo {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        @media only screen and (max-width: 600px) {
-            form {
-                width: 100% !important;
-            }
+        .logo img {
+            max-width: 120px;
+        }
+
+        /* Illustration positioned properly */
+        .illustration img {
+            max-width: 80%;
         }
     </style>
 </head>
-
 <body>
-    <form class="mx-auto" method="post"  th:object="${dto}">
-        <h4 class="text-center">Admin Login</h4>
-		<div th:if="${msg}">
-			<p th:text="${msg}" style="text-align: center;"></div>
-        <div class="mb-3 mt-5">
-            <label for="exampleInputEmail1" class="form-label">Admin Name</label>
-            <input type="text" class="form-control" th:field="${dto.userid}">
+    <div class="container">
+        <div class="form-container">
+            <div class="form-content">
+                <h2>ADMIN LOGIN</h2>
+                <form method="post" th:object="${dto}">
+                    <div class="input-group">
+                        <input type="text" placeholder="Admin Name" th:field="${dto.userid}" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Password" th:field="${dto.password}" required>
+                    </div>
+                    <div class="options">
+                        <a href="#">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="login-btn">LOGIN</button>
+                </form>
+                <div th:if="${msg}">
+                    <p th:text="${msg}" style="text-align: center; color: red; margin-top: 10px;"></p>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Password</label>
-            <input type="password" class="form-control" th:field="${dto.password}">
-            <div id="emailHelp" class="form-text mt-4">Forget Password</div>
+        <div class="right-content">
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo">
+            </div>
+            <div class="illustration">
+                <img src="images/login.jpg" alt="Illustration">
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary mt-4">Login</button>
-    </form>
+    </div>
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 </body>
-
 </html>
