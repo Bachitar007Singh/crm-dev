@@ -1,27 +1,15 @@
-package com.app.crm.model;
+package com.app.crm.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "counselors")
-public class Counselor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class CounselorDto {
+    private Integer id; // Add this field
     private String name;
     private String email;
     private String password;
     private String phoneNumber;
     private String role;
-    private boolean active = true; // Default to active
 
     // Getters and Setters
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -67,13 +55,5 @@ public class Counselor {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 }
