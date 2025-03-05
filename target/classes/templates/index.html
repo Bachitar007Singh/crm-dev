@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBMI Group of Institutions</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .logo img {
+            width: 150px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            font-size: 16px;
+            color: #000;
+            padding: 10px 20px;
+            background-color: #f00;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        /* Style for search image */
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-container img {
+            width: 30px; /* Set a width for the microscope image */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        .hero {
+            position: relative;
+            height: 500px;
+            background: url('campus-image.jpg') no-repeat center center/cover;
+        }
+
+        .cta-buttons {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .cta-buttons .btn {
+            text-decoration: none;
+            padding: 15px 30px;
+            background-color: #f00;
+            color: #fff;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .grid-item img {
+            width: 100%;
+            border-radius: 15px;
+        }
+
+        /* Container for horizontal row layout */
+        .center-row {
+            display: flex;
+            justify-content: center; /* Center both buttons horizontally */
+            align-items: center;     /* Align buttons vertically in the center */
+            gap: 20px;               /* Space between the buttons */
+        }
+
+        /* Each button container (optional if you want more styling per button) */
+        .center-container {
+            display: flex;
+        }
+
+        /* Button styling */
+        .custom-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border: 2px solid #ff0000; /* Red border */
+            border-radius: 50px; /* Rounded corners */
+            background-color: #fff; /* White background */
+            color: #000; /* Black text color */
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-btn:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* Circular shape for arrow */
+        .arrow-circle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%; /* Circular shape */
+            background-color: #ff0000; /* Red background */
+            color: #fff; /* White arrow color */
+            margin-right: 10px;
+        }
+
+        /* Arrow styling */
+        .custom-btn i {
+            font-size: 14px;
+            transform: rotate(-45deg); /* Rotate the arrow to point top-left */
+        }
+
+        /* Adjust margin for headings */
+        h1, p {
+            margin: 10px 0; /* Increased top and bottom margin for more gap */
+            text-align: center;
+        }
+
+        h1 {
+            color: blue;
+            font-size: 80px;
+            margin-top: 0; /* Remove top margin for h1 */
+        }
+
+        p {
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="images/logo.png" alt="RBMI Logo">
+        </div>
+        <nav>
+            <div class="search-container">
+                <img src="images/microscope1.png" alt="Search" title="Search"> <!-- Replace with your microscope image path -->
+            </div>
+        </nav>
+    </header>
+
+    <h1>Reimagine the Future</h1>
+    <p>Unlock Your Potential at RBMI Group of Institutions</p>
+
+    <div class="center-row">
+        <div class="center-container">
+            <a href="/home"><button class="custom-btn">
+                <span class="arrow-circle">
+                    <i class="fa fa-arrow-up-left"></i>
+                </span>
+                Registration    
+            </button></a>
+        </div>
+        <div class="center-container">
+            <a href="/adminlogin"><button class="custom-btn">
+                <span class="arrow-circle">
+                    <i class="fa fa-arrow-up-left"></i>
+                </span>
+                Admin Login
+            </button></a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- <section class="hero">
+            <img src="//pages/images/hero-section.jpg" alt="RBMI Campus">
+            <div class="cta-buttons">
+                <a href="#" class="btn">Download the Prospectus</a>
+                <a href="#" class="btn">Discover Our Courses</a>
+            </div>
+        </section> -->
+
+        <!-- Image Grid -->
+        <section class="image-grid">
+            <div class="grid-item">
+                <img src="images/students.png" alt="Students Fun">
+            </div>
+            <div class="grid-item">
+                <img src="images/group-discussion.png" alt="Group Discussion">
+            </div>
+            <div class="grid-item">
+                <img src="images/lab.png" alt="Laboratory Work">
+            </div>
+            <div class="grid-item">
+                <img src="images/sports.png" alt="Sports Activities">
+            </div>
+        </section>
+    </main>
+</body>
+</html>

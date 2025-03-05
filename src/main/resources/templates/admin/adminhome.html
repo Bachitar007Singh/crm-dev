@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBMI Group of Institutions</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="/css/admin/adminhome.css">
+	<style>
+		body {
+		    margin: 0;
+		    font-family: Arial, sans-serif;
+		    display: flex;
+		    background-color: #f5f5f5; /* Light grey background */
+		}
+
+		/* Sidebar Styles */
+		.sidebar {
+		    height: 100vh;
+		    width: 60px; /* Collapsed width */
+		    background-color: #333;
+		    color: white;
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    transition: width 0.3s;
+		    overflow: hidden;
+		}
+
+		.sidebar:hover {
+		    width: 200px; /* Expanded width */
+		}
+
+		.sidebar a {
+		    text-decoration: none;
+		    color: white;
+		    padding: 15px 0;
+		    width: 100%;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    border-bottom: 1px solid #444;
+		    transition: background-color 0.3s, padding-left 0.3s;
+		}
+
+		.sidebar a:hover {
+		    background-color: #575757;
+		}
+
+		.sidebar .material-icons {
+		    font-size: 24px;
+		    transition: margin-right 0.3s;
+		}
+
+		.sidebar a span.text {
+		    display: none;
+		    white-space: nowrap;
+		    margin-left: 10px;
+		}
+
+		.sidebar:hover a span.text {
+		    display: inline;
+		}
+
+		.sidebar:hover a {
+		    justify-content: flex-start;
+		    padding-left: 20px;
+		}
+/*for Admin dashbord css */
+		body {
+		           font-family: Arial, sans-serif;
+		           margin: 0;
+		           padding: 0;
+		           background-color: #f4f4f9;
+		       }
+
+		       .navbar {
+		           display: flex;
+		           justify-content: space-between/*flex-start*/;
+		           align-items: center;
+		           background-color: white;
+		           padding: 10px 20px;
+		           color: black;
+		       }
+
+		       .navbar h1 {
+		           margin: 0;
+		           font-size: 24px;
+				  margin-right: auto;
+		       }			 
+			    .navbar-left {
+			      flex: 1;
+			  }
+
+			  .navbar-title {
+			      font-size: 24px;
+			      font-weight: bold;
+			  }
+
+			  .navbar-right {
+			      display: flex;
+			      align-items: center;
+			  }
+
+			  .icon-btn {
+			      margin-left: 20px;
+			      display: flex;
+			      justify-content: center;
+			      align-items: center;
+			      width: 40px;
+			      height: 40px;
+			      border-radius: 50%;
+			      background-color: rgb(108, 122, 224);
+			      cursor: pointer;
+			  }
+			  .icon-btn img {
+			      width: 60%;
+			      height: 60%;
+			  }
+
+			  .icon-btn:hover {
+			      background-color:rgb(108, 122, 224);
+			  }
+			   .profile {
+			               position: relative;
+			              /* display: flex;
+			               align-items: center;
+						   margin-left: 20px; /* Ensures the profile section is pushed to the far right */
+			           }
+		     /*  .profile {
+				   position: relative;
+				   margin-left: auto;
+				   display: flex;
+				   align-items: center;
+		       }*/
+
+		       .profile-icon {
+		           width: 50px;
+		           height: 50px;
+		           border-radius: 50%;
+		           overflow: hidden;
+		           cursor: pointer;
+		           border: 2px solid white;
+				   display: flex;
+				              align-items: center;
+				              justify-content: center;
+				              background-color: rgb(108, 122, 224);
+				              color: #fff;
+				              font-weight: bold;
+				              font-size: 18px;
+				              text-transform: uppercase;
+		       }
+
+		      /* .profile-icon img {
+		           width: 100%;
+		           height: 100%;
+		           object-fit: cover;
+		       }*/
+			   .dropdown {
+			              display: none;
+			              position: absolute;
+			              top: 60px;
+			              right: 0;
+			              background-color: white;
+			              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			              border-radius: 8px;
+			              width: 200px;
+						  padding: 15px;
+			              z-index: 1000;
+			          }
+
+			          .dropdown.active {
+			              display: block;
+			          }
+
+			          .dropdown h3 {
+			             /* margin: 0;
+			              padding: 10px;*/
+						  margin-top: 0;
+						      margin-bottom: 10px;
+			              background-color: rgb(222, 224, 202);
+			              color: white;
+			              border-top-left-radius: 8px;
+			              border-top-right-radius: 8px;
+			          }
+
+			        /*  .dropdown p,  {
+			              margin: 5px 0;
+			              padding: 10px;
+			              color: #333;
+						  text-decoration: none;
+						              display: flex;
+						              align-items: center;
+						              gap: 10px;
+			          }*/							
+					  	  .dropdown p {
+								      margin: 5px 0;
+								  }
+					  .dropdown a {
+					      display: block;
+					      margin: 10px 0;
+					      color: #007BFF;
+					      text-decoration: none;
+					      font-size: 14px;
+					  }
+					  .dropdown a:hover {
+					              background-color: #f4f4f9;
+					          }
+
+			          .dropdown p span {
+			              font-weight: bold;
+						  
+			          }
+					 /* .dropdown a i {
+					             font-size: 18px;
+					         }*/
+							 .dropdown a:hover {
+							     text-decoration: underline;
+							 }
+
+							 .dropdown i {
+							     margin-right: 8px;
+							 }
+							 /* Show dropdown on toggle */
+							 .profile.open .dropdown {
+							     display: block;
+							 }
+
+					  /* Prevent navbar size change */
+					          .navbar .profile {
+					              display: flex;
+					              align-items: center;
+					          }
+					  /*					  body {
+					             font-family: Arial, sans-serif;
+					             margin: 0;
+					             padding: 0;
+					             background-color: #f4f4f9;
+					         }
+
+					         .navbar {
+					             display: flex;
+					             justify-content: space-between;
+					             align-items: center;
+					             background-color: #6200ea;
+					             padding: 10px 20px;
+					             color: white;
+					         }
+
+					         .navbar h1 {
+					             margin: 0;
+					             font-size: 24px;
+					         }
+
+					         .profile {
+					             position: relative;
+					             margin-left: auto;
+					         }
+
+					         .profile-icon {
+					             width: 50px;
+					             height: 50px;
+					             border-radius: 50%;
+					             overflow: hidden;
+					             cursor: pointer;
+					             border: 2px solid white;
+					         }
+
+		/* Main Content */
+		.profile-section {
+		    margin-left: 60px;
+		    padding: 20px;
+		    width: 100%;
+		    transition: margin-left 0.3s;
+		}
+
+		.sidebar:hover ~ .profile-section {
+		    margin-left: 200px;
+		}
+
+		.main-header {
+		    margin-bottom: 20px;
+		}
+
+		.main-header h2 {
+		    margin: 0;
+		    color: #333;
+		}
+
+		.dashboard-box, .funnel-box{
+		    background-color: white;
+		    padding: 20px;
+		    border-radius: 5px;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		    margin-bottom: 1px;
+		}
+		 .stats-box, .funnel-box-bottom {
+		    background-color: white;
+		    padding: 20px;
+		    border-radius: 5px;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		    margin-bottom: 30px;
+		}
+		 .lead-funnel{
+			width: 50%;
+		    background-color: white;
+		    padding: 20px;
+		    border-radius: 5px;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		    margin-bottom: 30px;
+		}
+		.dashboard-box h3, .stats-box h3 {
+		    margin: 0 0 20px 0;
+		    color: #333;
+		}
+
+		.date-range {
+		    margin-top: 10px;
+		    font-size: 14px;
+		}
+
+		.date-range input {
+		    padding: 5px;
+		    font-size: 14px;
+		}
+
+		.stats-container {
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    gap: 20px;
+		}
+
+		.stats-item {
+		    text-align: center;
+		    font-size: 16px;
+		    font-weight: bold;
+		    color: #555;
+		}
+
+		.stats-item span {
+		    display: block;
+		    color: #333;
+		    font-weight: normal;
+		    margin-top: 5px;
+		}
+
+		/* Dropdown Menu Styles */
+		.dropdown {
+		    position: relative;
+		    width: 100%;
+		}
+
+		.dropdown-menu {
+		    display: none;
+		    position: relative;
+		    flex-direction: column;
+		    background-color: #444;
+		    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+		    z-index: 1001;
+		}
+
+		.dropdown-menu a {
+		    text-decoration: none;
+		    color: white;
+		    padding: 10px 20px;
+		    display: block;
+		    transition: background-color 0.3s;
+		}
+
+		.dropdown-menu a:hover {
+		    background-color: #575757;
+		}
+
+		.dropdown:hover .dropdown-menu {
+		    display: flex;
+		}
+
+		.sidebar a, .dropdown > .menu-item {
+		    text-decoration: none;
+		    color: white;
+		    padding: 15px 0;
+		    width: 100%;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    border-bottom: 1px solid #444;
+		    transition: background-color 0.3s, padding-left 0.3s;
+		    position: relative;
+		}
+
+		.sidebar a:hover, .dropdown > .menu-item:hover {
+		    background-color: #575757;
+		}
+
+		.sidebar a span.text, .dropdown > .menu-item span.text {
+		    display: none;
+		    white-space: nowrap;
+		    margin-left: 10px;
+		}
+
+		.sidebar:hover a span.text, .sidebar:hover .dropdown > .menu-item span.text {
+		    display: inline;
+		}
+
+		.sidebar:hover a, .sidebar:hover .dropdown > .menu-item {
+		    justify-content: flex-start;
+		    padding-left: 20px;
+		}
+		/* Funnel Box Bottom Styles */
+		.funnel-box-bottom {
+		    margin-top: 1px;
+		    padding: 20px;
+		    border-radius: 8px;
+		    background-color: white;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.funnel-box-bottom h3 {
+		    text-align: center;
+		    margin-bottom: 20px;
+		}
+
+		.tree-container {
+		    display: flex;
+		    justify-content: center;
+		    align-items: flex-start;
+		    position: relative;
+		    padding: 20px;
+		}
+
+		.root, .branch {
+		    text-align: center;
+		    padding: 20px;
+		    border: 2px solid #444;
+		    border-radius: 8px;
+		    position: relative;
+		    width: 150px;
+		    margin: 0 20px;
+		}
+
+		.root {
+		    background-color: #f5f5f5;
+		}
+
+		.branch {
+		    background-color: #dcdcdc;
+		}
+
+		.branch .branch-text, .root .root-text {
+		    font-size: 16px;
+		    font-weight: bold;
+		    margin-bottom: 10px;
+		}
+
+		.root-number, .branch-number {
+		    font-size: 24px;
+		    font-weight: bold;
+		    color: #333;
+		}
+
+		/* Sub-branches (Paid and Unpaid) */
+		.sub-branches {
+		    margin-top: 20px;
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		}
+
+		.sub-branch {
+		    padding: 8px;
+		    margin: 5px;
+		    border: 1px solid #444;
+		    width: 100%;
+		    text-align: center;
+		    background-color: #e2e2e2;
+		    border-radius: 5px;
+		}
+
+		.sub-branch.online {
+		    background-color: #8bc34a;
+		}
+
+		.sub-branch.offline {
+		    background-color: #ff9800;
+		}
+
+		.sub-branch.dd {
+		    background-color: #2196f3;
+		}
+
+		.sub-branch.cash {
+		    background-color: #4caf50;
+		}
+
+		.sub-branch.initiated {
+		    background-color: #4caf50;
+		}
+
+		.sub-branch.not-initiated {
+		    background-color: #f44336;
+		}
+
+		/* Styling for the connecting lines */
+		.tree-container::before {
+		    content: "";
+		    position: absolute;
+		    top: 50%;
+		    left: 0;
+		    width: 100%;
+		    height: 2px;
+		    background-color: #444;
+		    z-index: -1;
+		}
+
+		.branch-container {
+		    display: flex;
+		    justify-content: center;
+		    position: relative;
+		    align-items: flex-start;
+		}
+
+		/* Line between root and branches */
+		.root::before {
+		    content: "";
+		    position: absolute;
+		    top: 100%;
+		    left: 50%;
+		    width: 2px;
+		    height: 20px;
+		    background-color: #444;
+		    transform: translateX(-50%);
+		}
+
+		/* Lines between branches and sub-branches */
+		.branch::before {
+		    content: "";
+		    position: absolute;
+		    top: 100%;
+		    left: 50%;
+		    width: 2px;
+		    height: 20px;
+		    background-color: #444;
+		    transform: translateX(-50%);
+		}
+
+		.branch-container .branch.paid .sub-branches {
+		    margin-top: 20px;
+		    padding-left: 20px;
+		}
+
+		.branch-container .branch.unpaid .sub-branches {
+		    margin-top: 20px;
+		    padding-right: 20px;
+		}
+		/* Lead Funnel */
+		.lead-funnel {
+		    display: inline-block;
+		    justify-content: space-between;
+		    align-items: center;
+		    background-color: white;
+		    padding: 15px 20px; /* Reduced top and bottom padding for less gap */
+		    border-radius: 5px;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		    margin-bottom: 30px;
+		    gap: 20px; /* Reduced space between the parts */
+			width: 30%;
+		}
+		.lead-funnel1 {
+		    display: inline-block;
+			flex-direction: column;
+		    /*justify-content: space-between;*/
+		    align-items: center;
+		    background-color: white;
+		    padding: 15px 20px; /* Reduced top and bottom padding for less gap */
+		    border-radius: 5px;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		    margin-bottom: 30px;
+		    gap: 20px; /* Reduced space between the parts */
+			width: 15%;
+		}
+		.lead-funnel2 {
+		    display: inline-block;
+			flex-direction: column;
+		    justify-content: space-between;
+		    align-items: center;
+		    background-color: white;
+		    padding: 15px 20px; /* Reduced top and bottom padding for less gap */
+		    border-radius: 5px;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		    margin-bottom: 30px;
+		    gap: 20px; /* Reduced space between the parts */
+		}
+
+		/* Part styling inside Lead Funnel */
+		.lead-funnel-part {
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: center;
+		}
+
+		/* Date Range Text */
+		#date-range-text {
+		    font-size: 14px;
+		    color: #333;
+		    line-height: 1.5; /* For better readability */
+		    margin-top: 5px; /* Reduced margin to bring closer to Lead Funnel title */
+		}
+
+		/* Button Styling for Download */
+		.download-btn {
+		    background: none;
+		    border: none;
+		    cursor: pointer;
+		    font-size: 24px;
+		}
+
+		.download-btn .material-icons {
+		    color: #333;
+		}
+
+		/* Date Range - Data Range Heading and Calendar Icon */
+		.date-range label {
+		    font-size: 14px;
+		    color: #333;
+		    margin-left: 8px;
+		}
+
+		.calendar-icon {
+		    font-size: 24px;
+		    margin-right: 8px; /* Space between the icon and Data Range */
+		    cursor: pointer;
+		}
+	</style>
+	
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+		<div class="dropdown">
+		            <a href="#" class="menu-item">
+		                <span class="material-icons">dashboard</span>
+		                <span class="text">Dashboard</span>
+		            </a>
+		            <div class="dropdown-menu">
+		                <a href="/admin/adminhome">Admin Dashboard</a>
+		                <a href="/user-dashboard">User Dashboard</a>
+		                <a href="/student-quality-index">Student Quality Index</a>
+		            </div>
+		</div>
+        <a href="formdesk">
+            <span class="material-icons">description</span>
+            <span class="text">Formdesk</span>
+        </a>
+        <a href="leadmanager">
+            <span class="material-icons">supervisor_account</span>
+            <span class="text">Lead Manager</span>
+        </a>
+        <a href="opportunity">
+            <span class="material-icons">assignment</span>
+            <span class="text">Opportunity</span>
+        </a>
+        <a href="applicationmanager">
+            <span class="material-icons">folder</span>
+            <span class="text">Application Manager</span>
+        </a>
+        <a href="marketing">
+            <span class="material-icons">campaign</span>
+            <span class="text">Marketing</span>
+        </a>
+        <a href="compeignmanager">
+            <span class="material-icons">send</span>
+            <span class="text">Campaign Manager</span>
+        </a>
+        <a href="querymanager">
+            <span class="material-icons">help</span>
+            <span class="text">Query Manager</span>
+        </a>
+        <a href="paymentmanager">
+            <span class="material-icons">payment</span>
+            <span class="text">Payment Manager</span>
+        </a>
+        <a href="reportanalytics">
+            <span class="material-icons">bar_chart</span>
+            <span class="text">Reports & Analytics</span>
+        </a>
+        <a href="templatemanager">
+            <span class="material-icons">widgets</span>
+            <span class="text">Template Manager</span>
+        </a>
+        <a href="logout">
+            <span class="material-icons">logout</span>
+            <span class="text">Logout</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-section">
+        <!-- Admin Dashboard Heading 
+        <div class="main-header">
+            <h2>Admin Dashboard</h2>-->
+			<nav class="navbar">
+			    <div class="navbar-left">
+			        <span class="navbar-title">Admin Dashboard</span>
+			    </div>
+			    <div class="navbar-right">
+			        <div class="icon-btn" id="missed-calls">
+			            <img src="missed-calls-icon.png" alt="Missed Calls">
+			        </div>
+			        <div class="icon-btn" id="calls-for-questions">
+			            <img src="calls-for-questions-icon.png" alt="Calls for Questions">
+			        </div>
+			        <div class="icon-btn" id="notifications">
+			            <img src="notifications-icon.png" alt="Notifications">
+			        </div>
+			        <div class="icon-btn" id="profile">
+			            <img src="profile-icon.png" alt="Profile">
+			        </div>
+					<div class="navbar">
+													<div class="main-header">
+													           <!--<h1>Admin Dashboard</h1>
+												    /* <h1>Admin Dashboard</h1> */-->
+												       <div class="profile">
+														<div class="profile-icon" id="profileIcon" onclick="toggleDropdown()">
+														               <!-- Initials will be dynamically set -->
+														           </div>
+												           <!--div class="profile-icon" onclick="toggleDropdown()">DM
+												               <img src="https://via.placeholder.com/50" alt="Profile">
+												           </div>-->
+												           <div class="dropdown" id="profileDropdown">
+												               <h3>Admin Information</h3>
+												               <p><span>Name:</span> Dipti M.</p>
+												               <p><span>Email:</span> adminDipti@example.com</p>
+												               <p><span>Role:</span> Administrator</p>
+															   <p><span>Mobile No.:</span> 98786756453</p>
+															   <p><span>Ticket ID:</span> @1234Testcase</p>
+															   <p><span>A/C Manager:</span> Khushi M</p>
+															   <a href="#">
+															     <i class="fas fa-shield-alt"></i> Security Settings
+															     </a>
+										    		                <a href="#">
+															   	<i class="fas fa-key"></i> Change Password
+															        </a>
+														        <a href="#">
+													              <i class="fas fa-sign-out-alt"></i> Sign Out
+															       </a>
+												           </div>
+												       </div>
+												   </div>
+
+									        </div>
+			    </div>
+				
+			</nav>
+
+			<!--<div class="navbar">
+				<div class="main-header">
+				           <!-<h1>Admin Dashboard</h1>
+			    /* <h1>Admin Dashboard</h1> */-->
+			      <!-- <div class="profile">
+					<div class="profile-icon" id="profileIcon" onclick="toggleDropdown()">
+					               Initials will be dynamically set -->
+					         <!--  </div>-->
+			           <!--div class="profile-icon" onclick="toggleDropdown()">DM
+			               <img src="https://via.placeholder.com/50" alt="Profile">
+			           </div>-->
+			          <!--<div class="dropdown" id="profileDropdown">
+			               <h3>Admin Information</h3>
+			               <p><span>Name:</span> Dipti M.</p>
+			               <p><span>Email:</span> adminDipti@example.com</p>
+			               <p><span>Role:</span> Administrator</p>
+						   <p><span>Mobile No.:</span> 98786756453</p>
+						   <p><span>Ticket ID:</span> @1234Testcase</p>
+						   <p><span>A/C Manager:</span> Khushi M</p>
+						   <a href="#">
+						     <i class="fas fa-shield-alt"></i> Security Settings
+						     </a>
+	    		                <a href="#">
+						   	<i class="fas fa-key"></i> Change Password
+						        </a>
+					        <a href="#">
+				              <i class="fas fa-sign-out-alt"></i> Sign Out
+						       </a>
+			           </div>
+			       </div>
+			   </div>
+
+        </div> -->
+		
+		<!--<div class="navbar">
+		        <h1>Admin Dashboard</h1>
+		        <div class="profile">
+		            <div class="profile-icon" onclick="toggleDropdown()">
+		                <img src="https://via.placeholder.com/50" alt="Profile">
+		            </div>
+		            <div class="dropdown" id="profileDropdown">
+		                <h3>Admin Information</h3>
+		                
+		            </div>
+		        </div>
+		    </div>
+			<!-- FontAwesome for icons -->
+			    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+		<script>
+			function toggleDropdown() {
+			    const profile = document.querySelector('.profile');
+			    profile.classList.toggle('open');
+			}
+		        function toggleDropdown() {
+		            const dropdown = document.getElementById('profileDropdown');
+		            dropdown.classList.toggle('active');
+		        }
+
+		        // Close dropdown when clicking outside
+		        window.addEventListener('click', function(e) {
+		            const profileIcon = document.querySelector('.profile-icon');
+		            const dropdown = document.getElementById('profileDropdown');
+		            if (!profileIcon.contains(e.target) && !dropdown.contains(e.target)) {
+		                dropdown.classList.remove('active');
+		            }
+		        });
+				// Dynamically set initials from admin name
+				       document.addEventListener('DOMContentLoaded', function() {
+				           const adminName = "Dipti M"; // Replace with dynamic admin name
+				           const initials = adminName.split(' ').map(name => name[0]).join('');
+				           const profileIcon = document.getElementById('profileIcon');
+				           profileIcon.textContent = initials.toUpperCase();
+						   
+						   // Ensure dropdown does not resize navbar
+						              const dropdown = document.getElementById('profileDropdown');
+						              dropdown.style.position = 'absolute';
+				       });
+		    </script>
+
+        <!-- Score Board Box -->
+        <div class="dashboard-box">
+            <h3>Score Board</h3>
+            <div class="date-range">
+                <label for="date-range">Date Range:</label>
+                <input type="date" id="start-date"> to 
+                <input type="date" id="end-date">
+            </div>
+        </div>
+
+        <!-- Stats Box -->
+        <div class="stats-box">
+            <h3>Statistics</h3>
+            <div class="stats-container">
+                <div class="stats-item">
+                    Total Leads 
+                    <span th:text="${totalLeads}">0</span>
+                </div>
+                <div class="stats-item">
+                    Total Free/Paid Applications 
+                    <span>800</span>
+                </div>
+                <div class="stats-item">
+                    Total Unpaid Courses 
+                    <span>200</span>
+                </div>
+                <div class="stats-item">
+                    Total Queries 
+                    <span>150</span>
+                </div>
+                <div class="stats-item">
+                    Communications 
+                    <span>1,000</span>
+                </div>
+            </div>
+        </div>
+		<div class="funnel-box">
+		            <h3>Application Funnel</h3>
+		            <div class="date-range">
+		                <label for="date-range">Date Range:</label>
+		                <input type="date" id="start-date"> to 
+		                <input type="date" id="end-date">
+		            </div>
+		 </div>
+		 <!-- Funnel Box Bottom with Tree Structure -->
+		 <div class="funnel-box-bottom">
+		     <h3>Total Applications</h3>
+		     <div class="tree-container">
+		         <div class="root">
+		             <div class="root-text">
+		                 <span>Total Applications</span>
+		                 <span class="root-number">1000</span>
+		             </div>
+		         </div>
+		         <div class="branch-container">
+		             <div class="branch paid">
+		                 <div class="branch-text">
+		                     <span>Paid Applications</span>
+		                     <span class="branch-number">800</span>
+		                 </div>
+		                 <div class="sub-branches">
+		                     <div class="sub-branch online">Online: 200</div>
+		                     <div class="sub-branch offline">Offline: 100</div>
+		                     <div class="sub-branch dd">DD: 50</div>
+		                     <div class="sub-branch cash">Cash: 450</div>
+		                 </div>
+		             </div>
+		             <div class="branch unpaid">
+		                 <div class="branch-text">
+		                     <span>Unpaid Applications</span>
+		                     <span class="branch-number">200</span>
+		                 </div>
+		                 <div class="sub-branches">
+		                     <div class="sub-branch initiated">Payment Initiated: 150</div>
+		                     <div class="sub-branch not-initiated">Payment Not Initiated: 50</div>
+		                 </div>
+		             </div>
+		         </div>
+		     </div>
+		 </div>
+		 <div class="lead-funnel">
+		     <!-- First part: Displaying the date range in one line -->
+		     <div class="lead-funnel-part" style="width: 30%;">
+		         <h3>Lead Funnel</h3>
+		         <p id="date-range-text">
+		             <span id="date-range">Data Range: (01 Jan 2024 to 07 Jan 2024)</span>
+		         </p>
+		     </div>
+
+		     
+
+		     
+		 </div>
+		 <div class="lead-funnel1">
+		 		 		     
+
+			<!-- Second part: Icon first and then Data Range heading -->
+					     <div class="lead-funnel-part" style="width: 15%;">
+					         <div class="date-range">
+					             <span class="calendar-icon">&#x1F4C5;</span>
+					             <label for="start-date">Data Range</label>
+					         </div>
+					     </div>
+		 		 		 </div>
+		 <div class="lead-funnel2">
+		 		     
+
+		 		     <!-- Third part: Download icon -->
+		 		     <div class="lead-funnel-part" style="width: 5%;">
+		 		         <button class="download-btn">
+		 		             <span class="material-icons">download</span>
+		 		         </button>
+		 		     </div>
+		 		 </div>
+    </div>
+
+</body>
+</html>
