@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RBMI Group of Institutions</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
+    <>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -114,10 +114,70 @@
             font-weight: normal;
             margin-top: 5px;
         }
+		/* Profile View Styles */
+		        .profile-container {
+		            position: relative;
+		            display: inline-block;
+		            margin-left: 20px; /* Add some spacing */
+		        }
+
+		        .profile-icon {
+		            cursor: pointer;
+		            font-size: 24px;
+		            color: #fff; /* Style as needed */
+		        }
+
+		        .profile-view {
+		            display: none;
+		            position: absolute;
+		            top: 40px; /* Adjust as needed */
+		            right: 0;
+		            background-color: #fff;
+		            border: 1px solid #ccc;
+		            border-radius: 5px;
+		            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+		            padding: 10px;
+		            z-index: 1000; /* Ensure it's on top */
+		            width: 200px; /* Adjust width */
+		        }
+
+		        .profile-view p {
+		            margin: 5px 0;
+		            font-size: 14px;
+		            color: #333;
+		        }
+
+		        /* Style for the top navigation bar */
+		        .top-nav {
+		            background-color: #333; /* Or your preferred color */
+		            color: white;
+		            padding: 10px 20px;
+		            display: flex;
+		            justify-content: flex-end; /* Align items to the right */
+		            align-items: center;
+		            position: fixed; /* Fixed positioning */
+		            top: 0;
+		            width: 100%;
+		            z-index: 999; /* Ensure it's above other elements */
+		        }
+		    
     </style>
 </head>
-<body>
-
+<>
+	<div class="top-nav">
+	        <div class="profile-container">
+	            <span class="material-icons profile-icon" id="profile-icon">account_circle</span>
+	            <div class="profile-view" id="profile-view">
+	                <p><strong>Name:</strong> <span th:text="${adminName}"></span></p>
+	                <p><strong>Mobile:</strong> <span th:text="${adminMobile}"></span></p>
+	                <p><strong>Email:</strong> <span th:text="${adminEmail}"></span></p>
+	                <p><strong>Designation:</strong> <span th:text="${adminDesignation}"></span></p>
+	                <p><strong>Department:</strong> <span th:text="${adminDepartment}"></span></p>
+	            </div>
+	        </div>
+	        <span class="material-icons" style="color: white; margin-left: 20px;">notifications</span>
+	    </div>
+		
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="dashboard">
@@ -168,6 +228,11 @@
             <span class="material-icons">logout</span>
             <span class="text">Logout</span>
         </a>
+		<div class="sidebar">
+		        </div>
+
+		    <div class="profile-section">
+		        </div>
     </div>
 
     <!-- Main Content -->
@@ -214,6 +279,22 @@
             </div>
         </div>
     </div>
+	<script>
+	        const profileIcon = document.getElementById('profile-icon');
+	        const profileView = document.getElementById('profile-view');
+
+	        profileIcon.addEventListener('click', () => {
+	            profileView.style.display = profileView.style.display === 'block' ? 'none' : 'block';
+	        });
+
+	        document.addEventListener('click', (event) => {
+	            if (!profileIcon.contains(event.target) && !profileView.contains(event.target)) {
+	                profileView.style.display = 'none';
+	            }
+	        });
+	    </script>
+	    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	
 
 </body>
 </html>
