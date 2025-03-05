@@ -1,0 +1,47 @@
+# Compiled class file 
+*.class 
+# Log file 
+*.log 
+# BlueJ files 
+*.ctxt 
+# Mobile Tools for Java (J2ME) 
+.mtj.tmp/ 
+# Package Files # 
+*.jar 
+*.war 
+*.ear 
+# virtual machine crash logs, see 
+http://www.java.com/en/download/help/error_hotspot.xml hs_err_pid* 
+# IDE - 
+Eclipse 
+.classpath 
+.project 
+.settings/ 
+*.launch 
+# IDE - IntelliJ IDEA 
+.idea/ 
+*.iml 
+# IDE - NetBeans 
+/nbproject/private/ 
+/build/ 
+/dist/ 
+/nbdist/ 
+
+/.nb-gradle/ 
+# Build artifacts (Maven) 
+/target/ 
+# Temporary files created by operating systems 
+.DS_Store 
+Thumbs.db 
+# Maven wrapper 
+mvnw.cmd 
+# Gradle 
+build 
+.gradle 
+/build/ 
+# Spring Tool Suite (STS) 
+.springBeans 
+.sts4-cache/ 
+# other 
+*.swp
+*.bak
