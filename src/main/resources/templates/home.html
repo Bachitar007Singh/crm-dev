@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Management System with CRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+		
+        /* Navbar Styling */
+        
+
+        .navbar-brand img {
+            width: 150px;
+            height: 80px;
+			margin-left:50px;
+        }
+
+        /* Hero Section Styling */
+        .hero-image {
+            background-image: url('images/hero-section.jpg');
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Form Container Styling */
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 100%;
+        }
+
+        /* Button Styling */
+        .btn-register {
+            background-color: #0047ba;
+            color: black;
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .btn-register:hover {
+            background-color: #003a9e;
+        }
+
+        /* Adjust form margins */
+        .form-container .row > div {
+            margin-bottom: 15px;
+        }
+        /* for pop up 60-92 */
+       /* /* Basic modal styles */
+      /*.modal {
+          display: none; /* Hidden by default */
+         /* position: fixed; 
+          z-index: 1; 
+          left: 0;
+          top: 0;
+          width: 100%; 
+          height: 100%; 
+          overflow: auto; 
+          background-color: rgb(0,0,0); 
+          background-color: rgba(0,0,0,0.4); 
+      }
+      .modal-content {
+          background-color: #fefefe;
+          margin: 15% auto; 
+          padding: 20px;
+          border: 1px solid #888;
+          width: 80%; 
+      }
+      .close {
+          color: #aaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+          color: black;
+          text-decoration: none;
+          cursor: pointer;
+      }*/
+
+    </style>
+</head>
+
+<body>
+    <!-- Header (Navbar) -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="images/logo.png" alt="Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form class="d-flex ms-auto">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                        style="width: 600px;">
+                    <button class="btn btn-outline-dark" type="submit" style="color:black;">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="container-fluid p-0">
+        <div class="hero-image">
+            <div class="form-container">
+                <h3 class="text-center mb-4">Applications Open for Graduate and PG Programmes</h3>
+				<div th:if="${msg}">
+								<p th:text="${msg}" style="color: green;text-align: center;"></p>
+							 </div>
+				<div th:if="${msg}">
+					<p style="color: green;text-align: center;"></p>
+				</div>
+                <form  th:object="${dto}" method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Enter Name *</label>
+							<input type="text" th:field="*{name}" class="form-control" placeholder="Enter Name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Enter Email Address *</label>
+                            <input type="email" th:field="${dto.email}" class="form-control"  placeholder="Enter Email Address">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="mobile" class="form-label">Enter Mobile Number *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">+91</span>
+                                <input type="text" th:field="${dto.contactno}" class="form-control" id="mobile" placeholder="Enter Mobile Number" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="otp" class="form-label">Enter OTP *</label>
+                            <input type="text" th:field="${dto.otp}" class="form-control"  placeholder="Enter OTP" required>
+                        </div>
+						<div class="col-md-6 mb-3">
+						                            <label for="state" class="form-label">Select State *</label>
+						                            <select class="form-select" th:field="${dto.state}"  required onchange="updateCity()">
+						                                <option value="Select" selected disabled>Select State</option>
+														<option value="Andaman and Nicobar">Andaman and Nicobar</option>
+														    <option value="Andhra Pradesh">Andhra Pradesh</option>
+														    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+														    <option value="Assam">Assam</option>
+														    <option value="Bihar">Bihar</option>
+														    <option value="Chandigarh">Chandigarh</option>
+														    <option value="Chhattisgarh">Chhattisgarh</option>
+														    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+														    <option value="Delhi">Delhi</option>
+														    <option value="Goa">Goa</option>
+														    <option value="Gujarat">Gujarat</option>
+														    <option value="Haryana">Haryana</option>
+														    <option value="Himachal Pradesh">Himachal Pradesh</option>
+														    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+														    <option value="Jharkhand">Jharkhand</option>
+														    <option value="Karnataka">Karnataka</option>
+														    <option value="Kerala">Kerala</option>
+														    <option value="Ladakh">Ladakh</option>
+														    <option value="Lakshadweep">Lakshadweep</option>
+														    <option value="Madhya Pradesh">Madhya Pradesh</option>
+														    <option value="Maharashtra">Maharashtra</option>
+														    <option value="Manipur">Manipur</option>
+														    <option value="Meghalaya">Meghalaya</option>
+														    <option value="Mizoram">Mizoram</option>
+														    <option value="Nagaland">Nagaland</option>
+														    <option value="Odisha">Odisha</option>
+														    <option value="Puducherry">Puducherry</option>
+														    <option value="Punjab">Punjab</option>
+														    <option value="Rajasthan">Rajasthan</option>
+														    <option value="Sikkim">Sikkim</option>
+														    <option value="Tamil Nadu">Tamil Nadu</option>
+														    <option value="Telangana">Telangana</option>
+														    <option value="Tripura">Tripura</option>
+														    <option value="Uttar Pradesh">Uttar Pradesh</option>
+														    <option value="Uttarakhand">Uttarakhand</option>
+														    <option value="West Bengal">West Bengal</option>
+						                            </select>
+						                        </div>
+						                        <div class="col-md-6 mb-3">
+						                            <label for="city" class="form-label">Select City *</label>
+						                            <select class="form-select" th:field="${dto.city}"  required>
+						                                <option value="Select" selected disabled>Select City</option>
+						                            </select>
+						                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="institute" class="form-label">Select Institute Applying For *</label>
+                            <select class="form-select" th:field="${dto.institution}"  required>
+                                <option value="Select" selected disabled>Select Institute</option>
+                                <option value="bareilly">Bareilly</option>
+                                <option value="noida">Greater Noida</option>
+                                                 </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="course" class="form-label">Select Course *</label>
+                            <select class="form-select" th:field="${dto.course}"  required>
+                                <option value="Select" selected disabled>Select Course</option>
+								<option value="BBA">Bachelor of Business Administration (BBA)</option>
+								<option value="BCom">Bachelor of Commerce (B.Com)</option> 
+								<option value="BCA">Bachelor of Computer Application (BCA)</option>
+								<option value="BEd">Bachelor of Education (B.Ed.)</option>
+								<option value="BScHSc">Bachelor of Science (B.Sc(H.Sc))</option>
+								<option value="BScPCM">Bachelor of Science (B.Sc(PCM))</option> 
+								<option value="BScNursing">Bachelor of Science in Nursing (B.Sc. Nursing)</option>
+								<option value="BTech">Bachelor of Technology (B.Tech)</option> 
+								<option value="BPharma">Bachelor of Pharmacy (B.Pharma)</option> 
+								<option value="DiplomaEE">Diploma (Electrical Engineering)</option>
+								<option value="DiplomaMech">Diploma (Mechanical)</option>
+								<option value="DPharma">Diploma in Pharmacy (D.Pharma)</option> 
+								<option value="MBA">Master of Business Administration (MBA)</option>
+								<option value="MEd">Master of Education (M.Ed.)</option> 
+								<option value="BComHons">Bachelor of Commerce (B.Com (Hons))</option>
+								<option value="MCA">Master of Computer Applications (MCA)</option>
+								<option value="DiplomaGNM">Diploma (GNM)</option> 
+								<option value="BScZBC">Bachelor of Science (B.Sc (ZBC))</option>
+
+                            </select>
+                        </div>
+						<div class="col-md-6 mb-3">
+						                            <label for="name" class="form-label">Remark</label>
+						                            <input type="text" class="form-control" th:field="*{remark}" placeholder="Remark!" >
+						                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn-register" >Register Now </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+	     <!-- MOdel for counselor 243-251 -->
+	<!-- Modal for counselor information -->
+	  <!--<div id="counselorModal" class="modal">
+	      <div class="modal-content">
+	           <span class="close" id="closeModal">&times;</span>
+	           <h2>Registration Successful!</h2>
+	           <p id="counselorInfo"></p>
+	       </div>
+	   </div>-->
+
+	<script>
+	        // List of cities for each state
+			const citiesByState = {
+			    "Andaman and Nicobar": ["Port Blair", "Rangat", "Diglipur", "Mayabunder"],
+			    "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Tirupati", "Kurnool", "Nellore", "Kadapa", "Anantapur"],
+			    "Arunachal Pradesh": ["Itanagar", "Pasighat", "Tawang", "Ziro", "Bomdila", "Tezu"],
+			    "Assam": ["Guwahati", "Dibrugarh", "Jorhat", "Silchar", "Tezpur", "Nagaon", "Tinsukia"],
+			    "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Darbhanga", "Bihar Sharif", "Arrah", "Begusarai"],
+			    "Chandigarh": ["Chandigarh"],
+			    "Chhattisgarh": ["Raipur", "Bilaspur", "Durg", "Korba", "Bhilai", "Rajnandgaon", "Jagdalpur"],
+			    "Dadra and Nagar Haveli and Daman and Diu": ["Silvassa", "Daman", "Diu"],
+			    "Delhi": ["New Delhi", "Old Delhi", "Dwarka", "Saket", "Rohini", "Karol Bagh"],
+			    "Goa": ["Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda"],
+			    "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Gandhinagar"],
+			    "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Hisar", "Rohtak", "Karnal"],
+			    "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Solan", "Mandi", "Hamirpur", "Una", "Kullu"],
+			    "Jammu and Kashmir": ["Srinagar", "Jammu", "Leh", "Kargil", "Anantnag", "Baramulla", "Pulwama"],
+			    "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Hazaribagh", "Deoghar", "Giridih"],
+			    "Karnataka": ["Bengaluru", "Mysuru", "Mangalore", "Hubballi", "Belgaum", "Kalaburagi", "Shivamogga"],
+			    "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Kollam", "Thrissur", "Alappuzha", "Palakkad"],
+			    "Ladakh": ["Leh", "Kargil"],
+			    "Lakshadweep": ["Kavaratti", "Minicoy", "Agatti"],
+			    "Madhya Pradesh": ["Bhopal", "Indore", "Gwalior", "Jabalpur", "Ujjain", "Sagar", "Satna"],
+			    "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad", "Solapur", "Amravati", "Kolhapur"],
+			    "Manipur": ["Imphal", "Thoubal", "Bishnupur", "Churachandpur", "Kakching"],
+			    "Meghalaya": ["Shillong", "Tura", "Jowai", "Nongpoh", "Cherrapunji"],
+			    "Mizoram": ["Aizawl", "Lunglei", "Champhai", "Serchhip"],
+			    "Nagaland": ["Kohima", "Dimapur", "Mokokchung", "Tuensang", "Mon", "Wokha"],
+			    "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Puri", "Sambalpur", "Berhampur", "Balasore"],
+			    "Puducherry": ["Puducherry", "Karaikal", "Yanam", "Mahe"],
+			    "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda", "Mohali", "Pathankot"],
+			    "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", "Ajmer", "Alwar"],
+			    "Sikkim": ["Gangtok", "Namchi", "Gyalshing", "Mangan"],
+			    "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Vellore"],
+			    "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Khammam", "Karimnagar", "Mahbubnagar"],
+			    "Tripura": ["Agartala", "Dharmanagar", "Udaipur", "Kailashahar", "Belonia"],
+			    "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi", "Agra", "Allahabad", "Ghaziabad", "Noida", "Meerut"],
+			    "Uttarakhand": ["Dehradun", "Haridwar", "Nainital", "Rishikesh", "Haldwani", "Almora"],
+			    "West Bengal": ["Kolkata", "Howrah", "Darjeeling", "Siliguri", "Asansol", "Durgapur"]
+			};
+
+
+	        // Function to update city options based on selected state
+	        function updateCity() {
+	            const state = document.getElementById('state').value;  // Get selected state
+	            const citySelect = document.getElementById('city');
+	            citySelect.innerHTML = ''; // Clear previous options
+
+	            console.log("Selected state:", state);  // Debugging: log the selected state
+	            if (citiesByState[state]) {
+	                console.log("Cities found for", state, ":", citiesByState[state]);  // Debugging: log cities list
+	                citiesByState[state].forEach(city => {
+	                    const option = document.createElement('option');
+	                    option.value = city;
+	                    option.text = city;
+	                    citySelect.appendChild(option);
+	                });
+	            } else {
+	                const defaultOption = document.createElement('option');
+	                defaultOption.text = "No cities available";
+	                citySelect.appendChild(defaultOption);
+	                console.log("No cities found for", state);  // Debugging: log if no cities are available
+	            }
+	        }
+			// pop up model 317-350
+			// Get the modal
+			       const modal = document.getElementById("counselorModal");
+
+			       // Get the <span> element that closes the modal
+			       const span = document.getElementById("closeModal");
+
+			       // Function to show the modal with counselor info
+			       function showModal(counselorName, counselorPhone) {
+			           const counselorInfo = document.getElementById("counselorInfo");
+			           counselorInfo.innerHTML = "Your assigned counselor is: " + counselorName + 
+			                                     "<br>Contact Number: " + counselorPhone;
+			           modal.style.display = "block";
+			       }
+
+			       // When the user clicks on <span> (x), close the modal
+			       span.onclick = function() {
+			           modal.style.display = "none";
+			       }
+
+			       // Close modal if user clicks outside of it
+			       window.onclick = function(event) {
+			           if (event.target === modal) {
+			               modal.style.display = "none";
+			           }
+			       }
+
+			       // Check if there are flash attributes from the backend
+			       const counselorName = "${counselorName}";
+			       const counselorPhone = "${counselorPhone}";
+
+			       if (counselorName && counselorPhone) {
+			           showModal(counselorName, counselorPhone);
+			       }
+
+	    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
