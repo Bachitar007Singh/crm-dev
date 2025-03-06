@@ -126,4 +126,13 @@ public class AdminController {
             return "redirect:/adminlogin";
         }
     }
+   
+   
+
+    @GetMapping("/admin/calendarpro")  // Corrected mapping
+    public String calendarpro() {
+        return "calendarpro"; // Assuming "calendarpro.html" is in your templates folder
+    }
+
+
 }
