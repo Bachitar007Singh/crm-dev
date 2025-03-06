@@ -273,295 +273,334 @@
             border-collapse: collapse;
         }
 
-        th,	
-		td {
-		            padding: 8px;
-		            text-align: left;
-		            border-bottom: 1px solid #ddd;
-		        }
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
 
-		        th {
-		            background-color: #f2f2f2;
-		        }
+        th {
+            background-color: #f2f2f2;
+        }
 
-		        .total-records {
-		            padding: 10px;
-		            text-align: right;
-		        }
+        .total-records {
+            padding: 10px;
+            text-align: right;
+        }
 
-		        /* Add more specific styles based on adminhome.html */
-		        /* You can add styles for search inputs, buttons, etc. */
+        /* Add more specific styles based on adminhome.html */
+        /* You can add styles for search inputs, buttons, etc. */
 
-		        /* Example styles for header elements (adjust as needed) */
-		        .header h1 {
-		            font-size: 24px;
-		            color: #333;
-		            margin: 0;
-		        }
+        /* Example styles for header elements (adjust as needed) */
+        .header h1 {
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+        }
 
-		        .header-right input[type="text"] {
-		            padding: 5px;
-		            border: 1px solid #ccc;
-		            border-radius: 4px;
-		            margin-right: 10px;
-		        }
+        .header-right input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
 
-		        .header-right button {
-		            padding: 5px 10px;
-		            background-color: #007bff;
-		            color: white;
-		            border: none;
-		            border-radius: 4px;
-		            cursor: pointer;
-		        }
+        .header-right button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-		        .filters {
-		            display: flex;
-		            justify-content: space-between;
-		            align-items: center;
-		        }
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-		        .filters .filter-group {
-		            display: flex;
-		            align-items: center;
-		            gap: 10px;
-		        }
+        .filters .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-		        .filters .filter-group label {
-		            font-size: 14px;
-		            color: #555;
-		        }
+        .filters .filter-group label {
+            font-size: 14px;
+            color: #555;
+        }
 
-		        .filters .filter-group select,
-		        .filters .filter-group input[type="date"] {
-		            padding: 5px;
-		            border: 1px solid #ccc;
-		            border-radius: 4px;
-		        }
-		    </style>
-		</head>
+        .filters .filter-group select,
+        .filters .filter-group input[type="date"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
 
-		<body>
-		    <nav class="navbar">
-		        <div class="nav-right">
-		            <div class="notifications">
-		                <i class="fas fa-bell notification-icon"></i>
-		                <div class="notification-dropdown">
-		                    <div class="notification-item success">
-		                        <div class="icon"><i class="fas fa-check-circle"></i></div>
-		                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
-		                    </div>
-		                    <div class="notification-item failed">
-		                        <div class="icon"><i class="fas fa-times-circle"></i></div>
-		                        <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
-		                    </div>
-		                    <div class="notification-item success">
-		                        <div class="icon"><i class="fas fa-check-circle"></i></div>
-		                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
-		                    </div>
-		                    <div class="notification-item failed">
-		                        <div class="icon"><i class="fas fa-times-circle"></i></div>
-		                        <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
-		                    </div>
-		                    <div class="notification-item success">
-		                        <div class="icon"><i class="fas fa-check-circle"></i></div>
-		                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
-		                    </div>
-		                    <div class="show-all">Show All Activities</div>
-		                </div>
-		            </div>
-		            <div class="profile">
-		                <img src="profile-placeholder.jpg" alt="Profile" class="profile-img">
-		                <span class="profile-name">John Alex</span>
-		                <div class="profile-dropdown">
-		                    <div class="profile-info">
-		                        <span class="profile-detail-label">Name:</span> John Alex<br>
-		                        <span class="profile-detail-label">Mobile:</span> 123-456-7890<br>
-		                        <span class="profile-detail-label">Email:</span> john.alex@example.com<br>
-		                        <span class="profile-detail-label">Designation:</span> Manager<br>
-		                        <span class="profile-detail-label">Department:</span> Sales
-		                    </div>
-		                    <a href="#">Settings</a>
-		                    <a href="#" class="sign-out-btn">Sign Out</a>
-		                </div>
-		            </div>
-		        </div>
-		    </nav>
+<body>
+    <nav class="navbar">
+        <div class="nav-right">
+            <div class="notifications">
+                <i class="fas fa-bell notification-icon"></i>
+                <div class="notification-dropdown">
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+                    </div>
+                    <div class="notification-item failed">
+                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
+                    </div>
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+                    </div>
+                    <div class="notification-item failed">
+                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
+                    </div>
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+                    </div>
+                    <div class="show-all">Show All Activities</div>
+                </div>
+            </div>
+            <div class="profile">
+                <img src="profile-placeholder.jpg" alt="Profile" class="profile-img">
+                <span class="profile-name">John Alex</span>
+                <div class="profile-dropdown">
+                    <div class="profile-info">
+                        <span class="profile-detail-label">Name:</span> John Alex<br>
+                        <span class="profile-detail-label">Mobile:</span> 123-456-7890<br>
+                        <span class="profile-detail-label">Email:</span> john.alex@example.com<br>
+                        <span class="profile-detail-label">Designation:</span> Manager<br>
+                        <span class="profile-detail-label">Department:</span> Sales
+                    </div>
+                    <a href="#">Settings</a>
+                    <a href="#" class="sign-out-btn">Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-		    <div class="sidebar">
-		        <div class="dropdown">
-		            <a href="/admin/adminhome" class="menu-item">
-		                <span class="material-icons">dashboard</span>
-		                <span class="text">Dashboard</span>
-		            </a>
-		            <div class="dropdown-menu">
-		                <a href="/admin/adminhome">Admin Dashboard</a>
-		                <a href="/admin/user_dashboard">User Dashboard</a>
-		                <a href="/admin/Student_QI">Student Quality Index</a>
-		            </div>
-		        </div>
+    <div class="sidebar">
+        <div class="dropdown">
+            <a href="/admin/adminhome" class="menu-item">
+                <span class="material-icons">dashboard</span>
+                <span class="text">Dashboard</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="/admin/adminhome">Admin Dashboard</a>
+                <a href="/admin/user_dashboard">User Dashboard</a>
+                <a href="/admin/Student_QI">Student Quality Index</a>
+            </div>
+        </div>
 
-		        <a href="formdesk">
-		            <span class="material-icons">description</span>
-		            <span class="text">Formdesk</span>
-		        </a>
-		        <a href="/admin/counselor">
-		            <span class="material-icons">person</span>
-		            <span class="text">Counselor</span>
-		        </a>
-		        <a href="leadmanager">
-		            <span class="material-icons">supervisor_account</span>
-		            <span class="text">Lead Manager</span>
-					<a href="calendarpro">
-							            <span class="material-icons">calendar_month</span>
-							            <span class="text">Calendar Pro</span>
-		        </a>
-		        <a href="opportunity">
-		            <span class="material-icons">assignment</span>
-		            <span class="text">Opportunity</span>
-		        </a>
-		        <a href="applicationmanager">
-		            <span class="material-icons">folder</span>
-		            <span class="text">Application Manager</span>
-		        </a>
-		        <a href="marketing">
-		            <span class="material-icons">campaign</span>
-		            <span class="text">Marketing</span>
-		        </a>
-		        <a href="compeignmanager">
-		            <span class="material-icons">send</span>
-		            <span class="text">Campaign Manager</span>
-		        </a>
-		        <a href="querymanager">
-		            <span class="material-icons">help</span>
-		            <span class="text">Query Manager</span>
-		        </a>
-		        <a href="paymentmanager">
-		            <span class="material-icons">payment</span>
-		            <span class="text">Payment Manager</span>
-		        </a>
-		        <a href="reportanalytics">
-		            <span class="material-icons">bar_chart</span>
-		            <span class="text">Reports & Analytics</span>
-		        </a>
-		        <a href="templatemanager">
-		            <span class="material-icons">widgets</span>
-		            <span class="text">Template Manager</span>
-		        </a>
-		        <a href="logout">
-		            <span class="material-icons">logout</span>
-		            <span class="text">Logout</span>
-		        </a>
-		    </div>
+        <a href="formdesk">
+            <span class="material-icons">description</span>
+            <span class="text">Formdesk</span>
+        </a>
+        <a href="/admin/counselor">
+            <span class="material-icons">person</span>
+            <span class="text">Counselor</span>
+        </a>
+        <a href="leadmanager">
+            <span class="material-icons">supervisor_account</span>
+            <span class="text">Lead Manager</span>
+        </a>
+        <a href="calendarpro">
+            <span class="material-icons">calendar_month</span>
+            <span class="text">Calendar Pro</span>
+        </a>
+        <a href="opportunity">
+            <span class="material-icons">assignment</span>
+            <span class="text">Opportunity</span>
+        </a>
+        <a href="applicationmanager">
+            <span class="material-icons">folder</span>
+            <span class="text">Application Manager</span>
+        </a>
+        <a href="marketing">
+            <span class="material-icons">campaign</span>
+            <span class="text">Marketing</span>
+        </a>
+        <a href="compeignmanager">
+            <span class="material-icons">send</span>
+            <span class="text">Campaign Manager</span>
+        </a>
+        <a href="querymanager">
+            <span class="material-icons">help</span>
+            <span class="text">Query Manager</span>
+        </a>
+        <a href="paymentmanager">
+            <span class="material-icons">payment</span>
+            <span class="text">Payment Manager</span>
+        </a>
+        <a href="reportanalytics">
+            <span class="material-icons">bar_chart</span>
+            <span class="text">Reports & Analytics</span>
+        </a>
+        <a href="templatemanager">
+            <span class="material-icons">widgets</span>
+            <span class="text">Template Manager</span>
+        </a>
+        <a href="logout">
+            <span class="material-icons">logout</span>
+            <span class="text">Logout</span>
+        </a>
+    </div>
 
-		    <div class="profile-section">
-		        <div class="calendar-container">
-		            <div class="header">
-		                <h1>Calendar Pro</h1>
-		                <div class="header-right">
-		                    <input type="text" placeholder="Search...">
-		                    <button>Add Event</button>
-		                </div>
-		            </div>
-		            <div class="filters">
-		                <div class="filter-group">
-		                    <label for="quick-filters">Quick Filters:</label>
-		                    <select id="quick-filters">
-		                        <option value="all">All</option>
-		                        <option value="today">Today</option>
-		                        <option value="upcoming">Upcoming</option>
-		                    </select>
-		                </div>
-		                <div class="filter-group">
-		                    <label for="status-filters">Status Filters:</label>
-		                    <select id="status-filters">
-		                        <option value="all">All</option>
-		                        <option value="completed">Completed</option>
-		                        <option value="pending">Pending</option>
-		                    </select>
-		                </div>
-		                <div class="filter-group">
-		                    <label for="start-date">Start Date:</label>
-		                    <input type="date" id="start-date">
-		                </div>
-		                <div class="filter-group">
-		                    <label for="end-date">End Date:</label>
-		                    <input type="date" id="end-date">
-		                </div>
-		            </div>
-		            <div class="table-container">
-		                <table>
-		                    <thead>
-		                        <tr>
-		                            <th>Name</th>
-		                            <th>Subject</th>
-		                            <th>Start Date - End Date</th>
-		                            <th>Organizer</th>
-		                            <th>Owner</th>
-		                            <th>Due Time</th>
-		                            <th>Status</th>
-		                            <th>Action</th>
-		                        </tr>
-		                    </thead>
-		                    <tbody>
-		                        <tr>
-		                            <td>Event 1</td>
-		                            <td>Meeting</td>
-		                            <td>2024-03-10 - 2024-03-10</td>
-		                            <td>John Doe</td>
-		                            <td>Jane Smith</td>
-		                            <td>10:00 AM</td>
-		                            <td>Completed</td>
-		                            <td>
-		                                <a href="#"><i class="fas fa-edit"></i></a>
-		                                <a href="#"><i class="fas fa-trash"></i></a>
-		                            </td>
-		                        </tr>
-		                        <tr>
-		                            <td>Event 2</td>
-		                            <td>Presentation</td>
-		                            <td>2024-03-12 - 2024-03-12</td>
-		                            <td>Alice Johnson</td>
-		                            <td>Bob Williams</td>
-		                            <td>02:00 PM</td>
-		                            <td>Pending</td>
-		                            <td>
-		                                <a href="#"><i class="fas fa-edit"></i></a>
-		                                <a href="#"><i class="fas fa-trash"></i></a>
-		                            </td>
-		                        </tr>
-		                        </tbody>
-		                </table>
-		                <div class="total-records">
-		                    Total Records: 2
-		                </div>
-		            </div>
-		        </div>
-		    </div>
+    <div class="profile-section">
+        <div class="calendar-container">
+            <div class="header">
+                <h1>Calendar Pro</h1>
+                <div class="header-right">
+                    <input type="text" placeholder="Search...">
+                    <button>Add Event</button>
+                </div>
+            </div>
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="quick-filters">Quick Filters:</label>
+                    <select id="quick-filters">
+                        <option value="all">All</option>
+                        <option value="today">Today</option>
+                        <option value="upcoming">Upcoming</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="status-filters">Status Filters:</label>
+                    <select id="status-filters">
+                        <option value="all">All</option>
+                        <option value="completed">Completed</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="start-date">Start Date:</label>
+                    <input type="date" id="start-date">
+                </div>
+                <div class="filter-group">
+                    <label for="end-date">End Date:</label>
+                    <input type="date" id="end-date">
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Subject</th>
+                            <th>Start Date - End Date</th>
+                            <th>Organizer</th>
+                            <th>Owner</th>
+                            <th>Due Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+                <div class="total-records">
+                    Total Records: 0
+                </div>
+            </div>
+        </div>
+    </div>
 
-		    <script>
-		        document.addEventListener('DOMContentLoaded', function () {
-		            const notifications = document.querySelector('.notifications');
-		            const notificationDropdown = document.querySelector('.notification-dropdown');
-		            const profile = document.querySelector('.profile');
-		            const profileDropdown = document.querySelector('.profile-dropdown');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/admin/events')
+                .then(response => response.json())
+                .then(data => {
+                    // Store the fetched data globally (for filtering later)
+                    window.events = data;
+                    populateTable (data);
+					                })
+					                .catch(error => console.error('Error fetching events:', error));
 
-		            notifications.addEventListener('click', function () {
-		                notificationDropdown.classList.toggle('show');
-		            });
+					            // Initial population of the table
+					            function populateTable(events) {
+					                const tableBody = document.querySelector('table tbody');
+					                tableBody.innerHTML = ''; // Clear existing rows
 
-		            profile.addEventListener('click', function () {
-		                profileDropdown.classList.toggle('show');
-		            });
+					                events.forEach(event => {
+					                    const row = tableBody.insertRow(); // Create a new table row
+					                    row.innerHTML = `
+					                        <td>${event.name}</td>
+					                        <td>${event.subject}</td>
+					                        <td>${event.startDate} - ${event.endDate}</td>
+					                        <td>${event.organizer}</td>
+					                        <td>${event.owner}</td>
+					                        <td>${event.dueTime}</td>
+					                        <td>${event.status}</td>
+					                        <td>
+					                            <a href="#"><i class="fas fa-edit"></i></a>
+					                            <a href="#"><i class="fas fa-trash"></i></a>
+					                        </td>
+					                    `;
+					                    // If your event object has an ID, add a data attribute for easier access later (e.g., for delete)
+					                    if (event.id) {
+					                        row.setAttribute('data-event-id', event.id);
+					                    }
+					                });
+					                updateTotalRecords(events.length); // Update the total records count
+					            }
 
-		            document.addEventListener('click', function (event) {
-		                if (!notifications.contains(event.target) && !profile.contains(event.target)) {
-		                    notificationDropdown.classList.remove('show');
-		                    profileDropdown.classList.remove('show');
-		                }
-		            });
-		        });
-		    </script>
-		</body>
+					            function updateTotalRecords(total) {
+					                const totalRecordsElement = document.querySelector('.total-records');
+					                if (totalRecordsElement) {
+					                    totalRecordsElement.textContent = `Total Records: ${total}`;
+					                }
+					            }
 
-		</html>
+					            // Filtering functionality
+					            function filterTable() {
+					                const statusFilter = document.getElementById('status-filters').value;
+					                const tableBody = document.querySelector('table tbody');
+					                tableBody.innerHTML = ''; // Clear existing rows
+
+					                let filteredEvents = window.events; // Start with all events
+
+					                if (statusFilter !== 'all') {
+					                    filteredEvents = window.events.filter(event => event.status === statusFilter);
+					                }
+
+					                populateTable(filteredEvents); // Re-populate the table with filtered data
+					            }
+
+					            // Event listener for filter changes
+					            document.getElementById('status-filters').addEventListener('change', filterTable);
+					        });
+
+					        document.addEventListener('DOMContentLoaded', function () {
+					            const notifications = document.querySelector('.notifications');
+					            const notificationDropdown = document.querySelector('.notification-dropdown');
+					            const profile = document.querySelector('.profile');
+					            const profileDropdown = document.querySelector('.profile-dropdown');
+
+					            notifications.addEventListener('click', function () {
+					                notificationDropdown.classList.toggle('show');
+					            });
+
+					            profile.addEventListener('click', function () {
+					                profileDropdown.classList.toggle('show');
+					            });
+
+					            document.addEventListener('click', function (event) {
+					                if (!notifications.contains(event.target) && !profile.contains(event.target)) {
+					                    notificationDropdown.classList.remove('show');
+					                    profileDropdown.classList.remove('show');
+					                }
+					            });
+					        });
+					    </script>
+					</body>
+
+					</html>
