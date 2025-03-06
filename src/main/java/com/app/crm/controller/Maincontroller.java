@@ -91,6 +91,11 @@ public class Maincontroller {
     }
 
 
+    @GetMapping("/admin/calendarpro")  // Corrected mapping
+    public String calendarpro() {
+        return "calendarpro"; // Assuming "calendarpro.html" is in your templates folder
+    }
+    
     @GetMapping("/counselor-info")
     public String showCounselorInfo(Model model) {
        
