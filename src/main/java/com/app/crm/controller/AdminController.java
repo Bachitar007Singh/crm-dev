@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.yaml.snakeyaml.events.Event;
 
 import com.app.crm.dto.CounselorDto;
 import com.app.crm.model.Counselor;
@@ -21,6 +22,10 @@ import com.app.crm.service.CounselorRepository; // Import CounselorRepository
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
+
+import java.util.ArrayList;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -132,9 +137,104 @@ public class AdminController {
         }
     }
    
+ 
    
 
   
 
+        @GetMapping("/events")
+        public List<Event> getEvents() {
+            // In a real application, you would fetch this from a database
+            List<Event> events = new ArrayList<>();
+            events.add(new Event("Event 1", "Meeting", "2024-03-10", "2024-03-10", "John Doe", "Jane Smith", "10:00 AM", "Completed"));
+            events.add(new Event("Event 2", "Presentation", "2024-03-12", "2024-03-12", "Alice Johnson", "Bob Williams", "02:00 PM", "Pending"));
+            return events;
+        }
+
+        class Event {
+            private String name;
+            private String subject;
+            private String startDate;
+            private String endDate;
+            private String organizer;
+            private String owner;
+            private String dueTime;
+            private String status;
+            // Constructor, getters, and setters
+            public Event(String name, String subject, String startDate, String endDate, String organizer, String owner, String dueTime, String status) {
+                this.name = name;
+                this.subject = subject;
+                this.startDate = startDate;
+                this.endDate = endDate;
+                this.organizer = organizer;
+                this.owner = owner;
+                this.dueTime = dueTime;
+                this.status = status;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getSubject() {
+                return subject;
+            }
+
+            public void setSubject(String subject) {
+                this.subject = subject;
+            }
+
+            public String getStartDate() {
+                return startDate;
+            }
+
+            public void setStartDate(String startDate) {
+                this.startDate = startDate;
+            }
+
+            public String getEndDate() {
+                return endDate;
+            }
+
+            public void setEndDate(String endDate) {
+                this.endDate = endDate;
+            }
+
+            public String getOrganizer() {
+                return organizer;
+            }
+
+            public void setOrganizer(String organizer) {
+                this.organizer = organizer;
+            }
+
+            public String getOwner() {
+                return owner;
+            }
+
+            public void setOwner(String owner) {
+                this.owner = owner;
+            }
+
+            public String getDueTime() {
+                return dueTime;
+            }
+
+            public void setDueTime(String dueTime) {
+                this.dueTime = dueTime;
+            }
+
+            public String getStatus() {
+                return status;
+            }
+
+            public void setStatus(String status) {
+                this.status = status;
+            }
+        }
 
 }
