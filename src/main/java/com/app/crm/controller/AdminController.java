@@ -53,7 +53,12 @@ public class AdminController {
         session.invalidate();
         return "redirect:/adminlogin";
     }
-
+    
+    @GetMapping("/admin/calendarpro")  // Corrected mapping
+    public String calendarpro() {
+        return "calendarpro"; // Assuming "calendarpro.html" is in your templates folder
+    }
+    
     @GetMapping("/counselor")
     public String showCounselorPage(Model model) {
         List<Counselor> activeCounselors = crepo.findByActiveTrue(); // Fetch only active counselors
@@ -129,10 +134,7 @@ public class AdminController {
    
    
 
-    @GetMapping("/admin/calendarpro")  // Corrected mapping
-    public String calendarpro() {
-        return "calendarpro"; // Assuming "calendarpro.html" is in your templates folder
-    }
+  
 
 
 }
