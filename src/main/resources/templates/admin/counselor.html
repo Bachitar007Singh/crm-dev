@@ -7,6 +7,168 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+		/* --- Navbar Styles --- */
+		body {
+			/* --- Navbar Styles --- */
+			body {
+			    font-family: sans-serif;
+			    margin: 0;
+			    padding: 0;
+			    display: flex;
+			    background-color: #f0f8ff; /* Light blue background */
+			}
+
+			.navbar {
+			    display: flex;
+			    justify-content: flex-end;
+			    align-items: center;
+			    background-color: rgb(218, 69, 63);/* red  navbar background */
+			    padding: 10px 20px;
+			    width: 100%;
+			    position: fixed;
+			    top: 0;
+			    z-index: 1000;
+			    box-shadow: 0 2px 4px  rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+			}
+
+			.nav-right {
+			    display: flex;
+			    align-items: center;
+			}
+
+			.notifications {
+			    position: relative;
+			    margin-right: 20px;
+			}
+
+			.notification-icon {
+			    font-size: 20px;
+			    cursor: pointer;
+			    color: #555; /* Darker icon color */
+			}
+
+			.notification-dropdown {
+			    display: none;
+			    position: absolute;
+			    top: 100%;
+			    right: 0;
+			    background-color: white;
+			    border: 1px solid #ccc;
+			    border-radius: 5px;
+			    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+			    width: 300px;
+			    padding: 10px;
+			    z-index: 1000;
+			}
+
+			.notification-dropdown.show {
+			    display: block;
+			}
+
+			.notification-item {
+			    display: flex;
+			    align-items: center;
+			    padding: 8px 0;
+			    border-bottom: 1px solid #eee;
+			}
+
+			.notification-item:last-child {
+			    border-bottom: none;
+			}
+
+			.notification-item .icon {
+			    margin-right: 10px;
+			    font-size: 18px;
+			}
+
+			.notification-item.success .icon {
+			    color: green;
+			}
+
+			.notification-item.failed .icon {
+			    color: red;
+			}
+
+			.notification-item .status {
+			    font-weight: bold;
+			    margin-left: auto;
+			}
+
+			.notification-item.success .status {
+			    color: green;
+			}
+
+			.notification-item.failed .status {
+			    color: red;
+			}
+
+			.show-all {
+			    text-align: center;
+			    padding-top: 10px;
+			    cursor: pointer;
+			    color: #007bff; /* Primary color */
+			}
+
+			.profile {
+			    position: relative;
+			    display: flex;
+			    align-items: center;
+			    cursor: pointer;
+			}
+
+			.profile-img {
+			    width: 40px;
+			    height: 40px;
+			    border-radius: 50%;
+			    margin-right: 10px;
+			}
+
+			.profile-dropdown {
+			    display: none;
+			    position: absolute;
+			    top: 100%;
+			    right: 0;
+			    background-color: white;
+			    border: 1px solid #ccc;
+			    border-radius: 5px;
+			    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+			    width: 250px;
+			    padding: 10px;
+			    z-index: 1000;
+			}
+
+			.profile-dropdown.show {
+			    display: block;
+			}
+
+			.profile-info {
+			    padding-bottom: 10px;
+			    border-bottom: 1px solid #eee;
+			    margin-bottom: 10px;
+			}
+
+			.profile-detail-label {
+			    font-weight: bold;
+			    margin-right: 5px;
+			}
+
+			.profile-dropdown a {
+			    display: block;
+			    padding: 8px 10px;
+			    text-decoration: none;
+			    color: #333;
+			}
+
+			.profile-dropdown a:hover {
+			    background-color: #f0f0f0;
+			}
+
+			.sign-out-btn {
+			    color: red;
+			}
+
+		
+		/*sidebar*/
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -14,190 +176,248 @@
             background-color: #f5f5f5;
         }
 
-        /* Sidebar Styles */
-        .sidebar {
-            height: 100vh;
-            width: 60px;
-            background-color: #333;
-            color: white;
-            position: fixed;
-            top: 0;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: width 0.3s;
-            overflow: hidden;
-        }
+		/* --- Sidebar Styles --- */
+					.sidebar {
+					    height: 100vh;
+					    width: 60px;
+					    background-color:rgb(14, 23, 53); /* Darker sidebar color */
+					    color: #ffffff; /* White text color */
+					    position: fixed;
+					    top: 60px;
+					    left: 0;
+					    display: flex;
+					    flex-direction: column;
+					    align-items: center;
+					    transition: width 0.3s;
+					    overflow: hidden;
+					    padding-top: 10px;
+					}
 
-        .sidebar:hover {
-            width: 200px;
-        }
+					.sidebar:hover {
+					    width: 200px;
+					}
 
-        .sidebar a {
-            text-decoration: none;
-            color: white;
-            padding: 15px 0;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid #444;
-            transition: background-color 0.3s, padding-left 0.3s;
-        }
+					.sidebar a {
+					    text-decoration: none;
+					    color: #ffffff; /* White text color */
+					    padding: 15px 0;
+					    width: 100%;
+					    display: flex;
+					    align-items: center;
+					    justify-content: center;
+					    border-bottom: 1px solid #34495e; /* Slightly lighter line color */
+					    transition: background-color 0.3s,
+					    padding-left: 0.3s;
+					}
 
-        .sidebar a:hover {
-            background-color: #575757;
-        }
+					.sidebar a:hover {
+					    background-color: rgb(201, 80, 69); /* Hover color */
+					}
 
-        .sidebar .material-icons {
-            font-size: 24px;
-            transition: margin-right 0.3s;
-        }
+					.sidebar .material-icons {
+					    font-size: 24px;
+					    transition: margin-right 0.3s;
+					    color: #ffffff; /* White icon color */
+					}
 
-        .sidebar a span.text {
-            display: none;
-            white-space: nowrap;
-            margin-left: 10px;
-        }
+					.sidebar a span.text {
+					    display: none;
+					    white-space: nowrap;
+					    margin-left: 10px;
+					}
 
-        .sidebar:hover a span.text {
-            display: inline;
-        }
+					.sidebar:hover a span.text {
+					    display: inline;
+					}
 
-        .sidebar:hover a {
-            justify-content: flex-start;
-            padding-left: 20px;
-        }
+					.sidebar:hover a {
+					    justify-content: flex-start;
+					    padding-left: 20px;
+					}
 
-        /* Main Content */
-        .profile-section {
-            margin-left: 60px;
-            padding: 20px;
-            width: 100%;
-            transition: margin-left 0.3s;
-        }
+					/* --- Main Content Styles --- */
+					.profile-section {
+					    margin-left: 60px;
+					    padding: 20px;
+					    width: 100%;
+					    transition: margin-left 0.3s;
+					    margin-top: 60px;
+					}
 
-        .sidebar:hover ~ .profile-section {
-            margin-left: 200px;
-        }
+					.sidebar:hover~.profile-section {
+					    margin-left: 200px;
+					}
 
-        .main-header {
-            margin-bottom: 20px;
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+					.main-header {
+					    margin-bottom: 20px;
+					    margin-top: 20px;
+					}
 
-        .search-filter {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+					.main-header h2 {
+					    margin: 0;
+					    color: #333;
+					}
 
-        .search-input {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 200px;
-        }
+					.dashboard-box,
+					.funnel-box {
+					    background-color: white;
+					    padding: 20px;
+					    border-radius: 5px;
+					    box-shadow: 0 2px 4px rgb(72, 142, 166);
+					    margin-bottom: 1px;
+					}
 
-        .filter-options select {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+					.hero {
+					    background-color: white;
+					    padding: 20px;
+					    border-radius: 5px;
+					    box-shadow: 0 2px 4px rgb(72, 142, 166);
+					    margin-bottom: 1px;
+					}
 
-        .counselor-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
+					.stats-box,
+					.funnel-box-bottom {
+					    background-color: white;
+					    padding: 20px;
+					    border-radius: 5px;
+					    box-shadow: 0 2px 4px rgb(72, 142, 166);
+					    margin-bottom: 30px;
+					}
 
-        .counselor-table th,
-        .counselor-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+					.lead-funnel {
+					    width: 50%;
+					    background-color: white;
+					    padding: 20px;
+					    border-radius: 5px;
+					    box-shadow: 0 2px 4px rgb(72, 142, 166);
+					    margin-bottom: 30px;
+					}
 
-        .counselor-table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
+					.dashboard-box h3,
+					.stats-box h3 {
+					    margin: 0 0 20px 0;
+					    color: #333;
+					}
 
-        .counselor-table tr:hover {
-            background-color: #f9f9f9;
-        }
+					.date-range {
+					    margin-top: 10px;
+					    font-size: 14px;
+					}
 
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
+					.date-range input {
+					    padding: 5px;
+					    font-size: 14px;
+					}
 
-        .form-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            width: 400px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+					.stats-container {
+					    display: flex;
+					    justify-content: space-between;
+					    align-items: center;
+					    gap: 20px;
+					}
 
-        .form-container label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
+					.stats-item {
+					    text-align: center;
+					    font-size: 16px;
+					    font-weight: bold;
+					    color: #555;
+					}
 
-        .form-container input,
-        .form-container select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+					.stats-item span {
+					    display: block;
+					    color: #333;
+					    font-weight: normal;
+					    margin-top: 5px;
+					}
 
-        .form-container button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
+					/* Dropdown Menu Styles */
+					.dropdown {
+					    position: relative;
+					    width: 100%;
+					}
 
-        .form-container button[type="button"] {
-            background-color: #ccc;
-        }
+					.dropdown-menu {
+					    display: none;
+					    position: relative;
+					    flex-direction: column;
+					    background-color: rgb(15, 22, 51); /* Darker dropdown background */
+					    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+					    z-index: 1001;
+					}
 
-        .close-button {
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            font-size: 15px;
-            font: inherit;
-            position: relative;
-            left: 360px;
-            bottom: 30px;
-            color: black;
-        }
+					.dropdown-menu a {
+					    text-decoration: none;
+					    color: #ffffff;
+					    padding: 10px 20px;
+					    display: block;
+					    transition: background-color 0.3s;
+					}
+
+					.dropdown-menu a:hover {
+					    background-color:rgb(218, 94, 66); /* Slightly lighter hover */
+					}
+
+					.dropdown:hover .dropdown-menu {
+					    display: flex;
+					}
+
+					.sidebar a,
+					.dropdown>.menu-item {
+					    text-decoration: none;
+					    color: #ffffff;
+					    padding: 15px 0;
+					    width: 100%;
+					    display: flex
+					    }
+
     </style>
 </head>
-<body>
+<body>/*navbar html*/
+				<nav class="navbar">
+				    <div class="nav-right">
+				        <div class="notifications">
+				            <i class="fas fa-bell notification-icon"></i>
+				            <div class="notification-dropdown">
+				                <div class="notification-item success">
+				                    <div class="icon"><i class="fas fa-check-circle"></i></div>
+				                    <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+				                </div>
+				                <div class="notification-item failed">
+				                    <div class="icon"><i class="fas fa-times-circle"></i></div>
+				                    <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
+				                </div>
+				                <div class="notification-item success">
+				                    <div class="icon"><i class="fas fa-check-circle"></i></div>
+				                    <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+				                </div>
+				                <div class="notification-item failed">
+				                    <div class="icon"><i class="fas fa-times-circle"></i></div>
+				                    <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
+				                </div>
+				                <div class="notification-item success">
+				                    <div class="icon"><i class="fas fa-check-circle"></i></div>
+				                    <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+				                </div>
+				                <div class="show-all">Show All Activities</div>
+				            </div>
+				        </div>
+				        <div class="profile">
+				            <img src="profile-placeholder.jpg" alt="Profile" class="profile-img">
+				            <span class="profile-name">John Alex</span>
+				            <div class="profile-dropdown">
+				                <div class="profile-info">
+				                    <span class="profile-detail-label">Name:</span> John Alex<br>
+				                    <span class="profile-detail-label">Mobile:</span> 123-456-7890<br>
+				                    <span class="profile-detail-label">Email:</span> john.alex@example.com<br>
+				                    <span class="profile-detail-label">Designation:</span> Manager<br>
+				                    <span class="profile-detail-label">Department:</span> Sales
+				                </div>
+				                <a href="#">Settings</a>
+				                <a href="#" class="sign-out-btn">Sign Out</a>
+				            </div>
+				        </div>
+				    </div>
+				</nav>
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="dropdown">
