@@ -1,5 +1,6 @@
 package com.app.crm.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +15,10 @@ public class Counselor {
     private Integer id;
 
     private String name;
+    
+    @Column(length = 100, nullable = false, unique = true) // Ensure email is unique
     private String email;
+    
     private String password;
     private String phoneNumber;
     private String role;

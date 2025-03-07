@@ -125,6 +125,46 @@
         .illustration img {
             max-width: 80%;
         }
+
+        /* Popup styling */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        /* Overlay styling */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Close button styling */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -132,15 +172,15 @@
         <div class="form-container">
             <div class="form-content">
                 <h2>ADMIN LOGIN</h2>
-                <form method="post" th:object="${dto}">
+                <form method="post" th:action="@{/adminlogin}" th:object="${dto}">
                     <div class="input-group">
-                        <input type="text" placeholder="Admin Name" th:field="${dto.userid}" required>
+                        <input type="text" placeholder="Admin Name" th:field="*{userid}" required>
                     </div>
                     <div class="input-group">
-                        <input type="password" placeholder="Password" th:field="${dto.password}" required>
+                        <input type="password" placeholder="Password" th:field="*{password}" required>
                     </div>
                     <div class="options">
-                        <a href="#">Forgot password?</a>
+                        <a href="#" onclick="showEmailPopup()">Forgot password?</a>
                     </div>
                     <button type="submit" class="login-btn">LOGIN</button>
                 </form>
@@ -159,9 +199,162 @@
         </div>
     </div>
 
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Email Popup -->
+    <div class="popup" id="emailPopup">
+        <span class="close-btn" onclick="hidePopups()">&times;</span> <!-- Cross button -->
+        <h3>Forgot Password</h3>
+        <form id="emailForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <button type="button" class="btn" onclick="sendOTP()">Send OTP</button>
+        </form>
+    </div>
+
+    <!-- OTP Popup -->
+    <div class="popup" id="otpPopup">
+        <span class="close-btn" onclick="hidePopups()">&times;</span> <!-- Cross button -->
+        <h3>Enter OTP</h3>
+        <form id="otpForm" onsubmit="verifyOTP(event)">
+            <div class="input-group">
+                <input type="text" id="otp" placeholder="Enter OTP" required>
+            </div>
+            <button type="submit" class="btn">Verify OTP</button>
+        </form>
+    </div>
+
+    <!-- New Password Popup -->
+    <div class="popup" id="newPasswordPopup">
+        <span class="close-btn" onclick="hidePopups()">&times;</span> <!-- Cross button -->
+        <h3>Reset Password</h3>
+        <form id="newPasswordForm">
+            <div class="input-group">
+                <input type="password" id="newPassword" placeholder="Enter new password" required>
+            </div>
+            <button type="button" class="btn" onclick="resetPassword()">Reset Password</button>
+        </form>
+    </div>
+
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+    <script>
+        // Show email popup
+        function showEmailPopup() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('emailPopup').style.display = 'block';
+        }
+
+        // Hide all popups
+        function hidePopups() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('emailPopup').style.display = 'none';
+            document.getElementById('otpPopup').style.display = 'none';
+            document.getElementById('newPasswordPopup').style.display = 'none';
+        }
+
+        // Send OTP
+        let otpTimer;
+        let otpExpired = false;
+
+        function sendOTP() {
+            const email = document.getElementById('email').value;
+            console.log('Sending OTP to:', email); // Debugging
+            fetch('/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response from backend:', data); // Debugging
+                if (data.success) {
+                    alert(data.message); // Show success message
+                    document.getElementById('emailPopup').style.display = 'none'; // Hide only the email popup
+                    console.log('Showing OTP popup'); // Debugging
+                    document.getElementById('otpPopup').style.display = 'block'; // Show OTP popup
+                    document.getElementById('overlay').style.display = 'block'; // Show overlay
+
+                    // Start the OTP timer (1 minute = 60000 milliseconds)
+                    otpExpired = false;
+                    otpTimer = setTimeout(() => {
+                        otpExpired = true;
+                        alert('OTP has expired. Please request a new OTP.');
+                        hidePopups(); // Hide the OTP popup
+                    }, 60000); // 1 minute
+                } else {
+                    alert(data.message); // Show error message
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+
+        // Verify OTP
+        function verifyOTP(event) {
+            event.preventDefault(); // Prevent form submission
+
+            if (otpExpired) {
+                alert('OTP has expired. Please request a new OTP.');
+                return;
+            }
+
+            const otp = document.getElementById('otp').value;
+            console.log('Verifying OTP:', otp); // Debugging
+            fetch('/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ otp: otp }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response from backend:', data); // Debugging
+                if (data.success) {
+                    clearTimeout(otpTimer); // Clear the OTP timer
+                    document.getElementById('otpPopup').style.display = 'none'; // Hide only the OTP popup
+                    console.log('Showing reset password popup'); // Debugging
+                    document.getElementById('newPasswordPopup').style.display = 'block'; // Show new password popup
+                    document.getElementById('overlay').style.display = 'block'; // Show overlay
+                } else {
+                    alert(data.message); // Show error message
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+
+        // Reset Password
+        function resetPassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            fetch('/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ newPassword: newPassword }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Password reset successfully!');
+                    hidePopups();
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

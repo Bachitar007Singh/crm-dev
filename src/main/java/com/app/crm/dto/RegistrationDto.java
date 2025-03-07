@@ -11,6 +11,34 @@ public class RegistrationDto {
 	private String institution;
 	private String course;
 	private String remark;
+	 private String leadStage;
+	    private String counselorName;
+	    private String campaignSource;
+
+	    // Getters and Setters for new fields
+	    public String getLeadStage() {
+	        return leadStage;
+	    }
+
+	    public void setLeadStage(String leadStage) {
+	        this.leadStage = leadStage;
+	    }
+
+	    public String getCounselorName() {
+	        return counselorName;
+	    }
+
+	    public void setCounselorName(String counselorName) {
+	        this.counselorName = counselorName;
+	    }
+
+	    public String getCampaignSource() {
+	        return campaignSource;
+	    }
+
+	    public void setCampaignSource(String campaignSource) {
+	        this.campaignSource = campaignSource;
+	    }
 	public String getRemark() {
 		return remark;
 	}

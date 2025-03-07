@@ -1,887 +1,642 @@
-```html
+</html>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RBMI Group of Institutions - Admin Home</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* --- Navbar Styles --- */
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            background-color: #f0f8ff;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            background-color: #ffffff;
-            padding: 10px 20px;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-        }
-
-        .notifications {
-            position: relative;
-            margin-right: 20px;
-        }
-
-        .notification-icon {
-            font-size: 20px;
-            cursor: pointer;
-            color: #555;
-        }
-
-        .notification-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            padding: 10px;
-            z-index: 1000;
-        }
-
-        .notification-dropdown.show {
-            display: block;
-        }
-
-        .notification-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .notification-item:last-child {
-            border-bottom: none;
-        }
-
-        .notification-item .icon {
-            margin-right: 10px;
-            font-size: 18px;
-        }
-
-        .notification-item.success .icon {
-            color: green;
-        }
-
-        .notification-item.failed .icon {
-            color: red;
-        }
-
-        .notification-item .status {
-            font-weight: bold;
-            margin-left: auto;
-        }
-
-        .notification-item.success .status {
-            color: green;
-        }
-
-        .notification-item.failed .status {
-            color: red;
-        }
-
-        .show-all {
-            text-align: center;
-            padding-top: 10px;
-            cursor: pointer;
-            color: #007bff;
-        }
-
-        .profile {
-            position: relative;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .profile-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .profile-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            width: 250px;
-            padding: 10px;
-            z-index: 1000;
-        }
-
-        .profile-dropdown.show {
-            display: block;
-        }
-
-        .profile-info {
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 10px;
-        }
-
-        .profile-detail-label {
-            font-weight: bold;
-            margin-right: 5px;
-        }
-
-        .profile-dropdown a {
-            display: block;
-            padding: 8px 10px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .profile-dropdown a:hover {
-            background-color: #f0f0f0;
-        }
-
-        .sign-out-btn {
-            color: red;
-        }
-
-        /* --- Sidebar Styles --- */
-        .sidebar {
-            height: 100vh;
-            width: 60px;
-            background-color: #2c3e50;
-            color: #ffffff;
-            position: fixed;
-            top: 60px;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: width 0.3s;
-            overflow: hidden;
-            padding-top: 10px;
-        }
-
-        .sidebar:hover {
-            width: 200px;
-        }
-
-        .sidebar a {
-            text-decoration: none;
-            color: #ffffff;
-            padding: 15px 0;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid #34495e;
-            transition: background-color 0.3s;
-            padding-left: 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: #34495e;
-        }
-
-        .sidebar .material-icons {
-            font-size: 24px;
-            transition: margin-right 0.3s;
-            color: #ffffff;
-        }
-
-        .sidebar a span.text {
-            display: none;
-            white-space: nowrap;
-            margin-left: 10px;
-        }
-
-        .sidebar:hover a span.text {
-            display: inline;
-        }
-
-        .sidebar:hover a {
-            justify-content: flex-start;
-            padding-left: 20px;
-        }
-
-        /* --- Main Content Styles --- */
-        .profile-section {
-            margin-left: 60px;
-            padding: 20px;
-            width: 100%;
-            transition: margin-left 0.3s;
-            margin-top: 60px;
-        }
-
-        .sidebar:hover~.profile-section {
-            margin-left: 200px;
-        }
-
-        .main-header {
-            margin-bottom: 20px;
-            margin-top: 20px;
-        }
-
-        .main-header h2 {
-            margin: 0;
-            color: #333;
-        }
-
-        .dashboard-box,
-        .funnel-box {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1px;
-        }
-
-        .hero {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1px;
-        }
-
-        .stats-box,
-        .funnel-box-bottom {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .lead-funnel {
-            width: 50%;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .dashboard-box h3,
-        .stats-box h3 {
-            margin: 0 0 20px 0;
-            color: #333;
-        }
-
-        .date-range {
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        .date-range input {
-            padding: 5px;
-            font-size: 14px;
-        }
-
-        .stats-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .stats-item {
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        .stats-item span {
-            display: block;
-            color: #333;
-            font-weight: normal;
-            margin-top: 5px;
-        }
-
-        /* Dropdown Menu Styles */
-        .dropdown {
-            position: relative;
-            width: 100%;
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: relative;
-            flex-direction: column;
-            background-color: #34495e;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            z-index: 1001;
-        }
-
-        .dropdown-menu a {
-            text-decoration: none;
-            color: #ffffff;
-            padding: 10px 20px;
-            display: block;
-            transition: background-color 0.3s;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: #3c556f;
-        }
-
-        .dropdown:hover .dropdown-menu {
-            display: flex;
-        }
-
-        .sidebar a,
-        .dropdown>.menu-item {
-            text-decoration: none;
-            color: #ffffff;
-            padding: 15px 0;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid #34495e;
-            transition: background-color 0.3s;
-            padding-left: 0.3s;
-            position: relative;
-        }
-
-        .sidebar a:hover,
-        .dropdown>.menu-item:hover {
-            background-color: #34495e;
-        }
-
-        .sidebar a span.text,
-        .dropdown>.menu-item span.text {
-            display: none;
-            white-space: nowrap;
-            margin-left: 10px;
-        }
-
-        .sidebar:hover a span.text,
-        .sidebar:hover .dropdown>.menu-item span.text {
-            display: inline;
-        }
-
-        .sidebar:hover a,
-        .sidebar:hover .dropdown>.menu-item {
-            justify-content: flex-start;
-            padding-left: 20px;
-        }
-
-        /* Funnel Box Bottom Styles */
-        .funnel-box-bottom {
-            margin-top: 1px;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .funnel-box-bottom h3 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .tree-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            position: relative;
-            padding: 20px;
-        }
-
-        .root,
-        .branch {
-            text-align: center;
-            padding: 20px;
-            border: 2px solid #444;
-            border-radius: 8px;
-            position: relative;
-            width: 150px;
-            margin: 0 20px;
-        }
-
-        .root {
-            background-color: #f5f5f5;
-        }
-
-        .branch {
-            background-color: #dcdcdc;
-        }
-
-        .branch .branch-text,
-        .root .root-text {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .root-number,
-        .branch-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* Sub-branches (Paid and Unpaid) */
-        .sub-branches {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .sub-branch {
-            padding: 8px;
-            margin: 5px;
-            border: 1px solid #444;
-            width: 100%;
-            text-align: center;
-            background-color: #e2e2e2;
-            border-radius: 5px;
-        }
-
-        .sub-branch.online {
-            background-color: #8bc34a;
-        }
-
-        .sub-branch.offline {
-            background-color: #ff9800;
-        }
-
-        .sub-branch.dd {
-            background-color: #2196f3;
-        }
-
-        .sub-branch.cash {
-            background-color: #4caf50;
-        }
-
-        .sub-branch.initiated {
-            background-color: #4caf50;
-        }
-
-        .sub-branch.not-initiated {
-            background-color: #f44336;
-        }
-
-        /* Styling for the connecting lines */
-        .tree-container::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #444;
-            z-index: -1;
-        }
-
-        .branch-container {
-            display: flex;
-            justify-content: center;
-            position: relative;
-            align-items: flex-start;
-        }
-
-        /* Line between root and branches */
-        .root::before {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            width: 2px;
-            height: 20px;
-            background-color: #444;
-            transform: translateX(-50%);
-        }
-
-        /* Lines between branches and sub-branches */
-        .branch::before {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            width: 2px;
-            height: 20px;
-            background-color: #444;
-            transform: translateX(-50%);
-        }
-
-        .branch-container .branch.paid .sub-branches {
-            margin-top: 20px;
-            padding-left: 20px;
-        }
-
-        .branch-container .branch.unpaid .sub-branches {
-            margin-top: 20px;
-            padding-right: 20px;
-        }
-
-        /* Lead Funnel */
-        .lead-funnel {
-            display: inline-block;
-            justify-content: space-between;
-            align-items: center;
-            background-color: white;
-            padding: 15px 20px;
-            /* Reduced top and bottom padding for less gap */
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            gap: 20px;
-            /* Reduced space between the parts */
-            width: 30%;
-        }
-
-        .lead-funnel1 {
-            display: inline-block;
-            flex-direction: column;
-            /*justify-content: space-between;*/
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>RBMI Group of Institutions</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="/css/admin/adminhome.css">
+	<style>
+		body {
+			margin: 0;
+			font-family: Arial, sans-serif;
+			display: flex;
+			background-color: #f5f5f5;
+			/* Light grey background */
+		}
+
+		/* Sidebar Styles */
+		.sidebar {
+			height: 100vh;
+			width: 60px;
+			/* Collapsed width */
+			background-color: #333;
+			color: white;
+			position: fixed;
+			top: 0;
+			left: 0;
+			display: flex;
+			flex-direction: column;
 			align-items: center;
-			            background-color: white;
-			            padding: 15px 20px;
-			            /* Reduced top and bottom padding for less gap */
-			            border-radius: 5px;
-			            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-			            margin-bottom: 30px;
-			            gap: 20px;
-			            /* Reduced space between the parts */
-			            width: 15%;
-			        }
+			transition: width 0.3s;
+			overflow: hidden;
+		}
 
-			        .lead-funnel2 {
-			            display: inline-block;
-			            flex-direction: column;
-			            justify-content: space-between;
-			            align-items: center;
-			            background-color: white;
-			            padding: 15px 20px;
-			            /* Reduced top and bottom padding for less gap */
-			            border-radius: 5px;
-			            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-			            margin-bottom: 30px;
-			            gap: 20px;
-			        }
+		.sidebar:hover {
+			width: 200px;
+			/* Expanded width */
+		}
 
-			        /* Part styling inside Lead Funnel */
-			        .lead-funnel-part {
-			            display: flex;
-			            flex-direction: column;
-			            justify-content: center;
-			        }
+		.sidebar a {
+			text-decoration: none;
+			color: white;
+			padding: 15px 0;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-bottom: 1px solid #444;
+			transition: background-color 0.3s, padding-left 0.3s;
+		}
 
-			        /* Date Range Text */
-			        #date-range-text {
-			            font-size: 14px;
-			            color: #333;
-			            line-height: 1.5;
-			            /* For better readability */
-			            margin-top: 5px;
-			            /* Reduced margin to bring closer to Lead Funnel title */
-			        }
+		.sidebar a:hover {
+			background-color: #575757;
+		}
 
-			        /* Button Styling for Download */
-			        .download-btn {
-			            background: none;
-			            border: none;
-			            cursor: pointer;
-			            font-size: 24px;
-			        }
+		.sidebar .material-icons {
+			font-size: 24px;
+			transition: margin-right 0.3s;
+		}
 
-			        .download-btn .material-icons {
-			            color: #333;
-			        }
+		.sidebar a span.text {
+			display: none;
+			white-space: nowrap;
+			margin-left: 10px;
+		}
 
-			        /* Date Range - Data Range Heading and Calendar Icon */
-			        .date-range label {
-			            font-size: 14px;
-			            color: #333;
-			            margin-left: 8px;
-			        }
+		.sidebar:hover a span.text {
+			display: inline;
+		}
 
-			        .calendar-icon {
-			            font-size: 24px;
-			            margin-right: 8px;
-			            /* Space between the icon and Data Range */
-			            cursor: pointer;
-			        }
-			    </style>
+		.sidebar:hover a {
+			justify-content: flex-start;
+			padding-left: 20px;
+		}
 
-			</head>
+		/* Main Content */
+		.profile-section {
+			margin-left: 60px;
+			padding: 20px;
+			width: 100%;
+			transition: margin-left 0.3s;
+		}
 
-			<body>
-			    <nav class="navbar">
-			        <div class="nav-right">
-			            <div class="notifications">
-			                <i class="fas fa-bell notification-icon"></i>
-			                <div class="notification-dropdown">
-			                    <div class="notification-item success">
-			                        <div class="icon"><i class="fas fa-check-circle"></i></div>
-			                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
-			                    </div>
-			                    <div class="notification-item failed">
-			                        <div class="icon"><i class="fas fa-times-circle"></i></div>
-			                        <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
-			                    </div>
-			                    <div class="notification-item success">
-			                        <div class="icon"><i class="fas fa-check-circle"></i></div>
-			                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
-			                    </div>
-			                    <div class="notification-item failed">
-			                        <div class="icon"><i class="fas fa-times-circle"></i></div>
-			                        <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
-			                    </div>
-			                    <div class="notification-item success">
-			                        <div class="icon"><i class="fas fa-check-circle"></i></div>
-			                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
-			                    </div>
-			                    <div class="show-all">Show All Activities</div>
-			                </div>
-			            </div>
-			            <div class="profile">
-			                <img src="profile-placeholder.jpg" alt="Profile" class="profile-img">
-			                <span class="profile-name">John Alex</span>
-			                <div class="profile-dropdown">
-			                    <div class="profile-info">
-			                        <span class="profile-detail-label">Name:</span> John Alex<br>
-			                        <span class="profile-detail-label">Mobile:</span> 123-456-7890<br>
-			                        <span class="profile-detail-label">Email:</span> john.alex@example.com<br>
-			                        <span class="profile-detail-label">Designation:</span> Manager<br>
-			                        <span class="profile-detail-label">Department:</span> Sales
-			                    </div>
-			                    <a href="#">Settings</a>
-			                    <a href="#" class="sign-out-btn">Sign Out</a>
-			                </div>
-			            </div>
-			        </div>
-			    </nav>
+		.sidebar:hover~.profile-section {
+			margin-left: 200px;
+		}
 
-			    <div class="sidebar">
-			        <div class="dropdown">
-			            <a href="/admin/adminhome" class="menu-item">
-			                <span class="material-icons">dashboard</span>
-			                <span class="text">Dashboard</span>
-			            </a>
-			            <div class="dropdown-menu">
-			                <a href="/admin/adminhome">Admin Dashboard</a>
-			                <a href="/admin/user_dashboard">User Dashboard</a>
-			                <a href="/admin/Student_QI">Student Quality Index</a>
-			            </div>
-			        </div>
+		.main-header {
+			margin-bottom: 20px;
+			margin-top: 20px;
+		}
 
-			        <a href="formdesk">
-			            <span class="material-icons">description</span>
-			            <span class="text">Formdesk</span>
-			        </a>
-			        <a href="/admin/counselor">
-			            <span class="material-icons">person</span>
-			            <span class="text">Counselor</span>
-			        </a>
-			        <a href="leadmanager">
-			            <span class="material-icons">supervisor_account</span>
-			            <span class="text">Lead Manager</span>
-			        </a>
-					<a href="/admin/calendarpro">  
-					           <span class="material-icons">calendar_month</span> 
-							   <span class="text">Calendar Pro</span>
-				     </a>
-			        <a href="opportunity">
-			            <span class="material-icons">assignment</span>
-			            <span class="text">Opportunity</span>
-			        </a>
-			        <a href="applicationmanager">
-			            <span class="material-icons">folder</span>
-			            <span class="text">Application Manager</span>
-			        </a>
-			        <a href="marketing">
-			            <span class="material-icons">campaign</span>
-			            <span class="text">Marketing</span>
-			        </a>
-			        <a href="compeignmanager">
-			            <span class="material-icons">send</span>
-			            <span class="text">Campaign Manager</span>
-			        </a>
-			        <a href="querymanager">
-			            <span class="material-icons">help</span>
-			            <span class="text">Query Manager</span>
-			        </a>
-			        <a href="paymentmanager">
-			            <span class="material-icons">payment</span>
-			            <span class="text">Payment Manager</span>
-			        </a>
-			        <a href="reportanalytics">
-			            <span class="material-icons">bar_chart</span>
-			            <span class="text">Reports & Analytics</span>
-			        </a>
-			        <a href="templatemanager">
-			            <span class="material-icons">widgets</span>
-			            <span class="text">Template Manager</span>
-			        </a>
-			        <a href="logout">
-			            <span class="material-icons">logout</span>
-			            <span class="text">Logout</span>
-			        </a>
-			    </div>
+		.main-header h2 {
+			margin: 0;
+			color: #333;
+		}
 
-			    <div class="profile-section">
-			        <div class="hero">
-			            <nav>
-			                <span class="material-icons" style="float: right;">help</span>
-			                <span class="material-icons" style="float: right;">notifications</span>
-			            </nav>
-			        </div>
-			        <div class="main-header">
-			            <h2>Admin Dashboard</h2>
-			        </div>
+		.dashboard-box,
+		.funnel-box {
+			background-color: white;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 1px;
+		}
 
-			        <div class="dashboard-box">
-			            <h3>Score Board</h3>
-			            <div class="date-range">
-			                <label for="date-range">Date Range:</label>
-			                <input type="date" id="start-date"> to
-			                <input type="date" id="end-date">
-			            </div>
-			        </div>
+		.hero {
+			background-color: white;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 1px;
+		}
 
-			        <div class="stats-box">
-			            <h3>Statistics</h3>
-			            <div class="stats-container">
-			                <div class="stats-item">
-			                    Total Leads
-			                    <span th:text="${totalLeads}">0</span>
-			                </div>
-			                <div class="stats-item">
-			                    Total Free/Paid Applications
-			                    <span>800</span>
-			                </div>
-			                <div class="stats-item">
-			                    Total Unpaid Courses
-			                    <span>200</span>
-			                </div>
-			                <div class="stats-item">
-			                    Total Queries
-			                    <span>150</span>
-			                </div>
-			                <div class="stats-item">
-			                    Communications
-			                    <span>1,000</span>
-			                </div>
-			            </div>
-			        </div>
-			        <div class="funnel-box">
-			            <h3>Application Funnel</h3>
-			            <div class="date-range">
-			                <label for="date-range">Date Range:</label>
-			                <input type="date" id="start-date"> to
-			                <input type="date" id="end-date">
-			            </div>
-			        </div>
-			        <div class="funnel-box-bottom">
-			            <h3>Total Applications</h3>
-			            <div class="tree-container">
-			                <div class="root">
-			                    <div class="root-text">
-			                        <span>Total Applications</span>
-			                        <span class="root-number">1000</span>
-			                    </div>
-			                </div>
-			                <div class="branch-container">
-			                    <div class="branch paid">
-			                        <div class="branch-text">
-			                            <span>Paid Applications</span>
-			                            <span class="branch-number">800</span>
-			                        </div>
-			                        <div class="sub-branches">
-			                            <div class="sub-branch online">Online: 200</div>
-			                            <div class="sub-branch offline">Offline: 100</div>
-			                            <div class="sub-branch dd">DD: 50</div>
-			                            <div class="sub-branch cash">Cash: 450</div>
-			                        </div>
-			                    </div>
-			                    <div class="branch unpaid">
-			                        <div class="branch-text">
-			                            <span>Unpaid Applications</span>
-			                            <span class="branch-number">200</span>
-			                        </div>
-			                        <div class="sub-branches">
-			                            <div class="sub-branch initiated">Payment Initiated: 150</div>
-			                            <div class="sub-branch not-initiated">Payment Not Initiated: 50</div>
-			                        </div>
-			                    </div>
-			                </div>
-			            </div>
-			        </div>
-			        <div class="lead-funnel">
-			            <div class="lead-funnel-part" style="width: 30%;">
-			                <h3>Lead Funnel</h3>
-			                <p id="date-range-text">
-			                    <span id="date-range">Data Range: (01 Jan 2024 to 07 Jan 2024)</span>
-			                </p>
-			            </div>
-			        </div>
-			        <div class="lead-funnel1">
-			            <div class="lead-funnel-part" style="width: 15%;">
-			                <div class="date-range">
-			                    <span class="calendar-icon">&#x1F4C5;</span>
-			                    <label for="start-date">Data Range</label>
-			                </div>
-			            </div>
-			        </div>
-			        <div class="lead-funnel2">
-			            <div class="lead-funnel-part" style="width: 5%;">
-			                <button class="download-btn">
-			                    <span class="material-icons">download</span>
-			                </button>
-			            </div>
-			        </div>
-			    </div>
+		.stats-box,
+		.funnel-box-bottom {
+			background-color: white;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 30px;
+		}
 
-			    <script>
-			        document.addEventListener('DOMContentLoaded', function () {
-			            const notifications = document.querySelector('.notifications');
-			            const notificationDropdown = document.querySelector('.notification-dropdown');
-			            const profile = document.querySelector('.profile');
-			            const profileDropdown = document.querySelector('.profile-dropdown');
+		.lead-funnel {
+			width: 50%;
+			background-color: white;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 30px;
+		}
 
-			            notifications.addEventListener('click', function () {
-			                notificationDropdown.classList.toggle('show');
-			            });
+		.dashboard-box h3,
+		.stats-box h3 {
+			margin: 0 0 20px 0;
+			color: #333;
+		}
 
-			            profile.addEventListener('click', function () {
-			                profileDropdown.classList.toggle('show');
-			            });
+		.date-range {
+			margin-top: 10px;
+			font-size: 14px;
+		}
 
-			            document.addEventListener('click', function (event) {
-			                if (!notifications.contains(event.target) && !profile.contains(event.target)) {
-			                    notificationDropdown.classList.remove('show');
-			                    profileDropdown.classList.remove('show');
-			                }
-			            });
-			        });
-			    </script>
-			</body>
+		.date-range input {
+			padding: 5px;
+			font-size: 14px;
+		}
 
-			</html>
+		.stats-container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 20px;
+		}
+
+		.stats-item {
+			text-align: center;
+			font-size: 16px;
+			font-weight: bold;
+			color: #555;
+		}
+
+		.stats-item span {
+			display: block;
+			color: #333;
+			font-weight: normal;
+			margin-top: 5px;
+		}
+
+		/* Dropdown Menu Styles */
+		.dropdown {
+			position: relative;
+			width: 100%;
+		}
+
+		.dropdown-menu {
+			display: none;
+			position: relative;
+			flex-direction: column;
+			background-color: #444;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+			z-index: 1001;
+		}
+
+		.dropdown-menu a {
+			text-decoration: none;
+			color: white;
+			padding: 10px 20px;
+			display: block;
+			transition: background-color 0.3s;
+		}
+
+		.dropdown-menu a:hover {
+			background-color: #575757;
+		}
+
+		.dropdown:hover .dropdown-menu {
+			display: flex;
+		}
+
+		.sidebar a,
+		.dropdown>.menu-item {
+			text-decoration: none;
+			color: white;
+			padding: 15px 0;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-bottom: 1px solid #444;
+			transition: background-color 0.3s, padding-left 0.3s;
+			position: relative;
+		}
+
+		.sidebar a:hover,
+		.dropdown>.menu-item:hover {
+			background-color: #575757;
+		}
+
+		.sidebar a span.text,
+		.dropdown>.menu-item span.text {
+			display: none;
+			white-space: nowrap;
+			margin-left: 10px;
+		}
+
+		.sidebar:hover a span.text,
+		.sidebar:hover .dropdown>.menu-item span.text {
+			display: inline;
+		}
+
+		.sidebar:hover a,
+		.sidebar:hover .dropdown>.menu-item {
+			justify-content: flex-start;
+			padding-left: 20px;
+		}
+
+		/* Funnel Box Bottom Styles */
+		.funnel-box-bottom {
+			margin-top: 1px;
+			padding: 20px;
+			border-radius: 8px;
+			background-color: white;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.funnel-box-bottom h3 {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		.tree-container {
+			display: flex;
+			justify-content: center;
+			align-items: flex-start;
+			position: relative;
+			padding: 20px;
+		}
+
+		.root,
+		.branch {
+			text-align: center;
+			padding: 20px;
+			border: 2px solid #444;
+			border-radius: 8px;
+			position: relative;
+			width: 150px;
+			margin: 0 20px;
+		}
+
+		.root {
+			background-color: #f5f5f5;
+		}
+
+		.branch {
+			background-color: #dcdcdc;
+		}
+
+		.branch .branch-text,
+		.root .root-text {
+			font-size: 16px;
+			font-weight: bold;
+			margin-bottom: 10px;
+		}
+
+		.root-number,
+		.branch-number {
+			font-size: 24px;
+			font-weight: bold;
+			color: #333;
+		}
+
+		/* Sub-branches (Paid and Unpaid) */
+		.sub-branches {
+			margin-top: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.sub-branch {
+			padding: 8px;
+			margin: 5px;
+			border: 1px solid #444;
+			width: 100%;
+			text-align: center;
+			background-color: #e2e2e2;
+			border-radius: 5px;
+		}
+
+		.sub-branch.online {
+			background-color: #8bc34a;
+		}
+
+		.sub-branch.offline {
+			background-color: #ff9800;
+		}
+
+		.sub-branch.dd {
+			background-color: #2196f3;
+		}
+
+		.sub-branch.cash {
+			background-color: #4caf50;
+		}
+
+		.sub-branch.initiated {
+			background-color: #4caf50;
+		}
+
+		.sub-branch.not-initiated {
+			background-color: #f44336;
+		}
+
+		/* Styling for the connecting lines */
+		.tree-container::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 0;
+			width: 100%;
+			height: 2px;
+			background-color: #444;
+			z-index: -1;
+		}
+
+		.branch-container {
+			display: flex;
+			justify-content: center;
+			position: relative;
+			align-items: flex-start;
+		}
+
+		/* Line between root and branches */
+		.root::before {
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			width: 2px;
+			height: 20px;
+			background-color: #444;
+			transform: translateX(-50%);
+		}
+
+		/* Lines between branches and sub-branches */
+		.branch::before {
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			width: 2px;
+			height: 20px;
+			background-color: #444;
+			transform: translateX(-50%);
+		}
+
+		.branch-container .branch.paid .sub-branches {
+			margin-top: 20px;
+			padding-left: 20px;
+		}
+
+		.branch-container .branch.unpaid .sub-branches {
+			margin-top: 20px;
+			padding-right: 20px;
+		}
+
+		/* Lead Funnel */
+		.lead-funnel {
+			display: inline-block;
+			justify-content: space-between;
+			align-items: center;
+			background-color: white;
+			padding: 15px 20px;
+			/* Reduced top and bottom padding for less gap */
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 30px;
+			gap: 20px;
+			/* Reduced space between the parts */
+			width: 30%;
+		}
+
+		.lead-funnel1 {
+			display: inline-block;
+			flex-direction: column;
+			/*justify-content: space-between;*/
+			align-items: center;
+			background-color: white;
+			padding: 15px 20px;
+			/* Reduced top and bottom padding for less gap */
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 30px;
+			gap: 20px;
+			/* Reduced space between the parts */
+			width: 15%;
+		}
+
+		.lead-funnel2 {
+			display: inline-block;
+			flex-direction: column;
+			justify-content: space-between;
+			align-items: center;
+			background-color: white;
+			padding: 15px 20px;
+			/* Reduced top and bottom padding for less gap */
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 30px;
+			gap: 20px;
+			/* Reduced space between the parts */
+		}
+
+		/* Part styling inside Lead Funnel */
+		.lead-funnel-part {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		/* Date Range Text */
+		#date-range-text {
+			font-size: 14px;
+			color: #333;
+			line-height: 1.5;
+			/* For better readability */
+			margin-top: 5px;
+			/* Reduced margin to bring closer to Lead Funnel title */
+		}
+
+		/* Button Styling for Download */
+		.download-btn {
+			background: none;
+			border: none;
+			cursor: pointer;
+			font-size: 24px;
+		}
+
+		.download-btn .material-icons {
+			color: #333;
+		}
+
+		/* Date Range - Data Range Heading and Calendar Icon */
+		.date-range label {
+			font-size: 14px;
+			color: #333;
+			margin-left: 8px;
+		}
+
+		.calendar-icon {
+			font-size: 24px;
+			margin-right: 8px;
+			/* Space between the icon and Data Range */
+			cursor: pointer;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<!-- Sidebar -->
+	<div class="sidebar">
+
+		<a href="/admin/adminhome" class="menu-item">
+			<span class="material-icons">dashboard</span>
+			<span class="text">Dashboard</span>
+		</a>
+
+
+
+
+		<a href="/admin/counselor">
+			<span class="material-icons">person</span>
+			<span class="text">Counselor</span>
+		</a>
+		<a href="/admin/leadmanager">
+			<span class="material-icons">supervisor_account</span>
+			<span class="text">Lead Manager</span>
+		</a>
+
+		<a href="/admin/logout">
+			<span class="material-icons">logout</span>
+			<span class="text">Logout</span>
+		</a>
+	</div>
+
+	<!-- Main Content -->
+	<div class="profile-section">
+		<div class="hero">
+			<nav>
+				<span class="material-icons" style="float: right;">help</span>
+				<span class="material-icons" style="float: right;">notifications</span>
+			</nav>
+		</div>
+		<!-- Admin Dashboard Heading -->
+		<div class="main-header">
+			<h2>Admin Dashboard</h2>
+		</div>
+
+		<!-- Score Board Box -->
+		<div class="dashboard-box">
+			<h3>Score Board</h3>
+			<div class="date-range">
+				<label for="date-range">Date Range:</label>
+				<input type="date" id="start-date"> to
+				<input type="date" id="end-date">
+			</div>
+		</div>
+
+		<!-- Stats Box -->
+		<div class="stats-box">
+			<h3>Statistics</h3>
+			<div class="stats-container">
+				<div class="stats-item">
+					Total Leads
+					<span th:text="${totalLeads}">0</span>
+				</div>
+				<div class="stats-item">
+					Total Free/Paid Applications
+					<span>800</span>
+				</div>
+				<div class="stats-item">
+					Total Unpaid Courses
+					<span>200</span>
+				</div>
+				<div class="stats-item">
+					Total Queries
+					<span>150</span>
+				</div>
+				<div class="stats-item">
+					Communications
+					<span>1,000</span>
+				</div>
+			</div>
+		</div>
+		<div class="funnel-box">
+			<h3>Application Funnel</h3>
+			<div class="date-range">
+				<label for="date-range">Date Range:</label>
+				<input type="date" id="start-date"> to
+				<input type="date" id="end-date">
+			</div>
+		</div>
+		<!-- Funnel Box Bottom with Tree Structure -->
+		<div class="funnel-box-bottom">
+			<h3>Total Applications</h3>
+			<div class="tree-container">
+				<div class="root">
+					<div class="root-text">
+						<span>Total Applications</span>
+						<span class="root-number">1000</span>
+					</div>
+				</div>
+				<div class="branch-container">
+					<div class="branch paid">
+						<div class="branch-text">
+							<span>Paid Applications</span>
+							<span class="branch-number">800</span>
+						</div>
+						<div class="sub-branches">
+							<div class="sub-branch online">Online: 200</div>
+							<div class="sub-branch offline">Offline: 100</div>
+							<div class="sub-branch dd">DD: 50</div>
+							<div class="sub-branch cash">Cash: 450</div>
+						</div>
+					</div>
+					<div class="branch unpaid">
+						<div class="branch-text">
+							<span>Unpaid Applications</span>
+							<span class="branch-number">200</span>
+						</div>
+						<div class="sub-branches">
+							<div class="sub-branch initiated">Payment Initiated: 150</div>
+							<div class="sub-branch not-initiated">Payment Not Initiated: 50</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="lead-funnel">
+			<!-- First part: Displaying the date range in one line -->
+			<div class="lead-funnel-part" style="width: 30%;">
+				<h3>Lead Funnel</h3>
+				<p id="date-range-text">
+					<span id="date-range">Data Range: (01 Jan 2024 to 07 Jan 2024)</span>
+				</p>
+			</div>
+
+
+
+
+		</div>
+		<div class="lead-funnel1">
+
+
+			<!-- Second part: Icon first and then Data Range heading -->
+			<div class="lead-funnel-part" style="width: 15%;">
+				<div class="date-range">
+					<span class="calendar-icon">&#x1F4C5;</span>
+					<label for="start-date">Data Range</label>
+				</div>
+			</div>
+		</div>
+		<div class="lead-funnel2">
+
+
+			<!-- Third part: Download icon -->
+			<div class="lead-funnel-part" style="width: 5%;">
+				<button class="download-btn">
+					<span class="material-icons">download</span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>
