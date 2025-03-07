@@ -11,23 +11,27 @@ import java.util.List;
 
 @Controller
 public class CalendarProController {
+	@GetMapping("/test")
+	public String testPage() {
+	    return "test"; // Look for test.html in templates/
+	}
+	@GetMapping("/admin/calendarpro")
+	public String showCalendarPro(Model model) {
+	    // Dummy data for demonstration
+	    List<Leads> leads = new ArrayList<>();
+	    Leads lead = new Leads();
+	    lead.setName("Sido Tubu");
+	    lead.setSubject("Follow Up Sido Tubu");
+	    lead.setStartDate(LocalDateTime.of(2025, 3, 6, 10, 56));
+	    lead.setEndDate(LocalDateTime.of(2025, 3, 6, 11, 26));
+	    lead.setOrganizer("Geeta Bhati");
+	    lead.setOwner("Geeta Bhati");
+	    lead.setDueTime("3 min");
+	    lead.setStatus("Overdue");
+	    leads.add(lead);
 
-    @GetMapping("/admin/calendarpro")
-    public String showCalendarPro(Model model) {
-        // Dummy data for demonstration
-        List<Leads> leads = new ArrayList<>();
-        Leads lead = new Leads();
-        lead.setName("Sido Tubu");
-        lead.setSubject("Follow Up Sido Tubu");
-        lead.setStartDate(LocalDateTime.of(2025, 3, 6, 10, 56));
-        lead.setEndDate(LocalDateTime.of(2025, 3, 6, 11, 26));
-        lead.setOrganizer("Geeta Bhati");
-        lead.setOwner("Geeta Bhati");
-        lead.setDueTime("3 min");
-        lead.setStatus("Overdue");
-        leads.add(lead);
-
-        model.addAttribute("leads", leads);
-        return "admin/calendarpro";
-    }
+	    System.out.println("Leads: " + leads); // Debugging statement
+	    model.addAttribute("leads", leads);
+	    return "admin/calendarpro";
+	}
 }
