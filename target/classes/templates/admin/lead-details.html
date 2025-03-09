@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lead Details</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<style>
+		/* Add your styles here */
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #f5f5f5;
+			display: flex;
+		}
+
+		/* Sidebar Styles */
+		.sidebar {
+			height: 100vh;
+			width: 60px;
+			background-color: #333;
+			color: white;
+			position: fixed;
+			top: 0;
+			left: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			transition: width 0.3s;
+			overflow: hidden;
+			z-index: 1001;
+			/* Ensure sidebar is above other content */
+		}
+
+		.sidebar:hover {
+			width: 200px;
+		}
+
+		.sidebar a {
+			text-decoration: none;
+			color: white;
+			padding: 15px 0;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-bottom: 1px solid #444;
+			transition: background-color 0.3s, padding-left 0.3s;
+		}
+
+		.sidebar a:hover {
+			background-color: #575757;
+		}
+
+		.sidebar .material-icons {
+			font-size: 24px;
+			transition: margin-right 0.3s;
+		}
+
+		.sidebar a span.text {
+			display: none;
+			white-space: nowrap;
+			margin-left: 10px;
+		}
+
+		.sidebar:hover a span.text {
+			display: inline;
+		}
+
+		.sidebar:hover a {
+			justify-content: flex-start;
+			padding-left: 20px;
+		}
+
+		/* Main Content */
+		.profile-section {
+			margin-left: 60px;
+			padding: 20px;
+			width: 100%;
+			transition: margin-left 0.3s;
+			margin-top: 60px;
+		}
+
+		.sidebar:hover~.profile-section {
+			margin-left: 200px;
+		}
+
+		/* Top Navigation Bar */
+		.top-nav {
+			position: fixed;
+			top: 0;
+			left: 60px;
+			/* Initial left position */
+			right: 0;
+			background-color: white;
+			padding: 10px 20px;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			z-index: 1000;
+			/* Ensure navbar is below sidebar */
+			transition: left 0.3s;
+			/* Smooth transition */
+		}
+
+		.top-nav .material-icons {
+			font-size: 24px;
+			margin-left: 20px;
+			cursor: pointer;
+		}
+
+		.profile-dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.profile-dropdown .dropdown-content {
+			display: none;
+			position: absolute;
+			right: 0;
+			background-color: white;
+			min-width: 160px;
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.profile-dropdown .dropdown-content a {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.profile-dropdown .dropdown-content a:hover {
+			background-color: #f1f1f1;
+		}
+
+		.profile-dropdown:hover .dropdown-content {
+			display: block;
+		}
+
+		/* Lead Details Layout */
+		.lead-details-container {
+			display: flex;
+			gap: 20px;
+			/* Space between boxes */
+		}
+
+		.lead-details-main {
+			flex: 1;
+			/* Takes 60% of the space */
+			background-color: white;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			border-top: 4px solid #007bff;
+		}
+
+		.lead-details-side {
+			flex: 1;
+			/* Takes 40% of the space */
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			
+			/* Space between side boxes */
+		}
+
+		.lead-details-block {
+			background-color: white;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			border-top: 4px solid #007bff;
+		}
+
+		.lead-details-block h3 {
+			margin-bottom: 20px;
+			color: #333;
+		}
+
+		.lead-details-block p {
+			margin: 10px 0;
+			color: #555;
+		}
+
+		.lead-details-block strong {
+			color: #333;
+		}
+
+		.lead-details-block .section {
+			margin-bottom: 20px;
+		}
+
+		.lead-details-block .section:last-child {
+			margin-bottom: 0;
+		}
+
+		.lead-details-block .section h4 {
+			margin-bottom: 10px;
+			color: #333;
+		}
+
+		.lead-details-block .section ul {
+			list-style-type: none;
+			padding: 0;
+		}
+
+		.lead-details-block .section ul li {
+			margin-bottom: 5px;
+		}
+
+		.lead-details-block .section ul li strong {
+			display: inline-block;
+			width: 150px;
+		}
+
+		/* Right-side block layout */
+		.right-block {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+		}
+
+		.right-block .top {
+			display: flex;
+			gap: 20px;
+		}
+
+		.right-block .bottom {
+			display: flex;
+			gap: 20px;
+		}
+
+		.right-block .top .lead-details-block,
+		.right-block .bottom .lead-details-block {
+			flex: 1;
+			/* Equal width for all blocks */
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Sidebar -->
+	<div class="sidebar" id="sidebar">
+		<a href="/dashboard" class="menu-item">
+			<span class="material-icons">dashboard</span>
+			<span class="text">Dashboard</span>
+		</a>
+		<a href="/admin/counselor">
+			<span class="material-icons">person</span>
+			<span class="text">Counselor</span>
+		</a>
+		<a href="/admin/leadmanager">
+			<span class="material-icons">supervisor_account</span>
+			<span class="text">Lead Manager</span>
+		</a>
+		<a href="/admin/calendarpro">
+			<span class="material-icons">calendar_month</span>
+			<span class="text">Calendar pro</span>
+		</a>
+		<a href="/admin/logout">
+			<span class="material-icons">logout</span>
+			<span class="text">Logout</span>
+		</a>
+	</div>
+
+	<!-- Top Navigation Bar -->
+	<div class="top-nav" id="top-nav">
+		<span class="material-icons">help</span>
+		<span class="material-icons">notifications</span>
+		<div class="profile-dropdown">
+			<span class="material-icons">account_circle</span>
+			<div class="dropdown-content">
+				<a href="#">Profile</a>
+				<a href="#">Settings</a>
+				<a href="#">Logout</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Main Content -->
+	<div class="profile-section">
+		<div class="lead-details-container">
+			<!-- Main Detail Box -->
+			<div class="lead-details-main">
+				<h2>ANJALI DIVAKAR</h2>
+				<p><strong>Lead Stage:</strong> Cold</p>
+				<p><strong>Application Stage:</strong> Untouched</p>
+				<p><strong>Email:</strong> lokeshkumar0090@gmail.com</p>
+				<p><strong>Mobile:</strong> +91-9719863195</p>
+				<p><strong>Added On:</strong> 22 Feb 2025 11:25 AM</p>
+				<p><strong>Last Active:</strong> 22 Feb 2025 11:26 AM</p>
+			</div>
+
+			<!-- Right-side Blocks -->
+			<div class="lead-details-side">
+				<div class="right-block">
+					<!-- Top Row -->
+					<div class="top">
+						<!-- Communication Status -->
+						<div class="lead-details-block">
+							<h3>Communication Status</h3>
+							<div class="section">
+								<p>Email Sent - 2</p>
+								<p>SMS Sent - 1</p>
+								<p>Whatsapp Sent - 0</p>
+							</div>
+							<h3>Upcoming Followup</h3>
+							<div class="section">
+								<p>NA</p>
+
+							</div>
+						</div>
+
+						<!-- Upcoming Followup -->
+						<div class="lead-details-block">
+							<h3>Telephony Status</h3>
+							<div class="section">
+								<p>Inbound Call - 0</p>
+								<p>Outbound Call - 0</p>
+								<p>Campaign Call - 0</p>
+							</div>
+							<h3>Lead Source</h3>
+							<div class="section">
+								<p>Organic</p>
+							</div>
+						</div>
+
+						<div class="lead-details-block">
+							<h3>Assigned Owners</h3>
+							<div class="section">
+								<p>NA</p>
+							</div>
+						</div>
+					</div>
+
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Handle sidebar hover to adjust top-nav position
+		const sidebar = document.getElementById('sidebar');
+		const topNav = document.getElementById('top-nav');
+
+		sidebar.addEventListener('mouseenter', () => {
+			topNav.style.left = '200px'; // Adjust top-nav position when sidebar expands
+		});
+
+		sidebar.addEventListener('mouseleave', () => {
+			topNav.style.left = '60px'; // Reset top-nav position when sidebar collapses
+		});
+
+		function openPopup() {
+			document.getElementById('popup').style.display = 'block';
+			document.getElementById('overlay').style.display = 'block';
+		}
+
+		function closePopup() {
+			document.getElementById('popup').style.display = 'none';
+			document.getElementById('overlay').style.display = 'none';
+		}
+
+		function saveChanges() {
+			const leadId = document.getElementById('lead-id').value;
+			const leadStage = document.getElementById('lead-stage').value;
+			const notes = document.getElementById('notes').value;
+			const followupDate = document.getElementById('followup-date').value;
+			const followupEndDate = document.getElementById('followup-end-date').value;
+
+			const data = {
+				leadId: leadId,
+				leadStage: leadStage,
+				notes: notes,
+				followupDate: followupDate,
+				followupEndDate: followupEndDate
+			};
+
+			fetch('/admin/update-lead-stage', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log('Success:', data);
+					closePopup();
+					location.reload(); // Reload the page to reflect changes
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+				});
+		}
+	</script>
+</body>
+
+</html>

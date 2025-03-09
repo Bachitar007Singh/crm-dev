@@ -22,4 +22,6 @@ public interface RegistrationRepository extends JpaRepository<Registration, Inte
     List<Registration> findByCampaignSource(@Param("campaignSource") String campaignSource);
 
 	List<Registration> findByRegistrationDate(LocalDate localDate);
+	
+	
 }

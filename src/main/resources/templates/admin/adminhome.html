@@ -1,6 +1,4 @@
-</html>
-<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
@@ -485,7 +483,7 @@
 	<!-- Sidebar -->
 	<div class="sidebar">
 
-		<a href="/admin/adminhome" class="menu-item">
+		<a href="/dashboard" class="menu-item">
 			<span class="material-icons">dashboard</span>
 			<span class="text">Dashboard</span>
 		</a>
@@ -502,14 +500,18 @@
 			<span class="text">Lead Manager</span>
 		</a>
 		<a href="/admin/calendarpro">
-					<span class="material-icons">calendar_month</span>
-					<span class="text">Calendar Pro</span>
-				</a>
-				<a href="/test">Test Link</a>
+			<span class="material-icons">calendar_month</span>
+			<span class="text">Calendar pro</span>
+		</a>
 		<a href="/admin/logout">
 			<span class="material-icons">logout</span>
 			<span class="text">Logout</span>
 		</a>
+		<a href="/admin/calendar">
+					<span class="material-icons">logout</span>
+					<span class="text">Logout</span>
+				</a>
+				
 	</div>
 
 	<!-- Main Content -->
@@ -561,7 +563,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="funnel-box">
+		
+		
+		<!--<div class="funnel-box">
 			<h3>Application Funnel</h3>
 			<div class="date-range">
 				<label for="date-range">Date Range:</label>
@@ -569,8 +573,8 @@
 				<input type="date" id="end-date">
 			</div>
 		</div>
-		<!-- Funnel Box Bottom with Tree Structure -->
-		<div class="funnel-box-bottom">
+		 Funnel Box Bottom with Tree Structure -->
+		<!--<div class="funnel-box-bottom">
 			<h3>Total Applications</h3>
 			<div class="tree-container">
 				<div class="root">
@@ -607,7 +611,7 @@
 		</div>
 		<div class="lead-funnel">
 			<!-- First part: Displaying the date range in one line -->
-			<div class="lead-funnel-part" style="width: 30%;">
+			<!--<div class="lead-funnel-part" style="width: 30%;">
 				<h3>Lead Funnel</h3>
 				<p id="date-range-text">
 					<span id="date-range">Data Range: (01 Jan 2024 to 07 Jan 2024)</span>
@@ -621,8 +625,8 @@
 		<div class="lead-funnel1">
 
 
-			<!-- Second part: Icon first and then Data Range heading -->
-			<div class="lead-funnel-part" style="width: 15%;">
+			 Second part: Icon first and then Data Range heading -->
+			<!--<div class="lead-funnel-part" style="width: 15%;">
 				<div class="date-range">
 					<span class="calendar-icon">&#x1F4C5;</span>
 					<label for="start-date">Data Range</label>
@@ -632,13 +636,13 @@
 		<div class="lead-funnel2">
 
 
-			<!-- Third part: Download icon -->
-			<div class="lead-funnel-part" style="width: 5%;">
+			 Third part: Download icon -->
+			<!--<div class="lead-funnel-part" style="width: 5%;">
 				<button class="download-btn">
 					<span class="material-icons">download</span>
 				</button>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
 </body>

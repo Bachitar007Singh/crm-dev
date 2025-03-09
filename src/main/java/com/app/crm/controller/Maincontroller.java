@@ -118,7 +118,7 @@ public class Maincontroller {
                 session.setAttribute("role", "Admin");
                 session.setAttribute("name", "Admin");
                 SessionRegistry.addSession(dto.getUserid(), session.getId()); // Register the new session
-                return "redirect:/dashboard";
+                return "redirect:/admin/adminhome";
             }
 
             // Check if the user is a counselor

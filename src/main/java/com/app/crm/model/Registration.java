@@ -1,5 +1,6 @@
 package com.app.crm.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -10,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+
 
 @Entity
 @Table(name="registrations")
@@ -45,6 +47,18 @@ public class Registration {
 	@Column(length=50, nullable=false)
 	private String remark;
 	
+	@Column(length=50, nullable=false)
+	private String followupstatus;
+	
+	
+	public String getFollowupstatus() {
+		return followupstatus;
+	}
+
+	public void setFollowupstatus(String followupstatus) {
+		this.followupstatus = followupstatus;
+	}
+
 	@Column(length = 50)
     private String leadStage; // Hot, Cold, Untouched, Warm, Closed, Not Reachable
 
@@ -85,8 +99,45 @@ public class Registration {
 	@Column(name = "registration_date")
     @Temporal(TemporalType.DATE)
     private Date registrationDate; // Add this field
+	
+	 private String leadRemark; // New field: Lead Remark
+	 @Column(name = "followup_date")
+	    @Temporal(TemporalType.DATE) // Add this annotation
+	    private Date followupDate; // Change to java.util.Date
 
-    // Getters and Setters
+	    @Column(name = "followup_end_date")
+	    @Temporal(TemporalType.DATE) // Add this annotation
+	    private Date followupEndDate;
+
+	    // Getters and Setters for new fields
+	    public String getLeadRemark() {
+	        return leadRemark;
+	    }
+
+	    public void setLeadRemark(String leadRemark) {
+	        this.leadRemark = leadRemark;
+	    }
+
+	    
+    
+
+	public Date getFollowupDate() {
+			return followupDate;
+		}
+
+		public void setFollowupDate(Date followupDate) {
+			this.followupDate = followupDate;
+		}
+
+		public Date getFollowupEndDate() {
+			return followupEndDate;
+		}
+
+		public void setFollowupEndDate(Date followupEndDate) {
+			this.followupEndDate = followupEndDate;
+		}
+
+	// Getters and Setters
     public Date getRegistrationDate() {
         return registrationDate;
     }

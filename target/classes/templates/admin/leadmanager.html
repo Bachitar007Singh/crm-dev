@@ -223,29 +223,32 @@
 
 	<!-- Sidebar -->
 	<div class="sidebar">
+	    <a href="/dashboard" class="menu-item">
+	        <span class="material-icons">dashboard</span>
+	        <span class="text">Dashboard</span>
+	    </a>
 
-			<a href="/admin/adminhome" class="menu-item">
-				<span class="material-icons">dashboard</span>
-				<span class="text">Dashboard</span>
-			</a>
+	    <!-- Show Counselor option only for Admin and Manager -->
+	    <a th:if="${userRole == 'Admin' or userRole == 'Manager'}" href="/admin/counselor">
+	        <span class="material-icons">person</span>
+	        <span class="text">Counselor</span>
+	    </a>
 
+	    <a href="/admin/leadmanager">
+	        <span class="material-icons">supervisor_account</span>
+	        <span class="text">Lead Manager</span>
+	    </a>
+		
+		<a href="/admin/calendarpro">
+					<span class="material-icons">calendar_month</span>
+					<span class="text">Calendar pro</span>
+				</a>
 
-
-
-			<a href="/admin/counselor">
-				<span class="material-icons">person</span>
-				<span class="text">Counselor</span>
-			</a>
-			<a href="/admin/leadmanager">
-				<span class="material-icons">supervisor_account</span>
-				<span class="text">Lead Manager</span>
-			</a>
-
-			<a href="/admin/logout">
-				<span class="material-icons">logout</span>
-				<span class="text">Logout</span>
-			</a>
-		</div>
+	    <a href="/admin/logout">
+	        <span class="material-icons">logout</span>
+	        <span class="text">Logout</span>
+	    </a>
+	</div>
 
 	<!-- Main Content -->
 	<div class="profile-section container-fluid">
@@ -280,7 +283,7 @@
 									<option value="Submitted">Submitted</option>
 									<option value="Closed">Closed</option>
 									<option value="Form Sold">Form Sold</option>
-									
+
 								</select>
 							</div>
 						</div>
@@ -291,7 +294,8 @@
 								<div class="custom-legend">Lead Owner/Teams</div>
 								<select class="form-select" id="lead-owner">
 									<option value="" selected>Select</option>
-									<option th:each="counselor : ${counselors}" th:value="${counselor.name}" th:text="${counselor.name}"></option>
+									<option th:each="counselor : ${counselors}" th:value="${counselor.name}"
+										th:text="${counselor.name}"></option>
 								</select>
 							</div>
 						</div>
@@ -317,32 +321,38 @@
 						<thead class="table-dark">
 							<tr>
 								<th>Assigned Counselor</th>
-								        <th>Registered Name</th>
-								        <th>Registered Email</th>
-								        <th>Registered Mobile</th>
-								        <th>State</th>
-								        <th>City</th>
-								        <th>Course</th>
-								        <th>Remark</th>
-								        <th>Registration Date</th>
-								        <th>Lead Stage</th>
-								        <th>Campaign Source</th>
+								<th>Registered Name</th>
+								<th>Registered Email</th>
+								<th>Registered Mobile</th>
+								<th>State</th>
+								<th>City</th>
+								<th>Course</th>
+								<th>Student Remark</th>
+								<th>Lead Remark</th>
+								<th>Followup Date</th>
+								<th>Followup End Date</th>
+								<th>Registration Date</th>
+								<th>Lead Stage</th>
+								<th>Campaign Source</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="s:${leadlist}">
-							        <td th:text="${s.counselorName}"></td>
-							        <td th:text="${s.name}"></td>
-							        <td th:text="${s.email}"></td>
-							        <td th:text="${s.contactno}"></td>
-							        <td th:text="${s.state}"></td>
-							        <td th:text="${s.city}"></td>
-							        <td th:text="${s.course}"></td>
-							        <td th:text="${s.remark}"></td>
-							        <td th:text="${#dates.format(s.registrationDate, 'yyyy-MM-dd')}"></td>
-							        <td th:text="${s.leadStage}"></td>
-							        <td th:text="${s.campaignSource}"></td>
-							    </tr>
+								<td th:text="${s.counselorName}"></td>
+								<td><a th:href="@{/admin/lead-details(id=${s.id})}" th:text="${s.name}"></a></td>
+								<td th:text="${s.email}"></td>
+								<td th:text="${s.contactno}"></td>
+								<td th:text="${s.state}"></td>
+								<td th:text="${s.city}"></td>
+								<td th:text="${s.course}"></td>
+								<td th:text="${s.remark}"></td>
+								<td th:text="${s.leadRemark}"></td>
+								<td th:text="${#dates.format(s.followupDate, 'yyyy-MM-dd')}"></td>
+								<td th:text="${#dates.format(s.followupEndDate, 'yyyy-MM-dd')}"></td>
+								<td th:text="${#dates.format(s.registrationDate, 'yyyy-MM-dd')}"></td>
+								<td th:text="${s.leadStage}"></td>
+								<td th:text="${s.campaignSource}"></td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -353,24 +363,24 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
 		document.getElementById('registration-date').addEventListener('change', function () {
-		    filterTable();
+			filterTable();
 		});
 
 		document.getElementById('lead-stage').addEventListener('change', function () {
-		    filterTable();
+			filterTable();
 		});
 
 		document.getElementById('lead-owner').addEventListener('change', function () {
-		    filterTable();
+			filterTable();
 		});
 
 		document.getElementById('campaign-source').addEventListener('change', function () {
-		    filterTable();
+			filterTable();
 		});
 
 		function filterTable() {
 		    const registrationDate = document.getElementById('registration-date').value;
-		    const leadStage = document.getElementById('lead-stage').value;
+		    const leadStage = document.getElementById('lead-stage').value.toLowerCase(); // Convert to lowercase
 		    const leadOwner = document.getElementById('lead-owner').value;
 		    const campaignSource = document.getElementById('campaign-source').value;
 
@@ -378,10 +388,10 @@
 		    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
 		    for (let row of rows) {
-		        const rowRegistrationDate = row.cells[8].textContent;
-		        const rowLeadStage = row.cells[9].textContent; // Assuming leadStage is in the 10th column
-		        const rowCounselorName = row.cells[0].textContent; // Assuming counselorName is in the 1st column
-		        const rowCampaignSource = row.cells[10].textContent; // Assuming campaignSource is in the 11th column
+		        const rowRegistrationDate = row.cells[11].textContent; // Assuming Registration Date is in the 12th column
+		        const rowLeadStage = row.cells[12].textContent.toLowerCase(); // Assuming Lead Stage is in the 13th column
+		        const rowCounselorName = row.cells[0].textContent; // Assuming Counselor Name is in the 1st column
+		        const rowCampaignSource = row.cells[13].textContent; // Assuming Campaign Source is in the 14th column
 
 		        const dateMatch = registrationDate === '' || rowRegistrationDate === registrationDate;
 		        const stageMatch = leadStage === '' || rowLeadStage === leadStage;
