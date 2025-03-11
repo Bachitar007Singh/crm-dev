@@ -240,6 +240,35 @@
 			flex: 1;
 			/* Equal width for all blocks */
 		}
+		/* Sidebar Popup Styles */
+		.sidebar-popup {
+		    height: 100%;
+		    width: 0;
+		    position: fixed;
+		    z-index: 1000;
+		    top: 0;
+		    right: 0;
+		    background-color: white;
+		    overflow-x: hidden;
+		    transition: 0.5s;
+		    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+		}
+
+		.sidebar-content {
+		    padding: 20px;
+		}
+
+		.close-btn {
+		    position: absolute;
+		    top: 10px;
+		    right: 20px;
+		    font-size: 24px;
+		    cursor: pointer;
+		}
+
+		.sidebar-popup.open {
+		    width: 400px; /* Adjust width as needed */
+		}
 	</style>
 </head>
 
@@ -287,15 +316,72 @@
 		<div class="lead-details-container">
 			<!-- Main Detail Box -->
 			<div class="lead-details-main">
-				<h2>ANJALI DIVAKAR</h2>
-				<p><strong>Lead Stage:</strong> Cold</p>
-				<p><strong>Application Stage:</strong> Untouched</p>
-				<p><strong>Email:</strong> lokeshkumar0090@gmail.com</p>
-				<p><strong>Mobile:</strong> +91-9719863195</p>
-				<p><strong>Added On:</strong> 22 Feb 2025 11:25 AM</p>
+				<h2>[[${lead.name}]]</h2>
+				<a href="#" onclick="openLeadStagePopup()" th:text="${lead.leadStage}"></a>
+				<p><strong>Email:</strong>[[${lead.email}]]</p>
+				<p><strong>Mobile:</strong>[[${lead.contactno}]]</p>
+				<p><strong>Added On:</strong>[[${lead.registrationDate}]]</p>
 				<p><strong>Last Active:</strong> 22 Feb 2025 11:26 AM</p>
 			</div>
 
+			<!-- Sidebar Popup for Editing Lead Details -->
+			<div id="leadStagePopup" class="sidebar-popup">
+			    <div class="sidebar-content">
+			        <!-- Close Button -->
+			        <span class="close-btn" onclick="closeLeadStagePopup()">&times;</span>
+
+			        <!-- Popup Title -->
+			        <h3>Change Lead Stage</h3>
+
+			        <!-- Form -->
+			        <form id="leadStageForm">
+			            <!-- Hidden Lead ID -->
+			            <input type="hidden" id="leadId" th:value="${lead.id}" />
+
+			            <!-- Lead Stage Dropdown -->
+			            <div class="form-group">
+			                <label for="leadStage">Lead Stage</label>
+			                <select id="leadStage" class="form-control">
+			                    <option value="Hot">Hot</option>
+			                    <option value="Cold">Cold</option>
+			                    <option value="Warm">Warm</option>
+			                    <option value="Untouched">Untouched</option>
+			                    <option value="Submitted">Submitted</option>
+			                    <option value="Closed">Closed</option>
+			                    <option value="Form Sold">Form Sold</option>
+			                </select>
+			            </div>
+
+			            <!-- Lead Owner Dropdown -->
+			            <div class="form-group">
+			                <label for="leadOwner">Lead Owner</label>
+			                <select id="leadOwner" class="form-control">
+			                    <option value="">Select Owner</option>
+			                    <option th:each="counselor : ${counselors}" 
+			                            th:value="${counselor.name}" 
+			                            th:text="${counselor.name}">
+			                    </option>
+			                </select>
+			            </div>
+
+			            <!-- Follow-up Date -->
+			            <div class="form-group">
+			                <label for="followupDate">Follow-up Date</label>
+			                <input type="date" id="followupDate" class="form-control" />
+			            </div>
+
+			            <!-- Lead Remark -->
+			            <div class="form-group">
+			                <label for="leadRemark">Lead Remark</label>
+			                <textarea id="leadRemark" class="form-control" rows="4"></textarea>
+			            </div>
+
+			            <!-- Save Button -->
+			            <button type="button" class="btn btn-primary" onclick="saveLeadChanges()">Save Changes</button>
+			        </form>
+			    </div>
+			</div>
+			
 			<!-- Right-side Blocks -->
 			<div class="lead-details-side">
 				<div class="right-block">
@@ -333,7 +419,7 @@
 						<div class="lead-details-block">
 							<h3>Assigned Owners</h3>
 							<div class="section">
-								<p>NA</p>
+								<p>[[${lead.counselorName}]]</p>
 							</div>
 						</div>
 					</div>
@@ -345,6 +431,54 @@
 	</div>
 
 	<script>
+		
+		// Open the sidebar popup
+		function openLeadStagePopup() {
+		    document.getElementById("leadStagePopup").classList.add("open");
+		}
+
+		// Close the sidebar popup
+		function closeLeadStagePopup() {
+		    document.getElementById("leadStagePopup").classList.remove("open");
+		}
+
+		// Save changes to the database
+		function saveLeadChanges() {
+		    const leadId = document.getElementById("leadId").value;
+		    const leadStage = document.getElementById("leadStage").value;
+		    const leadOwner = document.getElementById("leadOwner").value;
+		    const followupDate = document.getElementById("followupDate").value;
+		    const leadRemark = document.getElementById("leadRemark").value;
+
+		    const data = {
+		        leadId: leadId,
+		        leadStage: leadStage,
+		        counselorName: leadOwner,
+		        followupDate: followupDate,
+		        leadRemark: leadRemark
+		    };
+
+		    fetch('/admin/update-lead-stage', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json'
+		        },
+		        body: JSON.stringify(data)
+		    })
+		    .then(response => response.json())
+		    .then(data => {
+		        if (data.success) {
+		            alert("Lead details updated successfully!");
+		            closeLeadStagePopup();
+		            location.reload(); // Reload the page to reflect changes
+		        } else {
+		            alert("Failed to update lead details.");
+		        }
+		    })
+		    .catch(error => {
+		        console.error("Error:", error);
+		    });
+		}
 		// Handle sidebar hover to adjust top-nav position
 		const sidebar = document.getElementById('sidebar');
 		const topNav = document.getElementById('top-nav');

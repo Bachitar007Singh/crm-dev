@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lead Details</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Add your styles here */
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -25,23 +27,33 @@
         #lead-details h2 {
             margin-bottom: 20px;
             color: #333;
+            font-size: 1.8rem;
+            font-weight: bold;
         }
 
         #lead-details p {
             margin: 10px 0;
             color: #555;
+            font-size: 1rem;
         }
 
         #lead-details strong {
             color: #333;
+            font-weight: 600;
         }
 
         .lead-stage-link {
             color: #007bff;
             cursor: pointer;
             text-decoration: underline;
+            font-weight: 500;
         }
 
+        .lead-stage-link:hover {
+            color: #0056b3;
+        }
+
+        /* Popup Styles */
         .popup {
             display: none;
             position: fixed;
@@ -50,31 +62,56 @@
             width: 400px;
             height: 100%;
             background-color: white;
-            box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+            box-shadow: -2px 0 15px rgba(0, 0, 0, 0.2);
             padding: 20px;
             overflow-y: auto;
             z-index: 1000;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .popup.open {
+            transform: translateX(0);
         }
 
         .popup h3 {
             margin-bottom: 20px;
             color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
 
         .popup label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #555;
+            font-weight: 500;
         }
 
         .popup input[type="text"],
         .popup input[type="date"],
-        .popup textarea {
+        .popup textarea,
+        .popup select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .popup input[type="text"]:focus,
+        .popup input[type="date"]:focus,
+        .popup textarea:focus,
+        .popup select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+            outline: none;
+        }
+
+        .popup textarea {
+            resize: vertical;
+            min-height: 100px;
         }
 
         .popup button {
@@ -82,8 +119,10 @@
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
+            font-size: 14px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .popup button:hover {
@@ -100,9 +139,14 @@
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 999;
         }
+
+        .overlay.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <!-- Lead Details Section -->
     <div id="lead-details">
         <h2>Lead Details</h2>
         <p><strong>Name:</strong> <span th:text="${lead.name}"></span></p>
@@ -119,11 +163,14 @@
         <p><strong>Campaign Source:</strong> <span th:text="${lead.campaignSource}"></span></p>
     </div>
 
-    <!-- Popup for changing lead stage -->
+    <!-- Overlay -->
     <div class="overlay" id="overlay"></div>
+
+    <!-- Popup for Changing Lead Stage -->
     <div class="popup" id="popup">
         <h3>Change Lead Stage</h3>
         <form>
+            <!-- Lead Stage Dropdown -->
             <label for="lead-stage">Lead Stage:</label>
             <select id="lead-stage" name="lead-stage">
                 <option value="Untouched">Untouched</option>
@@ -135,60 +182,68 @@
                 <option value="Form Sold">Form Sold</option>
             </select>
 
+            <!-- Notes Textarea -->
             <label for="notes">Notes:</label>
             <textarea id="notes" name="notes" rows="4"></textarea>
 
+            <!-- Follow-up Date -->
             <label for="followup-date">Followup Date:</label>
             <input type="date" id="followup-date" name="followup-date">
 
+            <!-- Follow-up End Date -->
             <label for="followup-end-date">Followup End Date:</label>
             <input type="date" id="followup-end-date" name="followup-end-date">
 
+            <!-- Save and Close Buttons -->
             <button type="button" onclick="saveChanges()">Save Changes</button>
             <button type="button" onclick="closePopup()">Close</button>
         </form>
     </div>
 
     <script>
+        // Open the popup
         function openPopup() {
             document.getElementById('popup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('overlay').classList.add('active');
         }
 
+        // Close the popup
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('overlay').classList.remove('active');
         }
 
-		function saveChanges() {
-		    const leadStage = document.getElementById('lead-stage').value;
-		    const notes = document.getElementById('notes').value;
-		    const followupDate = document.getElementById('followup-date').value;
-		    const followupEndDate = document.getElementById('followup-end-date').value;
+        // Save changes
+        function saveChanges() {
+            const leadStage = document.getElementById('lead-stage').value;
+            const notes = document.getElementById('notes').value;
+            const followupDate = document.getElementById('followup-date').value;
+            const followupEndDate = document.getElementById('followup-end-date').value;
 
-		    const data = {
-		        leadStage: leadStage,
-		        notes: notes,
-		        followupDate: followupDate,
-		        followupEndDate: followupEndDate
-		    };
+            const data = {
+                leadStage: leadStage,
+                notes: notes,
+                followupDate: followupDate,
+                followupEndDate: followupEndDate
+            };
 
-		    fetch('/admin/update-lead-stage', {
-		        method: 'POST',
-		        headers: {
-		            'Content-Type': 'application/json'
-		        },
-		        body: JSON.stringify(data)
-		    })
-		    .then(response => response.json())
-		    .then(data => {
-		        console.log('Success:', data);
-		        closePopup();
-		    })
-		    .catch((error) => {
-		        console.error('Error:', error);
-		    });
-		}
+            fetch('/admin/update-lead-stage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                closePopup();
+                location.reload(); // Reload the page to reflect changes
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
     </script>
 </body>
 </html>

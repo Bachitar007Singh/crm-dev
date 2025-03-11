@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
@@ -75,74 +75,6 @@
 			margin-left: 200px;
 		}
 
-		/* Dropdown Menu Styles */
-		.dropdown {
-			position: relative;
-			width: 100%;
-		}
-
-		.dropdown-menu {
-			display: none;
-			position: relative;
-			flex-direction: column;
-			background-color: #444;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-			z-index: 1001;
-		}
-
-		.dropdown-menu a {
-			text-decoration: none;
-			color: white;
-			padding: 10px 20px;
-			display: block;
-			transition: background-color 0.3s;
-		}
-
-		.dropdown-menu a:hover {
-			background-color: #575757;
-		}
-
-		.dropdown:hover .dropdown-menu {
-			display: flex;
-		}
-
-		.sidebar a,
-		.dropdown>.menu-item {
-			text-decoration: none;
-			color: white;
-			padding: 15px 0;
-			width: 100%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			border-bottom: 1px solid #444;
-			transition: background-color 0.3s, padding-left 0.3s;
-			position: relative;
-		}
-
-		.sidebar a:hover,
-		.dropdown>.menu-item:hover {
-			background-color: #575757;
-		}
-
-		.sidebar a span.text,
-		.dropdown>.menu-item span.text {
-			display: none;
-			white-space: nowrap;
-			margin-left: 10px;
-		}
-
-		.sidebar:hover a span.text,
-		.sidebar:hover .dropdown>.menu-item span.text {
-			display: inline;
-		}
-
-		.sidebar:hover a,
-		.sidebar:hover .dropdown>.menu-item {
-			justify-content: flex-start;
-			padding-left: 20px;
-		}
-
 		/* Main Content Styles */
 		.profile-section {
 			margin-left: 80px;
@@ -216,38 +148,111 @@
 		.col-md-3 {
 			padding: 0 10px;
 		}
+
+		/* Top Navigation Bar */
+		.top-nav {
+			position: fixed;
+			top: 0;
+			left: 60px;
+			/* Initial left position (collapsed sidebar width) */
+			right: 0;
+			background-color: white;
+			padding: 10px 20px;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			z-index: 1000;
+			transition: left 0.3s;
+			/* Smooth transition */
+		}
+
+		/* Adjust the left position when sidebar is expanded */
+		.sidebar:hover~.profile-section .top-nav {
+			left: 200px;
+			/* Expanded sidebar width */
+		}
+
+		.top-nav .material-icons {
+			font-size: 24px;
+			margin-left: 20px;
+			cursor: pointer;
+		}
+
+		.profile-dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.profile-dropdown .dropdown-content {
+			display: none;
+			position: absolute;
+			right: 0;
+			background-color: white;
+			min-width: 160px;
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.profile-dropdown .dropdown-content a {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.profile-dropdown .dropdown-content a:hover {
+			background-color: #f1f1f1;
+		}
+
+		.profile-dropdown:hover .dropdown-content {
+			display: block;
+		}
 	</style>
 </head>
 
 <body>
-
 	<!-- Sidebar -->
 	<div class="sidebar">
-	    <a href="/dashboard" class="menu-item">
-	        <span class="material-icons">dashboard</span>
-	        <span class="text">Dashboard</span>
-	    </a>
+		<a href="/dashboard" class="menu-item">
+			<span class="material-icons">dashboard</span>
+			<span class="text">Dashboard</span>
+		</a>
 
-	    <!-- Show Counselor option only for Admin and Manager -->
-	    <a th:if="${userRole == 'Admin' or userRole == 'Manager'}" href="/admin/counselor">
-	        <span class="material-icons">person</span>
-	        <span class="text">Counselor</span>
-	    </a>
+		<!-- Show Counselor option only for Admin and Manager -->
+		<a th:if="${userRole == 'Admin' or userRole == 'Manager'}" href="/admin/counselor">
+			<span class="material-icons">person</span>
+			<span class="text">Counselor</span>
+		</a>
 
-	    <a href="/admin/leadmanager">
-	        <span class="material-icons">supervisor_account</span>
-	        <span class="text">Lead Manager</span>
-	    </a>
-		
+		<a href="/admin/leadmanager">
+			<span class="material-icons">supervisor_account</span>
+			<span class="text">Lead Manager</span>
+		</a>
+
 		<a href="/admin/calendarpro">
-					<span class="material-icons">calendar_month</span>
-					<span class="text">Calendar pro</span>
-				</a>
+			<span class="material-icons">calendar_month</span>
+			<span class="text">Calendar pro</span>
+		</a>
 
-	    <a href="/admin/logout">
-	        <span class="material-icons">logout</span>
-	        <span class="text">Logout</span>
-	    </a>
+		<a href="/admin/logout">
+			<span class="material-icons">logout</span>
+			<span class="text">Logout</span>
+		</a>
+	</div>
+
+	<!-- Top Navigation Bar -->
+	<div class="top-nav" id="top-nav">
+		<span class="material-icons">help</span>
+		<span class="material-icons">notifications</span>
+		<div class="profile-dropdown">
+			<span class="material-icons">account_circle</span>
+			<div class="dropdown-content">
+				<a href="#">Profile</a>
+				<a href="#">Settings</a>
+				<a href="#">Logout</a>
+			</div>
+		</div>
 	</div>
 
 	<!-- Main Content -->
@@ -277,13 +282,12 @@
 								<select class="form-select" id="lead-stage">
 									<option value="" selected>Select</option>
 									<option value="Hot">Hot</option>
-									<option value="COld">Cold</option>
+									<option value="Cold">Cold</option>
 									<option value="Warm">Warm</option>
 									<option value="Untouched">Untouched</option>
 									<option value="Submitted">Submitted</option>
 									<option value="Closed">Closed</option>
 									<option value="Form Sold">Form Sold</option>
-
 								</select>
 							</div>
 						</div>
@@ -292,10 +296,11 @@
 						<div class="col-md-3">
 							<div class="custom-fieldset">
 								<div class="custom-legend">Lead Owner/Teams</div>
-								<select class="form-select" id="lead-owner">
-									<option value="" selected>Select</option>
+								<select id="lead-owner" class="form-control">
+									<option value="">Select Owner</option>
 									<option th:each="counselor : ${counselors}" th:value="${counselor.name}"
-										th:text="${counselor.name}"></option>
+										th:text="${counselor.name}">
+									</option>
 								</select>
 							</div>
 						</div>
@@ -313,7 +318,6 @@
 							</div>
 						</div>
 					</div>
-
 				</div>
 				<!-- Lead Table -->
 				<div class="table-responsive mt-4">
@@ -362,49 +366,51 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
-		document.getElementById('registration-date').addEventListener('change', function () {
-			filterTable();
-		});
-
-		document.getElementById('lead-stage').addEventListener('change', function () {
-			filterTable();
-		});
-
-		document.getElementById('lead-owner').addEventListener('change', function () {
-			filterTable();
-		});
-
-		document.getElementById('campaign-source').addEventListener('change', function () {
-			filterTable();
-		});
-
+		// Function to filter the table
 		function filterTable() {
-		    const registrationDate = document.getElementById('registration-date').value;
-		    const leadStage = document.getElementById('lead-stage').value.toLowerCase(); // Convert to lowercase
-		    const leadOwner = document.getElementById('lead-owner').value;
-		    const campaignSource = document.getElementById('campaign-source').value;
+			const registrationDate = document.getElementById('registration-date').value;
+			const leadStage = document.getElementById('lead-stage').value.toLowerCase();
+			const leadOwner = document.getElementById('lead-owner').value.toLowerCase();
+			const campaignSource = document.getElementById('campaign-source').value.toLowerCase();
 
-		    const table = document.getElementById('lead-table');
-		    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+			const table = document.getElementById('lead-table');
+			const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-		    for (let row of rows) {
-		        const rowRegistrationDate = row.cells[11].textContent; // Assuming Registration Date is in the 12th column
-		        const rowLeadStage = row.cells[12].textContent.toLowerCase(); // Assuming Lead Stage is in the 13th column
-		        const rowCounselorName = row.cells[0].textContent; // Assuming Counselor Name is in the 1st column
-		        const rowCampaignSource = row.cells[13].textContent; // Assuming Campaign Source is in the 14th column
+			for (let row of rows) {
+				const rowRegistrationDate = row.cells[11].textContent;
+				const rowLeadStage = row.cells[12].textContent.toLowerCase();
+				const rowCounselorName = row.cells[0].textContent.toLowerCase();
+				const rowCampaignSource = row.cells[13].textContent.toLowerCase();
 
-		        const dateMatch = registrationDate === '' || rowRegistrationDate === registrationDate;
-		        const stageMatch = leadStage === '' || rowLeadStage === leadStage;
-		        const ownerMatch = leadOwner === '' || rowCounselorName === leadOwner;
-		        const sourceMatch = campaignSource === '' || rowCampaignSource === campaignSource;
+				const dateMatch = registrationDate === '' || rowRegistrationDate === registrationDate;
+				const stageMatch = leadStage === '' || rowLeadStage === leadStage;
+				const ownerMatch = leadOwner === '' || rowCounselorName === leadOwner;
+				const sourceMatch = campaignSource === '' || rowCampaignSource === campaignSource;
 
-		        if (dateMatch && stageMatch && ownerMatch && sourceMatch) {
-		            row.style.display = '';
-		        } else {
-		            row.style.display = 'none';
-		        }
-		    }
+				if (dateMatch && stageMatch && ownerMatch && sourceMatch) {
+					row.style.display = ''; // Show the row
+				} else {
+					row.style.display = 'none'; // Hide the row
+				}
+			}
 		}
+
+		// Add event listeners to filter inputs
+		document.getElementById('registration-date').addEventListener('change', filterTable);
+		document.getElementById('lead-stage').addEventListener('change', filterTable);
+		document.getElementById('lead-owner').addEventListener('change', filterTable);
+		document.getElementById('campaign-source').addEventListener('change', filterTable);
+
+		const sidebar = document.querySelector('.sidebar');
+		const topNav = document.querySelector('.top-nav');
+
+		sidebar.addEventListener('mouseenter', () => {
+			topNav.style.left = '200px'; // Expanded sidebar width
+		});
+
+		sidebar.addEventListener('mouseleave', () => {
+			topNav.style.left = '60px'; // Collapsed sidebar width
+		});
 	</script>
 </body>
 

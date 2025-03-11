@@ -71,7 +71,8 @@ public class Maincontroller {
         e.setInstitution(dto.getInstitution());
         e.setCourse(dto.getCourse());
         e.setRemark(dto.getRemark());
-        e.setRegistrationDate(new Date()); // Set the registration date to the current date
+        e.setRegistrationDate(new Date());
+        e.setLeadStage("Untouched");// Set the registration date to the current date
 
         // Assign a counselor and save the registration
         List<Counselor> counselors = crepo.findByActiveTrue();

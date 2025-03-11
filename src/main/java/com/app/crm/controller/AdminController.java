@@ -1,4 +1,7 @@
 package com.app.crm.controller;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -11,9 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,13 +24,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.app.crm.dto.AdminLoginDto;
 import com.app.crm.dto.CounselorDto;
+import com.app.crm.model.AdminLogin;
 import com.app.crm.model.Counselor;
 import com.app.crm.model.Registration;
 import com.app.crm.service.RegistrationRepository;
+import com.app.crm.service.StudentService;
 import com.app.crm.util.SessionRegistry;
 import com.app.crm.service.CounselorRepository; // Import CounselorRepository
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
@@ -43,47 +48,41 @@ public class AdminController {
     @Autowired
     CounselorRepository crepo; // Autowire CounselorRepository
     
-@GetMapping("/calendar")
-public String showform() {
-	return "admin/calendar";
-}
-@GetMapping("/calendarpro")
-public String showcalenderpro(HttpSession session, HttpServletResponse response, Model model) {
-    try {
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-        if (session.getAttribute("adminid") != null || session.getAttribute("counselorId") != null) {
-            List<Registration> leadlist;
+    @GetMapping("/calpro")
+    public String showLea(HttpSession session, HttpServletResponse response, Model model) {
+        try {
+            response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
 
-            // Fetch the role from the session
-            String role = (String) session.getAttribute("role");
+            System.out.println("Before session check - adminid: " + session.getAttribute("adminid"));
+            System.out.println("Before session check - counselorId: " + session.getAttribute("counselorId"));
+            System.out.println("Before session check - role: " + session.getAttribute("role"));
 
-            // Fetch leads based on the logged-in user's role
-            if ("Employee".equals(role)) {
-                // For Employee, fetch only leads assigned to them
-                Integer counselorId = (Integer) session.getAttribute("counselorId");
-                leadlist = rrepo.findByCounselorId(counselorId); // Fetch leads assigned to this counselor
+            if (session.getAttribute("adminid") != null || session.getAttribute("counselorId") != null) {
+                List<Registration> leadlist;
+
+                String role = (String) session.getAttribute("role");
+
+                if ("Employee".equals(role)) {
+                    Integer counselorId = (Integer) session.getAttribute("counselorId");
+                    leadlist = rrepo.findByCounselorId(counselorId);
+                } else {
+                    leadlist = rrepo.findAll();
+                }
+
+                leadlist.sort((r1, r2) -> r2.getRegistrationDate().compareTo(r1.getRegistrationDate()));
+
+                List<Counselor> counselors = crepo.findByActiveTrue();
+                model.addAttribute("counselors", counselors);
+
+                model.addAttribute("leadlist", leadlist);
+                return "/admin/calpro";
             } else {
-                // For Admin and Manager, fetch all leads
-                leadlist = rrepo.findAll(); // Fetch all leads
+                return "redirect:/adminlogin";
             }
-
-            // Sort the leadlist by registrationDate in descending order
-            leadlist.sort((r1, r2) -> r2.getRegistrationDate().compareTo(r1.getRegistrationDate()));
-
-            // Fetch all active counselors
-            List<Counselor> counselors = crepo.findByActiveTrue();
-            model.addAttribute("counselors", counselors); // Add counselors to the model
-
-            model.addAttribute("leadlist", leadlist);
-            return "/admin/";
-        } else {
+        } catch (Exception ex) {
             return "redirect:/adminlogin";
         }
-    } catch (Exception ex) {
-        return "redirect:/adminlogin";
     }
-}
-
     @GetMapping("/adminhome")
     public String showAdminHome(HttpSession session, HttpServletResponse response, Model model) {
         try {
@@ -100,14 +99,53 @@ public String showcalenderpro(HttpSession session, HttpServletResponse response,
         }
     }
 
+    @GetMapping("/calendarpro")
+    public String showcalendarpro(HttpSession session, HttpServletResponse response, Model model) {
+        try {
+            response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+
+             System.out.println("Session adminid: " + session.getAttribute("adminid"));
+            System.out.println("Session counselorId: " + session.getAttribute("counselorId"));
+            System.out.println("Session role: " + session.getAttribute("role"));
+
+            if (session.getAttribute("adminid") != null || session.getAttribute("counselorId") != null) {
+                List<Registration> leadlist;
+                String role = (String) session.getAttribute("role");
+
+                if ("Employee".equals(role)) {
+                    Integer counselorId = (Integer) session.getAttribute("counselorId");
+                    leadlist = rrepo.findByCounselorId(counselorId);
+                } else {
+                    leadlist = rrepo.findAll();
+                }
+
+                leadlist.sort((r1, r2) -> r2.getRegistrationDate().compareTo(r1.getRegistrationDate()));
+
+                List<Counselor> counselors = crepo.findByActiveTrue();
+                model.addAttribute("counselors", counselors);
+                model.addAttribute("leadlist", leadlist);
+
+                return "/admin/calendarpro";
+            } else {
+                return "redirect:/adminlogin";
+            }
+        } catch (Exception ex) {
+            return "redirect:/adminlogin";
+        }
+    }
+    
     @GetMapping("/lead-details")
     public String showLeadDetails(@RequestParam("id") int leadId, Model model) {
         // Fetch the lead details from the repository using the leadId
         Registration lead = rrepo.findById(leadId)
                 .orElseThrow(() -> new EntityNotFoundException("Lead not found with id: " + leadId));
 
-        // Add the lead details to the model
+        // Fetch all active counselors
+        List<Counselor> counselors = crepo.findByActiveTrue();
+
+        // Add the lead details and counselors to the model
         model.addAttribute("lead", lead);
+        model.addAttribute("counselors", counselors);
 
         // Return the view name (e.g., lead-details.html)
         return "admin/lead-details";
@@ -116,45 +154,52 @@ public String showcalenderpro(HttpSession session, HttpServletResponse response,
 
     @PostMapping("/update-lead-stage")
     @ResponseBody
-    public ResponseEntity<String> updateLeadStage(@RequestBody Map<String, String> data) {
+    public ResponseEntity<Map<String, Boolean>> updateLeadStage(@RequestBody Map<String, String> data) {
         try {
-            // Check if leadId is present
-            if (data.get("leadId") == null) {
-                return ResponseEntity.badRequest().body("Lead ID is required");
-            }
+            // Log the received data
+            System.out.println("Update lead stage endpoint called with data: " + data);
 
+            // Parse the data
             int leadId = Integer.parseInt(data.get("leadId"));
             String leadStage = data.get("leadStage");
-            String notes = data.get("notes");
-            String followupDateStr = data.get("followupDate");
-            String followupEndDateStr = data.get("followupEndDate");
+            String counselorName = data.get("counselorName");
+            String followupDateStr = data.get("followupDate"); // Get followupDate as string
+            String leadRemark = data.get("leadRemark");
+
+            // Log the parsed data
+            System.out.println("Lead ID: " + leadId);
+            System.out.println("Lead Stage: " + leadStage);
+            System.out.println("Counselor Name: " + counselorName);
+            System.out.println("Followup Date: " + followupDateStr);
+            System.out.println("Lead Remark: " + leadRemark);
 
             // Fetch the lead from the database
             Registration lead = rrepo.findById(leadId)
                     .orElseThrow(() -> new EntityNotFoundException("Lead not found with id: " + leadId));
 
-            // Convert String to LocalDate
-            LocalDate followupDate = LocalDate.parse(followupDateStr);
-            LocalDate followupEndDate = LocalDate.parse(followupEndDateStr);
-
-            // Convert LocalDate to Date
-            Date followupDateAsDate = Date.from(followupDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            Date followupEndDateAsDate = Date.from(followupEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
             // Update the lead details
             lead.setLeadStage(leadStage);
-            lead.setLeadRemark(notes); // Assuming 'remark' is used for notes
-            lead.setFollowupDate(followupDateAsDate);
-            lead.setFollowupEndDate(followupEndDateAsDate);
+            lead.setCounselorName(counselorName);
+            lead.setLeadRemark(leadRemark);
+
+            // Parse followupDate from String to LocalDate and then to Date
+            if (followupDateStr != null && !followupDateStr.isEmpty()) {
+                LocalDate followupLocalDate = LocalDate.parse(followupDateStr); // Parse the date
+                Date followupDate = Date.from(followupLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant()); // Convert to Date
+                lead.setFollowupDate(followupDate); // Set the followupDate
+            }
+
+            // Save the updated lead
             rrepo.save(lead);
 
-            return ResponseEntity.ok("Lead stage updated successfully");
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body("Invalid Lead ID");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            // Log success
+            System.out.println("Lead saved successfully: " + lead);
+
+            return ResponseEntity.ok(Map.of("success", true));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+            // Log the error
+            System.out.println("Error updating lead stage: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("success", false));
         }
     }
     
@@ -253,33 +298,10 @@ public String showcalenderpro(HttpSession session, HttpServletResponse response,
     }
 
     @GetMapping("/leadmanager")
-    public String showLead(HttpSession session, HttpServletResponse response, Model model) {
+    public String showLeadManager(HttpSession session, HttpServletResponse response, Model model) {
         try {
             response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-            if (session.getAttribute("adminid") != null || session.getAttribute("counselorId") != null) {
-                List<Registration> leadlist;
-
-                // Fetch the role from the session
-                String role = (String) session.getAttribute("role");
-
-                // Fetch leads based on the logged-in user's role
-                if ("Employee".equals(role)) {
-                    // For Employee, fetch only leads assigned to them
-                    Integer counselorId = (Integer) session.getAttribute("counselorId");
-                    leadlist = rrepo.findByCounselorId(counselorId); // Fetch leads assigned to this counselor
-                } else {
-                    // For Admin and Manager, fetch all leads
-                    leadlist = rrepo.findAll(); // Fetch all leads
-                }
-
-                // Sort the leadlist by registrationDate in descending order
-                leadlist.sort((r1, r2) -> r2.getRegistrationDate().compareTo(r1.getRegistrationDate()));
-
-                // Fetch all active counselors
-                List<Counselor> counselors = crepo.findByActiveTrue();
-                model.addAttribute("counselors", counselors); // Add counselors to the model
-
-                model.addAttribute("leadlist", leadlist);
+            if (session.getAttribute("adminid") != null) {
                 return "/admin/leadmanager";
             } else {
                 return "redirect:/adminlogin";
@@ -288,4 +310,79 @@ public String showcalenderpro(HttpSession session, HttpServletResponse response,
             return "redirect:/adminlogin";
         }
     }
+    @PostMapping("/adminlogin")
+    public String validateAdmin(AdminLoginDto adminLoginDto, RedirectAttributes ra, HttpSession session, HttpServletRequest request, Model model) {
+        System.out.println("validateAdmin - userid: " + adminLoginDto.getUserid());
+        System.out.println("validateAdmin - password: " + adminLoginDto.getPassword());
+        System.out.println("validateAdmin - role: " + adminLoginDto.getRole());
+
+        AdminLogin admin = adrepo.findAdminLoginByuserid(adminLoginDto.getUserid());
+
+        System.out.println("validateAdmin - admin object: " + admin); // Check if admin is null
+
+        if (admin != null) {
+            System.out.println("validateAdmin - admin.getUserid(): " + admin.getUserid());
+            System.out.println("validateAdmin - admin.getPassword(): " + admin.getPassword());
+            System.out.println("validateAdmin - admin.getRole(): " + admin.getRole());
+
+            if (admin.getPassword().equals(adminLoginDto.getPassword())) {
+                System.out.println("validateAdmin - Login successful");
+                session.setAttribute("adminid", admin.getUserid());
+                session.setAttribute("role", admin.getRole());
+
+                System.out.println("validateAdmin - Setting session adminid: " + session.getAttribute("adminid"));
+                System.out.println("validateAdmin - Setting session role: " + session.getAttribute("role"));
+
+                SessionRegistry.addSession(admin.getUserid(), session.getId());
+                return "redirect:/admin/adminhome";
+            } else {
+                System.out.println("validateAdmin - Login failed: Password incorrect");
+                ra.addFlashAttribute("error", "Invalid Credentials");
+                return "redirect:/adminlogin";
+            }
+        } else {
+            System.out.println("validateAdmin - Login failed: User not found");
+            ra.addFlashAttribute("error", "Invalid Credentials");
+            return "redirect:/adminlogin";
+        }
+    }
+    
+   // @GetMapping("/admin/student-info")
+   // public String showStudentInfo(Model model) {
+        // Add any data you need to pass to the template
+        // For example, you might fetch data from your database or services
+        // and add it to the model.
+
+        // Example data (replace with your actual data)
+    	// Example data (replace with your actual logic)
+     //   double malePercentage = 33.3;
+       // double femalePercentage = 66.7;
+      //  int averageAge = 19;
+    	
+    	
+    //    model.addAttribute("malePercentage", malePercentage);
+    //    model.addAttribute("femalePercentage", femalePercentage);
+    //    model.addAttribute("averageAge", averageAge);
+
+
+      //  return "admin/student-info"; // Return the name of the new template
+   // }
+    @Autowired
+    private StudentService studentService;
+
+    @GetMapping("/admin/student-info")
+    public String showStudentInfo(Model model) {
+        // Fetch data from the service or database
+        double malePercentage = 33.3;
+        double femalePercentage = 66.7;
+        int averageAge = 19;
+
+        // Add data to the model
+        model.addAttribute("malePercentage", malePercentage);
+        model.addAttribute("femalePercentage", femalePercentage);
+        model.addAttribute("averageAge", averageAge);
+
+        return "admin/student-info";
+    }
+
 }

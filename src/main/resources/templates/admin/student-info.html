@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Information</title>
+    <link rel="stylesheet" href="/css/style.css"> </head>
+<body>
+	<style>
+	/* Example CSS for student-info.html */
+	 .container {
+	            width: 80%;
+	            margin: 20px auto;
+	        }
+
+	        .charts {
+	            display: flex;
+	            justify-content: space-around;
+	        }
+
+	        .chart {
+	            width: 45%;
+	            border: 1px solid #ccc;
+	            padding: 20px;
+	        }
+
+	        .age-chart, .gender-chart {
+	            height: 200px; /* Set a fixed height or adjust as needed */
+	            border: 1px dashed #ddd; /* Placeholder for chart */
+	            display: flex;
+	            justify-content: center;
+	            align-items: center;
+	        }
+
+	        .insights {
+	            margin-top: 20px;
+	        }
+	    </style>
+
+	    <div class="container">
+	        <h1>Student Quality Index</h1>
+	        <p>We recommend you to read the information tip for better understanding and visualization</p>
+
+	        <div class="charts">
+	            <div class="chart">
+	                <h2>Age Bifurcation</h2>
+	                <div class="age-chart">
+	                    <!-- Canvas for Age Chart -->
+	                    <canvas id="ageChart"></canvas>
+	                </div>
+	            </div>
+
+	            <div class="chart">
+	                <h2>Gender Ratio</h2>
+	                <div class="gender-chart">
+	                    <!-- Canvas for Gender Chart -->
+	                    <canvas id="genderChart"></canvas>
+	                </div>
+	            </div>
+	        </div>
+
+	        <div class="insights">
+	            <h2>Insight</h2>
+	            <p>1. Gender ratio (Male: Female) of your Applicants is <span th:text="${malePercentage}">33.3</span>:<span th:text="${femalePercentage}">66.7</span>.</p>
+	            <p>2. Average age of your Applicants is <span th:text="${averageAge}">19</span> years.</p>
+	        </div>
+	    </div>
+
+	    <!-- Include Chart.js -->
+	    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	    <!-- JavaScript for Chart Initialization -->
+	    <script th:inline="javascript">
+	        // Example data (replace with your actual data)
+	        var ageData = {
+	            labels: ['18-20', '21-23', '24-26'],
+	            datasets: [{
+	                label: 'Age Distribution',
+	                data: [5, 7, 3], // Example data
+	                backgroundColor: ['lightblue', 'lightgreen', 'lightcoral']
+	            }]
+	        };
+
+	        var genderData = {
+	            labels: ['Male', 'Female'],
+	            datasets: [{
+	                label: 'Gender Ratio',
+	                data: [/*[[${malePercentage}]]*/ 33.3, /*[[${femalePercentage}]]*/ 66.7], // Thymeleaf dynamic data
+	                backgroundColor: ['orange', 'skyblue']
+	            }]
+	        };
+
+	        // Create Age Chart
+	        var ageCtx = document.getElementById('ageChart').getContext('2d');
+	        var ageChart = new Chart(ageCtx, {
+	            type: 'bar',
+	            data: ageData
+	        });
+
+	        // Create Gender Chart
+	        var genderCtx = document.getElementById('genderChart').getContext('2d');
+	        var genderChart = new Chart(genderCtx, {
+	            type: 'pie',
+	            data: genderData
+	        });
+	    </script>
+	</body>
+	</html>

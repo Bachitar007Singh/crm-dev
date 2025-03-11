@@ -47,18 +47,6 @@ public class Registration {
 	@Column(length=50, nullable=false)
 	private String remark;
 	
-	@Column(length=50, nullable=false)
-	private String followupstatus;
-	
-	
-	public String getFollowupstatus() {
-		return followupstatus;
-	}
-
-	public void setFollowupstatus(String followupstatus) {
-		this.followupstatus = followupstatus;
-	}
-
 	@Column(length = 50)
     private String leadStage; // Hot, Cold, Untouched, Warm, Closed, Not Reachable
 

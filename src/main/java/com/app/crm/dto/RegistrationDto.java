@@ -14,16 +14,7 @@ public class RegistrationDto {
 	 private String leadStage;
 	    private String counselorName;
 	    private String campaignSource;
-	    private String followupstatus;
-		
-		
-		public String getFollowupstatus() {
-			return followupstatus;
-		}
 
-		public void setFollowupstatus(String followupstatus) {
-			this.followupstatus = followupstatus;
-		}
 	    // Getters and Setters for new fields
 	    public String getLeadStage() {
 	        return leadStage;

@@ -196,6 +196,66 @@
 			bottom: 30px;
 			color: black;
 		}
+
+		/* Top Navigation Bar */
+		.top-nav {
+			position: fixed;
+			top: 0;
+			left: 60px;
+			/* Initial left position (collapsed sidebar width) */
+			right: 0;
+			background-color: white;
+			padding: 10px 20px;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			z-index: 1000;
+			transition: left 0.3s;
+			/* Smooth transition */
+		}
+
+		/* Adjust the left position when sidebar is expanded */
+		.sidebar:hover~.profile-section .top-nav {
+			left: 200px;
+			/* Expanded sidebar width */
+		}
+
+		.top-nav .material-icons {
+			font-size: 24px;
+			margin-left: 20px;
+			cursor: pointer;
+		}
+
+		.profile-dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.profile-dropdown .dropdown-content {
+			display: none;
+			position: absolute;
+			right: 0;
+			background-color: white;
+			min-width: 160px;
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.profile-dropdown .dropdown-content a {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.profile-dropdown .dropdown-content a:hover {
+			background-color: #f1f1f1;
+		}
+
+		.profile-dropdown:hover .dropdown-content {
+			display: block;
+		}
 	</style>
 </head>
 
@@ -227,6 +287,20 @@
 			<span class="material-icons">logout</span>
 			<span class="text">Logout</span>
 		</a>
+	</div>
+
+	<!-- Top Navigation Bar -->
+	<div class="top-nav" id="top-nav">
+		<span class="material-icons">help</span>
+		<span class="material-icons">notifications</span>
+		<div class="profile-dropdown">
+			<span class="material-icons">account_circle</span>
+			<div class="dropdown-content">
+				<a href="#">Profile</a>
+				<a href="#">Settings</a>
+				<a href="#">Logout</a>
+			</div>
+		</div>
 	</div>
 
 	<!-- Main Content -->
@@ -358,6 +432,17 @@
 
 		document.getElementById('searchInput').addEventListener('input', filterTable);
 		document.getElementById('roleFilter').addEventListener('change', filterTable);
+
+		const sidebar = document.querySelector('.sidebar');
+		const topNav = document.querySelector('.top-nav');
+
+		sidebar.addEventListener('mouseenter', () => {
+			topNav.style.left = '200px'; // Expanded sidebar width
+		});
+
+		sidebar.addEventListener('mouseleave', () => {
+			topNav.style.left = '60px'; // Collapsed sidebar width
+		});
 	</script>
 </body>
 
