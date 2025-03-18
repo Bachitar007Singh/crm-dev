@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Admin Dashboard</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		/* Sidebar Styles */
+		body {
+			margin: 0;
+			font-family: Arial, sans-serif;
+			display: flex;
+			background-color: #f5f5f5;
+		}
+
+		.sidebar {
+			height: 100vh;
+			width: 60px;
+			background-color: rgb(25, 45, 74);
+			color: white;
+			position: fixed;
+			top: 0;
+			left: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			transition: width 0.3s;
+			overflow: hidden;
+		}
+
+		.sidebar:hover {
+			width: 200px;
+		}
+
+		.sidebar a {
+			text-decoration: none;
+			color: white;
+			padding: 15px 0;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-bottom: 1px solid #444;
+			transition: background-color 0.3s, padding-left 0.3s;
+		}
+
+		.sidebar a:hover {
+			background-color: #575757;
+		}
+
+		.sidebar .material-icons {
+			font-size: 24px;
+			transition: margin-right 0.3s;
+		}
+
+		.sidebar a span.text {
+			display: none;
+			white-space: nowrap;
+			margin-left: 10px;
+		}
+
+		.sidebar:hover a span.text {
+			display: inline;
+		}
+
+		.sidebar:hover a {
+			justify-content: flex-start;
+			padding-left: 20px;
+		}
+
+		.sidebar:hover~.profile-section {
+			margin-left: 200px;
+		}
+
+		/* Dropdown Menu Styles */
+		.dropdown {
+			position: relative;
+			width: 100%;
+		}
+
+		.dropdown-menu {
+			display: none;
+			position: relative;
+			flex-direction: column;
+			background-color: #444;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+			z-index: 1001;
+		}
+
+		.dropdown-menu a {
+			text-decoration: none;
+			color: white;
+			padding: 10px 20px;
+			display: block;
+			transition: background-color 0.3s;
+		}
+
+		.dropdown-menu a:hover {
+			background-color: #575757;
+		}
+
+		.dropdown:hover .dropdown-menu {
+			display: flex;
+		}
+
+		.sidebar a,
+		.dropdown>.menu-item {
+			text-decoration: none;
+			color: white;
+			padding: 15px 0;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-bottom: 1px solid #444;
+			transition: background-color 0.3s, padding-left 0.3s;
+			position: relative;
+		}
+
+		.sidebar a:hover,
+		.dropdown>.menu-item:hover {
+			background-color: #575757;
+		}
+
+		.sidebar a span.text,
+		.dropdown>.menu-item span.text {
+			display: none;
+			white-space: nowrap;
+			margin-left: 10px;
+		}
+
+		.sidebar:hover a span.text,
+		.sidebar:hover .dropdown>.menu-item span.text {
+			display: inline;
+		}
+
+		.sidebar:hover a,
+		.sidebar:hover .dropdown>.menu-item {
+			justify-content: flex-start;
+			padding-left: 20px;
+		}
+
+		/* Main Content Styles */
+		.profile-section {
+			margin-left: 80px;
+			padding: 20px;
+			width: 100%;
+		}
+
+		.filter-container {
+			background-color: white;
+			border-radius: 8px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+		}
+
+		.filter-container .material-icons {
+			color: #333;
+		}
+
+		.filter-container .form-label {
+			font-weight: bold;
+		}
+
+		.filter-container .input-group-text {
+			background-color: #f0f0f0;
+			border: none;
+		}
+
+		.filter-container .form-control,
+		.filter-container .form-select {
+			border-radius: 4px;
+		}
+
+		.filter-container .input-group {
+			align-items: center;
+		}
+
+		/* Custom Styling for Filter Section */
+		.custom-fieldset {
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			position: relative;
+			padding: 15px;
+			margin-bottom: 15px;
+		}
+
+		.custom-legend {
+			position: absolute;
+			top: -12px;
+			left: 10px;
+			background-color: #f5f5f5;
+			padding: 0 8px;
+			font-weight: bold;
+			font-size: 0.9rem;
+		}
+
+		.form-select,
+		.form-control {
+			border: none;
+			border-bottom: 1px solid #ccc;
+			border-radius: 0;
+			outline: none;
+			box-shadow: none;
+			background-color: transparent;
+		}
+
+		.form-select:focus,
+		.form-control:focus {
+			border-bottom: 2px solid #007bff;
+		}
+
+		.col-md-3 {
+			padding: 0 10px;
+		}
+	</style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="/dashboard" class="menu-item">
+            <span class="material-icons">dashboard</span>
+            <span class="text">Dashboard</span>
+        </a>
+
+        <!-- Show Counselor option only for Admin and Manager -->
+        <a th:if="${userRole == 'Admin' or userRole == 'Manager'}" href="/admin/counselor">
+            <span class="material-icons">person</span>
+            <span class="text">Counselor</span>
+        </a>
+
+        <a href="/admin/leadmanager">
+            <span class="material-icons">supervisor_account</span>
+            <span class="text">Lead Manager</span>
+        </a>
+
+        <a href="/admin/calendarpro">
+            <span class="material-icons">calendar_month</span>
+            <span class="text">Calendar Pro</span>
+        </a>
+
+        <a href="/admin/logout">
+            <span class="material-icons">logout</span>
+            <span class="text">Logout</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-section container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mt-4">Calendar Pro</h2>
+                <!-- Filter Container -->
+                <div class="mt-4 p-3 bg-white rounded shadow">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="material-icons me-2">filter_alt</span>
+                        <h5 class="m-0">Filter Events</h5>
+                    </div>
+                    <div class="row g-3">
+                        <!-- Events Dropdown -->
+                        <div class="col-md-3">
+                            <div class="custom-fieldset">
+                                <div class="custom-legend">Events</div>
+                                <select class="form-select" id="events">
+                                    <option value="" selected>Select</option>
+                                    <option value="Event1">Event 1</option>
+                                    <option value="Event2">Event 2</option>
+                                    <option value="Event3">Event 3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Status Dropdown -->
+                        <div class="col-md-3">
+                            <div class="custom-fieldset">
+                                <div class="custom-legend">Status</div>
+                                <select class="form-select" id="status">
+                                    <option value="" selected>Select</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Date Field -->
+                        <div class="col-md-3">
+                            <div class="custom-fieldset">
+                                <div class="custom-legend">Date</div>
+                                <input type="date" class="form-control" id="date">
+                            </div>
+                        </div>
+
+                        <!-- Next Days Dropdown -->
+                        <div class="col-md-3">
+                            <div class="custom-fieldset">
+                                <div class="custom-legend">Next Days</div>
+                                <select class="form-select" id="next-days">
+                                    <option value="" selected>Select</option>
+                                    <option value="7">7 Days</option>
+                                    <option value="10">10 Days</option>
+                                    <option value="15">15 Days</option>
+                                    <option value="30">30 Days</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        
+                    </div>
+                </div>
+
+                <!-- Calendar Pro Table -->
+                <div class="table-responsive mt-4">
+                    <table class="table table-striped table-bordered" id="calendar-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Subject</th>
+                                <th>Start Date - End Date</th>
+                                <th>Organiser</th>
+                                <th>Owner</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr >
+                                <td>Event 1</td>
+                                <td>Subject 1</td>
+                                <td>2024-01-01 - 2024-01-05</td>
+                                <td>Organiser 1</td>
+                                <td>Owner 1</td>
+                                <td>2024-01-05</td>
+                                <td>Pending</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function applyAdvanceFilter() {
+            const events = document.getElementById('events').value;
+            const status = document.getElementById('status').value;
+            const date = document.getElementById('date').value;
+            const nextDays = document.getElementById('next-days').value;
+
+            const table = document.getElementById('calendar-table');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (let row of rows) {
+                const rowEvents = row.cells[0].textContent;
+                const rowStatus = row.cells[6].textContent;
+                const rowStartDate = row.cells[2].textContent.split(' - ')[0];
+                const rowDueDate = row.cells[5].textContent;
+
+                const eventsMatch = events === '' || rowEvents === events;
+                const statusMatch = status === '' || rowStatus === status;
+                const dateMatch = date === '' || rowStartDate === date;
+                const nextDaysMatch = nextDays === '' || isWithinNextDays(rowDueDate, nextDays);
+
+                if (eventsMatch && statusMatch && dateMatch && nextDaysMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+
+        function isWithinNextDays(dueDate, nextDays) {
+            const dueDateObj = new Date(dueDate);
+            const today = new Date();
+            const diffTime = dueDateObj - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays <= parseInt(nextDays);
+        }
+    </script>
+</body>
+
+</html>
