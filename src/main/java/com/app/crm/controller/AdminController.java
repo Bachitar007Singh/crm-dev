@@ -1,9 +1,14 @@
 package com.app.crm.controller;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,11 +29,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.app.crm.dto.AdminLoginDto;
 import com.app.crm.dto.CounselorDto;
+import com.app.crm.model.AdminLogin;
 import com.app.crm.model.Counselor;
 import com.app.crm.model.Registration;
 import com.app.crm.service.RegistrationRepository;
 import com.app.crm.util.SessionRegistry;
+import com.app.crm.service.AdminLoginRepository;
 import com.app.crm.service.CounselorRepository; // Import CounselorRepository
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,7 +51,8 @@ public class AdminController {
 
     @Autowired
     CounselorRepository crepo; // Autowire CounselorRepository
-    
+    @Autowired
+    AdminLoginRepository adminLoginRepository; // Ensure this repository is autowired
     
 
     @GetMapping("/adminhome")
@@ -61,7 +70,21 @@ public class AdminController {
             return "redirect:/adminlogin";
         }
     }
-
+    @PostMapping("/login")
+    public String login(@ModelAttribute AdminLoginDto dto, HttpSession session) {
+        AdminLogin admin = adminLoginRepository.findByUserid(dto.getUserid());
+        if (admin != null && admin.getPassword().equals(dto.getPassword())) {
+            session.setAttribute("adminid", admin.getUserid());
+            session.setAttribute("role", admin.getRole());
+            // If the user is a counselor, set counselorId
+            if ("Employee".equals(admin.getRole())) {
+                session.setAttribute("counselorId", admin.getId()); // Assuming counselorId is stored in the admin entity
+            }
+            return "redirect:/admin/adminhome";
+        } else {
+            return "redirect:/adminlogin";
+        }
+    }
     @GetMapping("/calendarpro")
     public String showcalendarpro(HttpSession session, HttpServletResponse response, Model model) {
         try {
@@ -73,17 +96,18 @@ public class AdminController {
             System.out.println("Role: " + session.getAttribute("role"));
 
             if (session.getAttribute("adminid") != null || session.getAttribute("counselorId") != null) {
-                List<Registration> leadlist;
                 String role = (String) session.getAttribute("role");
+                if (role == null || (!role.equals("Admin") && !role.equals("Manager") && !role.equals("Employee"))) {
+                    System.out.println("Invalid role: Redirecting to login page");
+                    return "redirect:/adminlogin";
+                }
 
-                // Fetch leads based on the logged-in user's role
+                List<Registration> leadlist;
                 if ("Employee".equals(role)) {
-                    // For Employee, fetch only leads assigned to them
                     Integer counselorId = (Integer) session.getAttribute("counselorId");
-                    leadlist = rrepo.findByCounselorId(counselorId); // Fetch leads assigned to this counselor
+                    leadlist = rrepo.findByCounselorId(counselorId);
                 } else {
-                    // For Admin and Manager, fetch all leads
-                    leadlist = rrepo.findAll(); // Fetch all leads
+                    leadlist = rrepo.findAll();
                 }
 
                 // Filter out null registration dates
@@ -103,17 +127,41 @@ public class AdminController {
 
                 // Fetch all active counselors
                 List<Counselor> counselors = crepo.findByActiveTrue();
-                model.addAttribute("counselors", counselors); // Add counselors to the model
-
+                model.addAttribute("counselors", counselors);
                 model.addAttribute("leadlist", leadlist);
                 return "/admin/calendarpro";
             } else {
-                return "redirect:/adminlogin"; // Session invalid
+                System.out.println("Session validation failed: Redirecting to login page");
+                return "redirect:/adminlogin";
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             return "redirect:/adminlogin";
         }
+    }
+    // Helper method to format the due date and calculate time remaining
+    private String formatDueDate(Date followupDate, String followupTime) {
+        if (followupDate == null || followupTime == null) {
+            return "N/A";
+        }
+
+        // Parse followup date and time
+        LocalDateTime followupDateTime = LocalDateTime.of(
+            followupDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+            LocalTime.parse(followupTime, DateTimeFormatter.ofPattern("hh:mm a"))
+        );
+
+        // Get current date and time
+        LocalDateTime now = LocalDateTime.now();
+
+        // Calculate time difference
+        Duration duration = Duration.between(now, followupDateTime);
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+
+        // Format the result
+        return followupDateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm a")) +
+               " (" + (hours > 0 ? hours + "hr " : "") + minutes + "min remaining)";
     }
     
     @GetMapping("/lead-details")
@@ -283,51 +331,35 @@ public class AdminController {
     public String showLead(HttpSession session, HttpServletResponse response, Model model) {
         try {
             response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-
-            // Debug logs
-            System.out.println("Admin ID: " + session.getAttribute("adminid"));
-            System.out.println("Counselor ID: " + session.getAttribute("counselorId"));
-            System.out.println("Role: " + session.getAttribute("role"));
-
             if (session.getAttribute("adminid") != null || session.getAttribute("counselorId") != null) {
                 List<Registration> leadlist;
+
+                // Fetch the role from the session
                 String role = (String) session.getAttribute("role");
 
-                // Fetch leads based on role
+                // Fetch leads based on the logged-in user's role
                 if ("Employee".equals(role)) {
+                    // For Employee, fetch only leads assigned to them
                     Integer counselorId = (Integer) session.getAttribute("counselorId");
-                    leadlist = rrepo.findByCounselorId(counselorId);
-                } else if ("Admin".equals(role) || "Manager".equals(role)) {
-                    leadlist = rrepo.findAll();
+                    leadlist = rrepo.findByCounselorId(counselorId); // Fetch leads assigned to this counselor
                 } else {
-                    return "redirect:/adminlogin"; // Invalid role
+                    // For Admin and Manager, fetch all leads
+                    leadlist = rrepo.findAll(); // Fetch all leads
                 }
 
-                // Filter out null registration dates
-                leadlist = leadlist.stream()
-                    .filter(registration -> registration.getRegistrationDate() != null)
-                    .collect(Collectors.toList());
+                // Sort the leadlist by registrationDate in descending order
+                leadlist.sort((r1, r2) -> r2.getRegistrationDate().compareTo(r1.getRegistrationDate()));
 
-                // Sort leads by registrationDate in descending order
-                leadlist.sort((r1, r2) -> {
-                    Date date1 = r1.getRegistrationDate();
-                    Date date2 = r2.getRegistrationDate();
-                    if (date1 == null && date2 == null) return 0;
-                    if (date1 == null) return -1; // Treat null as earlier
-                    if (date2 == null) return 1;  // Treat null as earlier
-                    return date2.compareTo(date1); // Sort in descending order
-                });
-
-                // Fetch active counselors
+                // Fetch all active counselors
                 List<Counselor> counselors = crepo.findByActiveTrue();
-                model.addAttribute("counselors", counselors);
+                model.addAttribute("counselors", counselors); // Add counselors to the model
+
                 model.addAttribute("leadlist", leadlist);
                 return "/admin/leadmanager";
             } else {
-                return "redirect:/adminlogin"; // Session invalid
+                return "redirect:/adminlogin";
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
             return "redirect:/adminlogin";
         }
     }

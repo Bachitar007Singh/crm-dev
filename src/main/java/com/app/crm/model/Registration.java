@@ -106,7 +106,17 @@ public class Registration {
 	        this.leadRemark = leadRemark;
 	    }
 
-	    
+	    @Column(name = "followup_time")
+	    private String followupTime; // Add this field for follow-up time (e.g., "11:00 AM")
+
+	    // Getters and Setters
+	    public String getFollowupTime() {
+	        return followupTime;
+	    }
+
+	    public void setFollowupTime(String followupTime) {
+	        this.followupTime = followupTime;
+	    } 
     
 
 	public Date getFollowupDate() {

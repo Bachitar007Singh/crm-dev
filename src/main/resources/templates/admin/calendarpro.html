@@ -19,7 +19,7 @@
 		.sidebar {
 			height: 100vh;
 			width: 60px;
-			background-color: rgb(25, 45, 74);
+			background-color: #333;
 			color: white;
 			position: fixed;
 			top: 0;
@@ -330,13 +330,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr >
-                                <td>Event 1</td>
-                                <td>Subject 1</td>
+                            <tr th:each="row : ${calendarData}">
+                                <td th:text="${row.name}"></td>
+                                <td th:text="${row.subject}"></td>
                                 <td>2024-01-01 - 2024-01-05</td>
-                                <td>Organiser 1</td>
-                                <td>Owner 1</td>
-                                <td>2024-01-05</td>
+                                <td th:text="${row.organiser}"></td>
+                                <td th:text="${row.owner}"></td>
+                                <td th:text="${row.dueDate}"></td>
                                 <td>Pending</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary">Edit</button>
