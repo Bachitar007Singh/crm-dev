@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
 	<meta charset="UTF-8">
@@ -8,258 +8,481 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 	<style>
-		/* Sidebar Styles */
+		
+		/* --- Navbar Styles --- */
 		body {
-			margin: 0;
-			font-family: Arial, sans-serif;
-			display: flex;
-			background-color: #f5f5f5;
-		}
+			/* --- Navbar Styles --- */
+		
+			    font-family: sans-serif;
+			    margin: 0;
+			    padding: 0;
+			    display: flex;
+			    background-color: #f0f8ff; /* Light blue background */
+			}
 
-		.sidebar {
-			height: 100vh;
-			width: 60px;
-			background-color: #333;
-			color: white;
-			position: fixed;
-			top: 0;
-			left: 0;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			transition: width 0.3s;
-			overflow: hidden;
-		}
+			.navbar {
+			    display: flex;
+			    justify-content: flex-end;
+			    align-items: center;
+			    background-color: #ffffff;/* white  navbar background */
+			    padding: 10px 20px;
+			    width: 100%;
+			    position: fixed;
+			    top: 0;
+			    z-index: 1000;
+			    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+			}
 
-		.sidebar:hover {
-			width: 200px;
-		}
+			.nav-right {
+			    display: flex;
+			    align-items: center;
+			}
 
-		.sidebar a {
-			text-decoration: none;
-			color: white;
-			padding: 15px 0;
-			width: 100%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			border-bottom: 1px solid #444;
-			transition: background-color 0.3s, padding-left 0.3s;
-		}
+			.notifications {
+			    position: relative;
+			    margin-right: 20px;
+			}
 
-		.sidebar a:hover {
-			background-color: #575757;
-		}
+			.notification-icon {
+			    font-size: 20px;
+			    cursor: pointer;
+			    color: #555; /* Darker icon color */
+			}
 
-		.sidebar .material-icons {
-			font-size: 24px;
-			transition: margin-right 0.3s;
-		}
+			.notification-dropdown {
+			    display: none;
+			    position: absolute;
+			    top: 100%;
+			    right: 0;
+			    background-color: white;
+			    border: 1px solid #ccc;
+			    border-radius: 5px;
+			    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+			    width: 300px;
+			    padding: 10px;
+			    z-index: 1000;
+			}
 
-		.sidebar a span.text {
-			display: none;
-			white-space: nowrap;
-			margin-left: 10px;
-		}
+			.notification-dropdown.show {
+			    display: block;
+			}
 
-		.sidebar:hover a span.text {
-			display: inline;
-		}
+			.notification-item {
+			    display: flex;
+			    align-items: center;
+			    padding: 8px 0;
+			    border-bottom: 1px solid #eee;
+			}
 
-		.sidebar:hover a {
-			justify-content: flex-start;
-			padding-left: 20px;
-		}
+			.notification-item:last-child {
+			    border-bottom: none;
+			}
 
-		.sidebar:hover~.profile-section {
-			margin-left: 200px;
-		}
+			.notification-item .icon {
+			    margin-right: 10px;
+			    font-size: 18px;
+			}
 
-		/* Main Content Styles */
-		.profile-section {
-			margin-left: 80px;
-			padding: 20px;
-			width: 100%;
-		}
+			.notification-item.success .icon {
+			    color: green;
+			}
 
-		.filter-container {
-			background-color: white;
-			border-radius: 8px;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			padding: 20px;
-		}
+			.notification-item.failed .icon {
+			    color: red;
+			}
 
-		.filter-container .material-icons {
-			color: #333;
-		}
+			.notification-item .status {
+			    font-weight: bold;
+			    margin-left: auto;
+			}
 
-		.filter-container .form-label {
-			font-weight: bold;
-		}
+			.notification-item.success .status {
+			    color: green;
+			}
 
-		.filter-container .input-group-text {
-			background-color: #f0f0f0;
-			border: none;
-		}
+			.notification-item.failed .status {
+			    color: red;
+			}
 
-		.filter-container .form-control,
-		.filter-container .form-select {
-			border-radius: 4px;
-		}
+			.show-all {
+			    text-align: center;
+			    padding-top: 10px;
+			    cursor: pointer;
+			    color: #007bff; /* Primary color */
+			}
 
-		.filter-container .input-group {
-			align-items: center;
-		}
+			.profile {
+			    position: relative;
+			    display: flex;
+			    align-items: center;
+			    cursor: pointer;
+			}
 
-		/* Custom Styling for Filter Section */
-		.custom-fieldset {
-			border: 1px solid #ccc;
-			border-radius: 4px;
-			position: relative;
-			padding: 15px;
-			margin-bottom: 15px;
-		}
+			.profile-img {
+			    width: 40px;
+			    height: 40px;
+			    border-radius: 50%;
+			    margin-right: 10px;
+			}
 
-		.custom-legend {
-			position: absolute;
-			top: -12px;
-			left: 10px;
-			background-color: #f5f5f5;
-			padding: 0 8px;
-			font-weight: bold;
-			font-size: 0.9rem;
-		}
+			.profile-dropdown {
+			    display: none;
+			    position: absolute;
+			    top: 100%;
+			    right: 0;
+			    background-color: white;
+			    border: 1px solid #ccc;
+			    border-radius: 5px;
+			    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+			    width: 250px;
+			    padding: 10px;
+			    z-index: 1000;
+			}
 
-		.form-select,
-		.form-control {
-			border: none;
-			border-bottom: 1px solid #ccc;
-			border-radius: 0;
-			outline: none;
-			box-shadow: none;
-			background-color: transparent;
-		}
+			.profile-dropdown.show {
+			    display: block;
+			}
 
-		.form-select:focus,
-		.form-control:focus {
-			border-bottom: 2px solid #007bff;
-		}
+			.profile-info {
+			    padding-bottom: 10px;
+			    border-bottom: 1px solid #eee;
+			    margin-bottom: 10px;
+			}
 
-		.col-md-3 {
-			padding: 0 10px;
-		}
+			.profile-detail-label {
+			    font-weight: bold;
+			    margin-right: 5px;
+			}
 
-		/* Top Navigation Bar */
-		.top-nav {
-			position: fixed;
-			top: 0;
-			left: 60px;
-			/* Initial left position (collapsed sidebar width) */
-			right: 0;
-			background-color: white;
-			padding: 10px 20px;
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-			z-index: 1000;
-			transition: left 0.3s;
-			/* Smooth transition */
-		}
+			.profile-dropdown a {
+			    display: block;
+			    padding: 8px 10px;
+			    text-decoration: none;
+			    color: #333;
+			}
 
-		/* Adjust the left position when sidebar is expanded */
-		.sidebar:hover~.profile-section .top-nav {
-			left: 200px;
-			/* Expanded sidebar width */
-		}
+			.profile-dropdown a:hover {
+			    background-color: #f0f0f0;
+			}
 
-		.top-nav .material-icons {
-			font-size: 24px;
-			margin-left: 20px;
-			cursor: pointer;
-		}
+			.sign-out-btn {
+			    color: red;
+			}
 
-		.profile-dropdown {
-			position: relative;
-			display: inline-block;
-		}
+			/* --- Sidebar Styles --- */
+						.sidebar {
+						    height: 100vh;
+						    width: 60px;
+						    background-color: #2c3e50; /* lighter sidebar color */
+						    color: #ffffff; /* White text color */
+						    position: fixed;
+						    top: 60px;
+						    left: 0;
+						    display: flex;
+						    flex-direction: column;
+						    align-items: center;
+						    transition: width 0.3s;
+						    overflow: hidden;
+						    padding-top: 10px;
+						}
 
-		.profile-dropdown .dropdown-content {
-			display: none;
-			position: absolute;
-			right: 0;
-			background-color: white;
-			min-width: 160px;
-			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-			z-index: 1;
-		}
+						.sidebar:hover {
+						    width: 200px;
+						}
 
-		.profile-dropdown .dropdown-content a {
-			color: black;
-			padding: 12px 16px;
-			text-decoration: none;
-			display: block;
-		}
+						.sidebar a {
+						    text-decoration: none;
+						    color: #ffffff; /* White text color */
+						    padding: 15px 0;
+						    width: 100%;
+						    display: flex;
+						    align-items: center;
+						    justify-content: center;
+						    border-bottom: 1px solid  #34495e; /* Slightly lighter line color */
+						    transition: background-color 0.3s;
+						    padding-left: 0.3s;
+						}
 
-		.profile-dropdown .dropdown-content a:hover {
-			background-color: #f1f1f1;
-		}
+						.sidebar a:hover {
+						    background-color:  #34495e;/* Hover color */
+						}
 
-		.profile-dropdown:hover .dropdown-content {
-			display: block;
-		}
-	</style>
+						.sidebar .material-icons {
+						    font-size: 24px;
+						    transition: margin-right 0.3s;
+						    color: #ffffff; /* White icon color */
+						}
+
+						.sidebar a span.text {
+						    display: none;
+						    white-space: nowrap;
+						    margin-left: 10px;
+						}
+
+						.sidebar:hover a span.text {
+						    display: inline;
+						}
+
+						.sidebar:hover a {
+						    justify-content: flex-start;
+						    padding-left: 20px;
+						}
+
+						/* --- Main Content Styles --- */
+						.profile-section {
+						    margin-left: 60px;
+						    padding: 20px;
+						    width: 100%;
+						    transition: margin-left 0.3s;
+						    margin-top: 60px;
+						}
+
+						.sidebar:hover~.profile-section {
+						    margin-left: 200px;
+						}
+
+						.main-header {
+						    margin-bottom: 20px;
+						    margin-top: 20px;
+						}
+
+						.main-header h2 {
+						    margin: 0;
+						    color: #333;
+						}
+
+						.dashboard-box,
+						.funnel-box {
+						    background-color: white;
+						    padding: 20px;
+						    border-radius: 5px;
+						    box-shadow: 0 2px 4px #333;
+						    margin-bottom: 1px;
+						}
+
+						.hero {
+						    background-color: white;
+						    padding: 20px;
+						    border-radius: 5px;
+						    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+						    margin-bottom: 1px;
+						}
+
+						.stats-box,
+						.funnel-box-bottom {
+						    background-color: white;
+						    padding: 20px;
+						    border-radius: 5px;
+						    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+						    margin-bottom: 30px;
+						}
+
+						.lead-funnel {
+						    width: 50%;
+						    background-color: white;
+						    padding: 20px;
+						    border-radius: 5px;
+						    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+						    margin-bottom: 30px;
+						}
+
+						.dashboard-box h3,
+						.stats-box h3 {
+						    margin: 0 0 20px 0;
+						    color: #333;
+						}
+
+						.date-range {
+						    margin-top: 10px;
+						    font-size: 14px;
+						}
+
+						.date-range input {
+						    padding: 5px;
+						    font-size: 14px;
+						}
+
+						.stats-container {
+						    display: flex;
+						    justify-content: space-between;
+						    align-items: center;
+						    gap: 20px;
+						}
+
+						.stats-item {
+						    text-align: center;
+						    font-size: 16px;
+						    font-weight: bold;
+						    color: #555;
+						}
+
+						.stats-item span {
+						    display: block;
+						    color: #333;
+						    font-weight: normal;
+						    margin-top: 5px;
+						}
+
+						/* Dropdown Menu Styles */
+						.dropdown {
+						    position: relative;
+						    width: 100%;
+						}
+
+						.dropdown-menu {
+						    display: none;
+						    position: relative;
+						    flex-direction: column;
+						    background-color: #2c3e50;  /* lighter dropdown background */
+						    box-shadow: 0 4px 6px  rgba(0, 0, 0, 0.3);
+						    z-index: 1001;/*rgba(0, 0, 0, 0.3);*/
+						}
+
+						.dropdown-menu a {
+						    text-decoration: none;
+						    color: #ffffff;
+						    padding: 10px 20px;
+						    display: block;
+						    transition: background-color 0.3s;
+						}
+
+						.dropdown-menu a:hover {
+						    background-color: #3c556f;/*rgb(45, 45, 45); /* Slightly lighter hover */
+						}
+
+						.dropdown:hover .dropdown-menu {
+						    display: flex;
+						}
+
+						.sidebar a,
+						.dropdown>.menu-item {
+						    text-decoration: none;
+						    color: #ffffff;
+						    padding: 15px 0;
+						    width: 100%;
+						    display: flex;
+						}
+		 </style>
+
 </head>
 
 <body>
+	<nav class="navbar">
+	        <div class="nav-right">
+	            <div class="notifications">
+	                <i class="fas fa-bell notification-icon"></i>
+	                <div class="notification-dropdown">
+	                    <div class="notification-item success">
+	                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+	                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+	                    </div>
+	                    <div class="notification-item failed">
+	                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+	                        <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
+	                    </div>
+	                    <div class="notification-item success">
+	                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+	                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+	                    </div>
+	                    <div class="notification-item failed">
+	                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+	                        <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
+	                    </div>
+	                    <div class="notification-item success">
+	                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+	                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+	                    </div>
+	                    <div class="show-all">Show All Activities</div>
+	                </div>
+	            </div>
+	            <div class="profile">
+	                <img src="profile-placeholder.jpg" alt="Profile" class="profile-img">
+	                <span class="profile-name">John Alex</span>
+	                <div class="profile-dropdown">
+	                    <div class="profile-info">
+	                        <span class="profile-detail-label">Name:</span> John Alex<br>
+	                        <span class="profile-detail-label">Mobile:</span> 123-456-7890<br>
+	                        <span class="profile-detail-label">Email:</span> john.alex@example.com<br>
+	                        <span class="profile-detail-label">Designation:</span> Manager<br>
+	                        <span class="profile-detail-label">Department:</span> Sales
+	                    </div>
+	                    <a href="#">Settings</a>
+	                    <a href="#" class="sign-out-btn">Sign Out</a>
+	                </div>
+	            </div>
+	        </div>
+	    </nav>
+	
 	<!-- Sidebar -->
 	<div class="sidebar">
-		<a href="/dashboard" class="menu-item">
-			<span class="material-icons">dashboard</span>
-			<span class="text">Dashboard</span>
+		<div class="dropdown">
+			<a href="/admin/adminhome" class="menu-item">
+				<span class="material-icons">dashboard</span>
+				<span class="text">Dashboard</span>
+			</a>
+			<div class="dropdown-menu">
+				<a href="/admin/adminhome">Admin Dashboard</a>
+				<a href="/user_dashboard">User Dashboard</a>
+				<a href="/admin/Dashboard/Student_QI">Student Quality Index</a>
+			</div>
+		</div>
+		<div class="dropdown">
+			<a href="leadmanager" class="menu-item">
+				<span class="material-icons">supervisor_account</span>
+				<span class="text">Lead Manager</span>
+			</a>
+			<div class="dropdown-menu">
+				<a href="/admin/adminhome">Manage Leads</a>
+				<a href="/user-dashboard">Offline Upload Logs</a>
+			</div>
+		</div>
+		<a href="formdesk">
+			<span class="material-icons">description</span>
+			<span class="text">Formdesk</span>
 		</a>
-
-		<!-- Show Counselor option only for Admin and Manager -->
-		<a th:if="${userRole == 'Admin' or userRole == 'Manager'}" href="/admin/counselor">
-			<span class="material-icons">person</span>
-			<span class="text">Counselor</span>
+		<a href="opportunity">
+			<span class="material-icons">assignment</span>
+			<span class="text">Opportunity</span>
 		</a>
-
-		<a href="/admin/leadmanager">
-			<span class="material-icons">supervisor_account</span>
-			<span class="text">Lead Manager</span>
+		<a href="applicationmanager">
+			<span class="material-icons">folder</span>
+			<span class="text">Application Manager</span>
 		</a>
-
-		<a href="/admin/calendarpro">
-			<span class="material-icons">calendar_month</span>
-			<span class="text">Calendar pro</span>
+		<a href="marketing">
+			<span class="material-icons">campaign</span>
+			<span class="text">Marketing</span>
 		</a>
-
-		<a href="/admin/logout">
+		<a href="compeignmanager">
+			<span class="material-icons">send</span>
+			<span class="text">Campaign Manager</span>
+		</a>
+		<a href="querymanager">
+			<span class="material-icons">help</span>
+			<span class="text">Query Manager</span>
+		</a>
+		<a href="paymentmanager">
+			<span class="material-icons">payment</span>
+			<span class="text">Payment Manager</span>
+		</a>
+		<a href="reportanalytics">
+			<span class="material-icons">bar_chart</span>
+			<span class="text">Reports & Analytics</span>
+		</a>
+		<a href="templatemanager">
+			<span class="material-icons">widgets</span>
+			<span class="text">Template Manager</span>
+		</a>
+		<a href="logout">
 			<span class="material-icons">logout</span>
 			<span class="text">Logout</span>
 		</a>
-	</div>
-
-	<!-- Top Navigation Bar -->
-	<div class="top-nav" id="top-nav">
-		<span class="material-icons">help</span>
-		<span class="material-icons">notifications</span>
-		<div class="profile-dropdown">
-			<span class="material-icons">account_circle</span>
-			<div class="dropdown-content">
-				<a href="#">Profile</a>
-				<a href="#">Settings</a>
-				<a href="#">Logout</a>
-			</div>
-		</div>
 	</div>
 
 	<!-- Main Content -->
 	<div class="profile-section container-fluid">
 		<div class="row">
 			<div class="col-12">
-				<h2 class="mt-4">Lead Managers</h2>
+				<h2 class="mt-4">Lead Manager</h2>
 				<!-- Filter Container -->
 				<div class="mt-4 p-3 bg-white rounded shadow">
 					<div class="d-flex align-items-center mb-3">
@@ -281,13 +504,9 @@
 								<div class="custom-legend">Lead Stage</div>
 								<select class="form-select" id="lead-stage">
 									<option value="" selected>Select</option>
-									<option value="Hot">Hot</option>
-									<option value="Cold">Cold</option>
-									<option value="Warm">Warm</option>
-									<option value="Untouched">Untouched</option>
-									<option value="Submitted">Submitted</option>
-									<option value="Closed">Closed</option>
-									<option value="Form Sold">Form Sold</option>
+									<option value="new">New</option>
+									<option value="contacted">Contacted</option>
+									<option value="qualified">Qualified</option>
 								</select>
 							</div>
 						</div>
@@ -296,11 +515,11 @@
 						<div class="col-md-3">
 							<div class="custom-fieldset">
 								<div class="custom-legend">Lead Owner/Teams</div>
-								<select id="lead-owner" class="form-control">
-									<option value="">Select Owner</option>
-									<option th:each="counselor : ${counselors}" th:value="${counselor.name}"
-										th:text="${counselor.name}">
-									</option>
+								<select class="form-select" id="lead-owner">
+									<option value="" selected>Select</option>
+									<option value="team1">Team 1</option>
+									<option value="team2">Team 2</option>
+									<option value="team3">Team 3</option>
 								</select>
 							</div>
 						</div>
@@ -318,44 +537,31 @@
 							</div>
 						</div>
 					</div>
+
 				</div>
 				<!-- Lead Table -->
 				<div class="table-responsive mt-4">
-					<table class="table table-striped table-bordered" id="lead-table">
+					<table class="table table-striped table-bordered">
 						<thead class="table-dark">
 							<tr>
-								<th>Assigned Counselor</th>
 								<th>Registered Name</th>
 								<th>Registered Email</th>
 								<th>Registered Mobile</th>
 								<th>State</th>
 								<th>City</th>
 								<th>Course</th>
-								<th>Student Remark</th>
-								<th>Lead Remark</th>
-								<th>Followup Date</th>
-								<th>Followup End Date</th>
-								<th>Registration Date</th>
-								<th>Lead Stage</th>
-								<th>Campaign Source</th>
+								<th>Remark</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="s:${leadlist}">
-								<td th:text="${s.counselorName}"></td>
-								<td><a th:href="@{/admin/lead-details(id=${s.id})}" th:text="${s.name}"></a></td>
+								<td th:text="${s.name}"></td>
 								<td th:text="${s.email}"></td>
 								<td th:text="${s.contactno}"></td>
 								<td th:text="${s.state}"></td>
 								<td th:text="${s.city}"></td>
 								<td th:text="${s.course}"></td>
 								<td th:text="${s.remark}"></td>
-								<td th:text="${s.leadRemark}"></td>
-								<td th:text="${#dates.format(s.followupDate, 'yyyy-MM-dd')}"></td>
-								<td th:text="${#dates.format(s.followupEndDate, 'yyyy-MM-dd')}"></td>
-								<td th:text="${#dates.format(s.registrationDate, 'yyyy-MM-dd')}"></td>
-								<td th:text="${s.leadStage}"></td>
-								<td th:text="${s.campaignSource}"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -365,53 +571,7 @@
 	</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-	<script>
-		// Function to filter the table
-		function filterTable() {
-			const registrationDate = document.getElementById('registration-date').value;
-			const leadStage = document.getElementById('lead-stage').value.toLowerCase();
-			const leadOwner = document.getElementById('lead-owner').value.toLowerCase();
-			const campaignSource = document.getElementById('campaign-source').value.toLowerCase();
 
-			const table = document.getElementById('lead-table');
-			const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-			for (let row of rows) {
-				const rowRegistrationDate = row.cells[11].textContent;
-				const rowLeadStage = row.cells[12].textContent.toLowerCase();
-				const rowCounselorName = row.cells[0].textContent.toLowerCase();
-				const rowCampaignSource = row.cells[13].textContent.toLowerCase();
-
-				const dateMatch = registrationDate === '' || rowRegistrationDate === registrationDate;
-				const stageMatch = leadStage === '' || rowLeadStage === leadStage;
-				const ownerMatch = leadOwner === '' || rowCounselorName === leadOwner;
-				const sourceMatch = campaignSource === '' || rowCampaignSource === campaignSource;
-
-				if (dateMatch && stageMatch && ownerMatch && sourceMatch) {
-					row.style.display = ''; // Show the row
-				} else {
-					row.style.display = 'none'; // Hide the row
-				}
-			}
-		}
-
-		// Add event listeners to filter inputs
-		document.getElementById('registration-date').addEventListener('change', filterTable);
-		document.getElementById('lead-stage').addEventListener('change', filterTable);
-		document.getElementById('lead-owner').addEventListener('change', filterTable);
-		document.getElementById('campaign-source').addEventListener('change', filterTable);
-
-		const sidebar = document.querySelector('.sidebar');
-		const topNav = document.querySelector('.top-nav');
-
-		sidebar.addEventListener('mouseenter', () => {
-			topNav.style.left = '200px'; // Expanded sidebar width
-		});
-
-		sidebar.addEventListener('mouseleave', () => {
-			topNav.style.left = '60px'; // Collapsed sidebar width
-		});
-	</script>
 </body>
 
 </html>

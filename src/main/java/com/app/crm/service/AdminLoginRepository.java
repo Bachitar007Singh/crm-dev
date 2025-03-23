@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.app.crm.model.AdminLogin;
 
 public interface AdminLoginRepository extends JpaRepository<AdminLogin, String> {
-	AdminLogin findByUserid(String userid); // Find admin by user ID
+
 }

@@ -1,17 +1,11 @@
 package com.app.crm.model;
 
-import java.time.LocalDate;
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-
 
 @Entity
 @Table(name="registrations")
@@ -46,112 +40,6 @@ public class Registration {
 	
 	@Column(length=50, nullable=false)
 	private String remark;
-	
-	@Column(length = 50)
-    private String leadStage; // Hot, Cold, Untouched, Warm, Closed, Not Reachable
-
-    @Column(length = 50)
-    private String counselorName; // Name of the assigned counselor
-
-    @Column(length = 50)
-    private String campaignSource; // Walkin, Email, Ad, Referral
-
-    // Getters and Setters for new fields
-    public String getLeadStage() {
-        return leadStage;
-    }
-
-    public void setLeadStage(String leadStage) {
-        this.leadStage = leadStage;
-    }
-
-    public String getCounselorName() {
-        return counselorName;
-    }
-
-    public void setCounselorName(String counselorName) {
-        this.counselorName = counselorName;
-    }
-
-    public String getCampaignSource() {
-        return campaignSource;
-    }
-
-    public void setCampaignSource(String campaignSource) {
-        this.campaignSource = campaignSource;
-    }
-	
-	@Column(name = "counselor_id")
-    private Integer counselorId; // Add this field
-
-	@Column(name = "registration_date")
-    @Temporal(TemporalType.DATE)
-    private Date registrationDate; // Add this field
-	
-	 private String leadRemark; // New field: Lead Remark
-	 @Column(name = "followup_date")
-	    @Temporal(TemporalType.DATE) // Add this annotation
-	    private Date followupDate; // Change to java.util.Date
-
-	    @Column(name = "followup_end_date")
-	    @Temporal(TemporalType.DATE) // Add this annotation
-	    private Date followupEndDate;
-
-	    // Getters and Setters for new fields
-	    public String getLeadRemark() {
-	        return leadRemark;
-	    }
-
-	    public void setLeadRemark(String leadRemark) {
-	        this.leadRemark = leadRemark;
-	    }
-
-	    @Column(name = "followup_time")
-	    private String followupTime; // Add this field for follow-up time (e.g., "11:00 AM")
-
-	    // Getters and Setters
-	    public String getFollowupTime() {
-	        return followupTime;
-	    }
-
-	    public void setFollowupTime(String followupTime) {
-	        this.followupTime = followupTime;
-	    } 
-    
-
-	public Date getFollowupDate() {
-			return followupDate;
-		}
-
-		public void setFollowupDate(Date followupDate) {
-			this.followupDate = followupDate;
-		}
-
-		public Date getFollowupEndDate() {
-			return followupEndDate;
-		}
-
-		public void setFollowupEndDate(Date followupEndDate) {
-			this.followupEndDate = followupEndDate;
-		}
-
-	// Getters and Setters
-    public Date getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-	
-    // Getters and Setters
-    public Integer getCounselorId() {
-        return counselorId;
-    }
-
-    public void setCounselorId(Integer counselorId) {
-        this.counselorId = counselorId;
-    }
 
 	public String getRemark() {
 		return remark;

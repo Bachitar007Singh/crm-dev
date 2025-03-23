@@ -14,7 +14,6 @@ public class AdminLogin {
 	private String userid;
 	@Column(length=30, nullable = false)
 	private String password;
-	private String role;
 	public String getUserid() {
 		return userid;
 	}
@@ -26,11 +25,5 @@ public class AdminLogin {
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	public String getRole() {
-		return role;
-	}
-	public void setRole(String role) {
-		this.role = role;
 	}
 }

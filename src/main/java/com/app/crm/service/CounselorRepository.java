@@ -9,17 +9,12 @@ import com.app.crm.model.Counselor;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CounselorRepository extends JpaRepository<Counselor, Integer> {
     List<Counselor> findByActiveTrue(); // Fetch only active counselors
 
-    @Query("SELECT c FROM Counselor c WHERE c.role = :role AND c.active = true")
-    List<Counselor> findByRoleAndActiveTrue(@Param("role") String role);
-    
     @Modifying
     @Transactional
     @Query("UPDATE Counselor c SET c.active = false WHERE c.id = :id")
     void deactivateCounselor(@Param("id") int id); // Deactivate counselor
-    Optional<Counselor> findByEmail(String email);
 }
