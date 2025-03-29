@@ -1,31 +1,40 @@
 package com.app.crm.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.yaml.snakeyaml.events.Event;
 
+import com.app.crm.dto.AdminLoginDto;
 import com.app.crm.dto.CounselorDto;
+import com.app.crm.model.AdminLogin;
 import com.app.crm.model.Counselor;
 import com.app.crm.model.Registration;
 import com.app.crm.service.RegistrationRepository;
-import com.app.crm.service.CounselorRepository; // Import CounselorRepository
+import com.app.crm.service.CounselorRepository;
+import com.app.crm.service.AdminLoginRepository; // Add this import
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-
-import java.util.ArrayList;
-
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Controller
 @RequestMapping("/admin")
@@ -35,7 +44,10 @@ public class AdminController {
     RegistrationRepository rrepo;
 
     @Autowired
-    CounselorRepository crepo; // Autowire CounselorRepository
+    CounselorRepository crepo;
+
+    @Autowired
+    AdminLoginRepository adminLoginRepository; // Add this autowired field
 
     @GetMapping("/adminhome")
     public String showAdminHome(HttpSession session, HttpServletResponse response, Model model) {
@@ -52,9 +64,7 @@ public class AdminController {
             return "redirect:/adminlogin";
         }
     }
-<<<<<<< HEAD
 
-=======
     @PostMapping("/login")
     public String login(@ModelAttribute AdminLoginDto dto, HttpSession session, Model model) {
         try {
@@ -155,6 +165,7 @@ public class AdminController {
             return "redirect:/adminlogin";
         }
     }
+
     @GetMapping("/lead-details")
     public String showLeadDetails(@RequestParam("id") int leadId, Model model) {
         // Fetch the lead details from the repository using the leadId
@@ -165,14 +176,12 @@ public class AdminController {
         List<Counselor> counselors = crepo.findByActiveTrue();
 
         // Add the lead details and counselors to the model
-    
         model.addAttribute("lead", lead);
         model.addAttribute("counselors", counselors);
 
         // Return the view name (e.g., lead-details.html)
         return "admin/lead-details";
     }
-    // Import Date
 
     @PostMapping("/update-lead-stage")
     @ResponseBody
@@ -224,19 +233,13 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("success", false));
         }
     }
-    
->>>>>>> 38f604b (this is testing version with previous issues avoid it but if you want to solve error go for it)
+
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/adminlogin";
     }
-    
-    @GetMapping("/admin/calendarpro")  // Corrected mapping
-    public String calendarpro() {
-        return "calendarpro"; // Assuming "calendarpro.html" is in your templates folder
-    }
-    
+
     @GetMapping("/counselor")
     public String showCounselorPage(Model model) {
         List<Counselor> activeCounselors = crepo.findByActiveTrue(); // Fetch only active counselors
@@ -264,7 +267,7 @@ public class AdminController {
         crepo.save(counselor);
         return "redirect:/admin/counselor";
     }
-    
+
     @GetMapping("/deactivateCounselor/{id}")
     public String deactivateCounselor(@PathVariable int id) {
         crepo.deactivateCounselor(id); // Deactivate counselor
@@ -298,12 +301,22 @@ public class AdminController {
     public String showLead(HttpSession session, HttpServletResponse response, Model model) {
         try {
             response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-<<<<<<< HEAD
+
             if (session.getAttribute("adminid") != null) {
                 List<Registration> leadlist = rrepo.findAll();
                 model.addAttribute("leadlist", leadlist);
                 return "/admin/leadmanager"; // Adjust according to your view structure
-=======
+            } else {
+                return "redirect:/adminlogin";
+            }
+        } catch (Exception ex) {
+            return "redirect:/adminlogin";
+        }
+    }
+    @GetMapping("/calendarpro")
+    public String showcalendarpro(HttpSession session, HttpServletResponse response, Model model) {
+        try {
+            response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
 
             // Debug logs
             System.out.println("Session - adminid: " + session.getAttribute("adminid"));
@@ -312,8 +325,12 @@ public class AdminController {
 
             if (session.getAttribute("adminid") != null || session.getAttribute("counselorId") != null) {
                 String role = (String) session.getAttribute("role");
-                List<Registration> leadlist;
+                if (role == null || (!role.equals("Admin") && !role.equals("Manager") && !role.equals("Employee"))) {
+                    System.out.println("Invalid role: Redirecting to login page");
+                    return "redirect:/adminlogin";
+                }
 
+                List<Registration> leadlist;
                 if ("Employee".equals(role)) {
                     Integer counselorId = (Integer) session.getAttribute("counselorId");
                     leadlist = rrepo.findByCounselorId(counselorId);
@@ -321,126 +338,39 @@ public class AdminController {
                     leadlist = rrepo.findAll();
                 }
 
-                // Sort leads
-                leadlist.sort((r1, r2) -> r2.getRegistrationDate().compareTo(r1.getRegistrationDate()));
+                // Filter and sort leads
+                leadlist = leadlist.stream()
+                    .filter(registration -> registration.getRegistrationDate() != null)
+                    .collect(Collectors.toList());
+
+                leadlist.sort((r1, r2) -> {
+                    Date date1 = r1.getRegistrationDate();
+                    Date date2 = r2.getRegistrationDate();
+                    if (date1 == null && date2 == null) return 0;
+                    if (date1 == null) return -1;
+                    if (date2 == null) return 1;
+                    return date2.compareTo(date1);
+                });
 
                 // Fetch active counselors
                 List<Counselor> counselors = crepo.findByActiveTrue();
                 model.addAttribute("counselors", counselors);
                 model.addAttribute("leadlist", leadlist);
-                return "admin/leadmanager"; // Ensure this matches the template path
->>>>>>> 38f604b (this is testing version with previous issues avoid it but if you want to solve error go for it)
+                return "admin/calendarpro"; // Ensure this matches the template path
             } else {
+                System.out.println("Session validation failed: Redirecting to login page");
                 return "redirect:/adminlogin";
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             return "redirect:/adminlogin";
         }
     }
-<<<<<<< HEAD
-   
- 
-   
-
-  
-
-        @GetMapping("/events")
-        public List<Event> getEvents() {
-            // In a real application, you would fetch this from a database
-            List<Event> events = new ArrayList<>();
-            events.add(new Event("Event 1", "Meeting", "2024-03-10", "2024-03-10", "John Doe", "Jane Smith", "10:00 AM", "Completed"));
-            events.add(new Event("Event 2", "Presentation", "2024-03-12", "2024-03-12", "Alice Johnson", "Bob Williams", "02:00 PM", "Pending"));
-            return events;
-        }
-
-        class Event {
-            private String name;
-            private String subject;
-            private String startDate;
-            private String endDate;
-            private String organizer;
-            private String owner;
-            private String dueTime;
-            private String status;
-            // Constructor, getters, and setters
-            public Event(String name, String subject, String startDate, String endDate, String organizer, String owner, String dueTime, String status) {
-                this.name = name;
-                this.subject = subject;
-                this.startDate = startDate;
-                this.endDate = endDate;
-                this.organizer = organizer;
-                this.owner = owner;
-                this.dueTime = dueTime;
-                this.status = status;
-            }
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public String getSubject() {
-                return subject;
-            }
-
-            public void setSubject(String subject) {
-                this.subject = subject;
-            }
-
-            public String getStartDate() {
-                return startDate;
-            }
-
-            public void setStartDate(String startDate) {
-                this.startDate = startDate;
-            }
-
-            public String getEndDate() {
-                return endDate;
-            }
-
-            public void setEndDate(String endDate) {
-                this.endDate = endDate;
-            }
-
-            public String getOrganizer() {
-                return organizer;
-            }
-
-            public void setOrganizer(String organizer) {
-                this.organizer = organizer;
-            }
-
-            public String getOwner() {
-                return owner;
-            }
-
-            public void setOwner(String owner) {
-                this.owner = owner;
-            }
-
-            public String getDueTime() {
-                return dueTime;
-            }
-
-            public void setDueTime(String dueTime) {
-                this.dueTime = dueTime;
-            }
-
-            public String getStatus() {
-                return status;
-            }
-
-            public void setStatus(String status) {
-                this.status = status;
-            }
-        }
-=======
-
-
->>>>>>> 38f604b (this is testing version with previous issues avoid it but if you want to solve error go for it)
-
+    
+    @GetMapping("/compeignmanager")
+    public String getMethodName() {
+        return "admin/compaignmanager";
+    }
+    
+    
 }

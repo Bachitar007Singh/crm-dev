@@ -7,227 +7,836 @@
     <title>User Dashboard</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-		/* Sidebar Styles */
-				body {
-					margin: 0;
-					font-family: Arial, sans-serif;
-					display: flex;
-					background-color: #f5f5f5;
-				}
+        /* --- Navbar Styles --- */
+		body {
+			font-family: sans-serif;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			background-color: #f0f8ff;
+		}
 
-				.sidebar {
-					height: 100vh;
-					width: 60px;
-					background-color: #333;
-					color: white;
-					position: fixed;
-					top: 0;
-					left: 0;
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					transition: width 0.3s;
-					overflow: hidden;
-				}
+		.navbar {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			background-color: #ffffff;
+			padding: 10px 20px;
+			width: 100%;
+			position: fixed;
+			top: 0;
+			z-index: 1000;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
 
-				.sidebar:hover {
-					width: 200px;
-				}
+		.nav-right {
+			display: flex;
+			align-items: center;
+		}
 
-				.sidebar a {
-					text-decoration: none;
-					color: white;
-					padding: 15px 0;
-					width: 100%;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					border-bottom: 1px solid #444;
-					transition: background-color 0.3s, padding-left 0.3s;
-				}
+		.notifications {
+			position: relative;
+			margin-right: 20px;
+		}
 
-				.sidebar a:hover {
-					background-color: #575757;
-				}
+		.notification-icon {
+			font-size: 20px;
+			cursor: pointer;
+			color: #555;
+		}
 
-				.sidebar .material-icons {
-					font-size: 24px;
-					transition: margin-right 0.3s;
-				}
+		.notification-dropdown {
+			display: none;
+			position: absolute;
+			top: 100%;
+			right: 0;
+			background-color: white;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+			width: 300px;
+			padding: 10px;
+			z-index: 1000;
+		}
 
-				.sidebar a span.text {
-					display: none;
-					white-space: nowrap;
-					margin-left: 10px;
-				}
+		.notification-dropdown.show {
+			display: block;
+		}
 
-				.sidebar:hover a span.text {
-					display: inline;
-				}
+		.notification-item {
+			display: flex;
+			align-items: center;
+			padding: 8px 0;
+			border-bottom: 1px solid #eee;
+		}
 
-				.sidebar:hover a {
-					justify-content: flex-start;
-					padding-left: 20px;
-				}
+		.notification-item:last-child {
+			border-bottom: none;
+		}
 
-				.sidebar:hover~.profile-section {
-					margin-left: 200px;
-				}
+		.notification-item .icon {
+			margin-right: 10px;
+			font-size: 18px;
+		}
 
-				/* Dropdown Menu Styles */
-				.dropdown {
-					position: relative;
-					width: 100%;
-				}
+		.notification-item.success .icon {
+			color: green;
+		}
 
-				.dropdown-menu {
-					display: none;
-					position: relative;
-					flex-direction: column;
-					background-color: #444;
-					box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-					z-index: 1001;
-				}
+		.notification-item.failed .icon {
+			color: red;
+		}
 
-				.dropdown-menu a {
-					text-decoration: none;
-					color: white;
-					padding: 10px 20px;
-					display: block;
-					transition: background-color 0.3s;
-				}
+		.notification-item .status {
+			font-weight: bold;
+			margin-left: auto;
+		}
 
-				.dropdown-menu a:hover {
-					background-color: #575757;
-				}
+		.notification-item.success .status {
+			color: green;
+		}
 
-				.dropdown:hover .dropdown-menu {
-					display: flex;
-				}
+		.notification-item.failed .status {
+			color: red;
+		}
 
-				.sidebar a,
-				.dropdown>.menu-item {
-					text-decoration: none;
-					color: white;
-					padding: 15px 0;
-					width: 100%;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					border-bottom: 1px solid #444;
-					transition: background-color 0.3s, padding-left 0.3s;
-					position: relative;
-				}
+		.show-all {
+			text-align: center;
+			padding-top: 10px;
+			cursor: pointer;
+			color: #007bff;
+		}
 
-				.sidebar a:hover,
-				.dropdown>.menu-item:hover {
-					background-color: #575757;
-				}
+		.profile {
+			position: relative;
+			display: flex;
+			align-items: center;
+			cursor: pointer;
+		}
 
-				.sidebar a span.text,
-				.dropdown>.menu-item span.text {
-					display: none;
-					white-space: nowrap;
-					margin-left: 10px;
-				}
+		.profile-img {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			margin-right: 10px;
+		}
 
-				.sidebar:hover a span.text,
-				.sidebar:hover .dropdown>.menu-item span.text {
-					display: inline;
-				}
+		.profile-dropdown {
+			display: none;
+			position: absolute;
+			top: 100%;
+			right: 0;
+			background-color: white;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+			width: 250px;
+			padding: 10px;
+			z-index: 1000;
+		}
 
-				.sidebar:hover a,
-				.sidebar:hover .dropdown>.menu-item {
-					justify-content: flex-start;
-					padding-left: 20px;
-				}
+		.profile-dropdown.show {
+			display: block;
+		}
 
+		.profile-info {
+			padding-bottom: 10px;
+			border-bottom: 1px solid #eee;
+			margin-bottom: 10px;
+		}
+
+		.profile-detail-label {
+			font-weight: bold;
+			margin-right: 5px;
+		}
+
+		.profile-dropdown a {
+			display: block;
+			padding: 8px 10px;
+			text-decoration: none;
+			color: #333;
+		}
+
+		.profile-dropdown a:hover {
+			background-color: #f0f0f0;
+		}
+
+		.sign-out-btn {
+			color: red;
+		}
+
+		/* --- Sidebar Styles --- */
+		.sidebar {
+			height: 100vh;
+			width: 60px;
+			background-color: #2c3e50;
+			/* lighter sidebar color */
+			color: #ffffff;
+			/* White text color */
+			position: fixed;
+			top: 60px;
+			left: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			transition: width 0.3s;
+			overflow: hidden;
+			padding-top: 10px;
+		}
+
+		.sidebar:hover {
+			width: 200px;
+		}
+
+		.sidebar a {
+			text-decoration: none;
+			color: #ffffff;
+			padding: 15px 0;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-bottom: 1px solid #34495e;
+			/*rgb(72, 142, 166); diif*/
+			/* Slightly lighter line color */
+			transition: background-color 0.3s;
+			padding-left: 0.3s;
+		}
+
+		.sidebar a:hover {
+			background-color: #34495e;
+			/*rgb(45, 45, 45);/* Hover color */
+		}
+
+		.sidebar .material-icons {
+			font-size: 24px;
+			transition: margin-right 0.3s;
+			color: #ffffff;
+		}
+
+		.sidebar a span.text {
+			display: none;
+			white-space: nowrap;
+			margin-left: 10px;
+		}
+
+		.sidebar:hover a span.text {
+			display: inline;
+		}
+
+		.sidebar:hover a {
+			justify-content: flex-start;
+			padding-left: 20px;
+		}
+
+		/*--- Main Content Styles --- */
+		.profile-section {
+			margin-left: 60px;
+			padding: 20px;
+			width: 100%;
+			transition: margin-left 0.3s;
+			margin-top: 60px;
+		}
+
+		.sidebar:hover~.profile-section {
+			margin-left: 200px;
+		}
+
+		.main-header {
+			margin-bottom: 20px;
+			margin-top: 20px;
+		}
+
+		.main-header h2 {
+			margin: 0;
+			color: #333;
+		}
+
+		.dashboard-box,
+		.funnel-box {
+			background-color: white;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 4px green;
+				/*#333;*/
+			margin-bottom: 1px ;
+		}
+
+		.hero {
+			background-color: white;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 1px;
+		}
+
+		.stats-box,
+		.funnel-box-bottom {
+			background-color: white;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 30px;
+		}
+
+		.lead-funnel {
+			width: 50%;
+			background-color: white;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 30px;
+		}
+
+		.dashboard-box h3,
+		.stats-box h3 {
+			margin: 0 0 20px 0;
+			color: #333;
+		}
+
+		.date-range {
+			margin-top: 10px;
+			font-size: 14px;
+		}
+
+		.date-range input {
+			padding: 5px;
+			font-size: 14px;
+		}
+
+		.stats-container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 20px;
+		}
+
+		.stats-item {
+			text-align: center;
+			font-size: 16px;
+			font-weight: bold;
+			color: #555;
+		}
+
+		.stats-item span {
+			display: block;
+			color: #333;
+			font-weight: normal;
+			margin-top: 5px;
+		}
+
+		/* Dropdown Menu Styles */
+		.dropdown {
+			position: relative;
+			width: 100%;
+		}
+
+		.dropdown-menu {
+			display: none;
+			position: relative;
+			flex-direction: column;
+			background-color: #2c3e50;
+			/* same color  dropdown background */
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+			z-index: 1001;
+		}
+
+		.dropdown-menu a {
+			text-decoration: none;
+			color: #ffffff;
+			padding: 10px 20px;
+			display: block;
+			transition: background-color 0.3s;
+		}
+
+		.dropdown-menu a:hover {
+			background-color: #3c556f;
+			/*rgb(45, 45, 45); /* Slightly lighter hover */
+		}
+
+		.dropdown:hover .dropdown-menu {
+			display: flex;
+		}
+
+		.sidebar a,
+		.dropdown>.menu-item {
+			text-decoration: none;
+			color: #ffffff;
+			padding: 15px 0;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-bottom: 1px solid #34495e;
+			transition: background-color 0.3s;
+			padding-left: 0.3s;
+			position: relative;
+		}
+
+		.sidebar a:hover,
+		.dropdown>.menu-item:hover {
+			background-color: #34495e;
+		}
+
+		.sidebar a span.text,
+		.dropdown>.menu-item span.text {
+			display: none;
+			white-space: nowrap;
+			margin-left: 10px;
+		}
+
+		.sidebar:hover a span.text,
+		.sidebar:hover .dropdown>.menu-item span.text {
+			display: inline;
+		}
+
+		.sidebar:hover a,
+		.sidebar:hover .dropdown>.menu-item {
+			justify-content: flex-start;
+			padding-left: 20px;
+		}
+    
+        /* Main Content Styles */
+        .content {
+            margin-left: 60px;
+            padding: 20px;
+            width: 100%;
+            transition: margin-left 0.3s;
+            
+        }
+        .main-header {
+			margin-bottom: 20px;
+			margin-top: 20px;
+		}
+        .options-container {
+            margin-bottom: 20px;
+        }
+        .main-header h2 {
+			
+            margin-top: 20px;
+			color: #333;
+		}
+        .options-container a {
+            margin-right: 15px;
+            text-decoration: none;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+        }
+
+        .options-container a:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Chart Styles */
+        #userChart {
+            width: 80%;
+            margin: 20px auto;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .button-container {
+            margin: 20px 0;
+        }
+        .report-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .report-button:hover {
+            background-color: #45a049;
+        }
+        .productivity-report {
+            display: none;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .quick-views {
+            display: flex;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .quick-view-item {
+            margin-right: 10px;
+            padding: 5px 10px;
+            background-color: #e9e9e9;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .quick-view-item:hover {
+            background-color: #ddd;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: right;
+            font-style: italic;
+            color: #666;
+        }
     </style>
 </head>
 
 <body>
 
-	<!-- Sidebar -->
-		<div class="sidebar">
-			<div class="dropdown">
-				<a href="/admin/adminhome" class="menu-item">
-					<span class="material-icons">dashboard</span>
-					<span class="text">Dashboard</span>
-				</a>
-				<div class="dropdown-menu">
-					<a href="/admin/adminhome">Admin Dashboard</a>
-					<a href="/user_dashboard">User Dashboard</a>
-					<a href="/admin/Dashboard/Student_QI">Student Quality Index</a>
-				</div>
-			</div>
-			<div class="dropdown">
-				<a href="leadmanager" class="menu-item">
-					<span class="material-icons">supervisor_account</span>
-					<span class="text">Lead Manager</span>
-				</a>
-				<div class="dropdown-menu">
-					<a href="/admin/adminhome">Manage Leads</a>
-					<a href="/user-dashboard">Offline Upload Logs</a>
-				</div>
-			</div>
-			<a href="formdesk">
-				<span class="material-icons">description</span>
-				<span class="text">Formdesk</span>
-			</a>
-			<a href="opportunity">
-				<span class="material-icons">assignment</span>
-				<span class="text">Opportunity</span>
-			</a>
-			<a href="applicationmanager">
-				<span class="material-icons">folder</span>
-				<span class="text">Application Manager</span>
-			</a>
-			<a href="marketing">
-				<span class="material-icons">campaign</span>
-				<span class="text">Marketing</span>
-			</a>
-			<a href="compeignmanager">
-				<span class="material-icons">send</span>
-				<span class="text">Campaign Manager</span>
-			</a>
-			<a href="querymanager">
-				<span class="material-icons">help</span>
-				<span class="text">Query Manager</span>
-			</a>
-			<a href="paymentmanager">
-				<span class="material-icons">payment</span>
-				<span class="text">Payment Manager</span>
-			</a>
-			<a href="reportanalytics">
-				<span class="material-icons">bar_chart</span>
-				<span class="text">Reports & Analytics</span>
-			</a>
-			<a href="templatemanager">
-				<span class="material-icons">widgets</span>
-				<span class="text">Template Manager</span>
-			</a>
-			<a href="logout">
-				<span class="material-icons">logout</span>
-				<span class="text">Logout</span>
-			</a>
-		</div>
-
-    <!-- Main Content -->
-    <div class="content container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="mt-4">User Dashboard</h2>
-                <!-- Options Container -->
-                <div class="options-container mt-4">
-                    <a href="/user-dashboard">User Dashboard</a>
-                    <a href="/productive-report">Productive Report</a>
+   <!--Navbar-->
+<nav class="navbar">
+    <div class="nav-right">
+        <div class="notifications">
+            <i class="fas fa-bell notification-icon"></i>
+            <div class="notification-dropdown">
+                <div class="notification-item success">
+                    <div class="icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
                 </div>
+                <div class="notification-item failed">
+                    <div class="icon"><i class="fas fa-times-circle"></i></div>
+                    <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
+                </div>
+                <div class="notification-item success">
+                    <div class="icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+                </div>
+                <div class="notification-item failed">
+                    <div class="icon"><i class="fas fa-times-circle"></i></div>
+                    <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
+                </div>
+                <div class="notification-item success">
+                    <div class="icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+                </div>
+                <div class="show-all">Show All Activities</div>
+            </div>
+        </div>
+        <div class="profile">
+            <img src="profile-placeholder.jpg" alt="Profile" class="profile-img">
+            <span class="profile-name">John Alex</span>
+            <div class="profile-dropdown">
+                <div class="profile-info">
+                    <span class="profile-detail-label">Name:</span> John Alex<br>
+                    <span class="profile-detail-label">Mobile:</span> 123-456-7890<br>
+                    <span class="profile-detail-label">Email:</span> john.alex@example.com<br>
+                    <span class="profile-detail-label">Designation:</span> Manager<br>
+                    <span class="profile-detail-label">Department:</span> Sales
+                </div>
+                <a href="#">Settings</a>
+                <a href="#" class="sign-out-btn">Sign Out</a>
             </div>
         </div>
     </div>
+</nav>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+		<div class="dropdown">
+			<a href="/admin/adminhome" class="menu-item">
+				<span class="material-icons">dashboard</span>
+				<span class="text">Dashboard</span>
+			</a>
+			<div class="dropdown-menu">
+				<a href="/admin/adminhome">Admin Dashboard</a>
+				<a href="/admin/user_dashboard">User Dashboard</a>
+				<a href="/admin/Student_QI">Student Quality Index</a>
+			</div>
+		</div>
+		<div class="dropdown">
+					<a href="leadmanager" class="menu-item">
+						<span class="material-icons">supervisor_account</span>
+						<span class="text">Lead Manager</span>
+					</a>
+					<div class="dropdown-menu">
+							<a href="/admin/adminhome">Manage Leads</a>
+							<a href="/user-dashboard">Offline Upload Logs</a>
+						</div>
+					</div>
+		<a href="/admin/calendarpro">
+			<span class="material-icons">calendar_month</span>
+			<span class="text">Calendar Pro</span>
+		</a>
+		<a href="formdesk">
+			<span class="material-icons">description</span>
+			<span class="text">Formdesk</span>
+		</a>
+		<a href="/admin/counselor">
+			<span class="material-icons">person</span>
+			<span class="text">Counselor</span>
+		</a>
+		<a href="opportunity">
+			<span class="material-icons">assignment</span>
+			<span class="text">Opportunity</span>
+		</a>
+		<a href="applicationmanager">
+			<span class="material-icons">folder</span>
+			<span class="text">Application Manager</span>
+		</a>
+		<a href="marketing">
+			<span class="material-icons">campaign</span>
+			<span class="text">Marketing</span>
+		</a>
+		<a href="compeignmanager">
+			<span class="material-icons">send</span>
+			<span class="text">Campaign Manager</span>
+		</a>
+		<a href="querymanager">
+			<span class="material-icons">help</span>
+			<span class="text">Query Manager</span>
+		</a>
+		<a href="paymentmanager">
+			<span class="material-icons">payment</span>
+			<span class="text">Payment Manager</span>
+		</a>
+		<a href="reportanalytics">
+			<span class="material-icons">bar_chart</span>
+			<span class="text">Reports & Analytics</span>
+		</a>
+		<a href="templatemanager">
+			<span class="material-icons">widgets</span>
+			<span class="text">Template Manager</span>
+		</a>
+		<a href="logout">
+			<span class="material-icons">logout</span>
+			<span class="text">Logout</span>
+		</a>
+	</div>
 
-</html>
+	<div class="profile-section">
+		<div class="profile-section container-fluid">
+		<div class="row">
+			<div class="col-12">
+				<h2 class="mt-4">User Dashboard</h2>
+    <!--div class="content container-fluid">
+        <div class="row">
+            <div class="col-12"-->
+            
+                <div class="options-container mt-4">
+                    <a href="/user-dashboard">User Dashboard</a>
+                    <div class="button-container">
+                        <button class="report-button" onclick="showProductivityReport()">Productivity Report</button>
+                    <!--a href="/productive-report">Productive Report</a>
+<!-report table-->
+<div id="productivityReport" class="productivity-report">
+    <h2>Productivity Report</h2>
+    
+    <div class="quick-views">
+        <div class="quick-view-item">Today</div>
+        <div class="quick-view-item">Lead Summary</div>
+        <div class="quick-view-item">Quick Summary</div>
+        <div class="quick-view-item">Application Summary</div>
+        <div class="quick-view-item">Telephony Status</div>
+        <div class="quick-view-item">Opportunity Missed</div>
+        <div class="quick-view-item">Effort Analysis</div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Owner Name</th>
+                <th>Lead Assigned</th>
+                <th>Leads Not Engaged</th>
+                <th>Leads Engaged</th>
+                <th>Overall</th>
+                <th>Untouched Stage</th>
+                <th>Overall Activities (Lead)</th>
+                <th>Lead Stage Total</th>
+                <th>Notes Added (Lead)</th>
+                <th>Followup Added (Lead)</th>
+                <th>Followup Overdue (Lead)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Aditi Sharma (aditi.sig@mail.it)</td>
+                <td>8</td>
+                <td>8</td>
+                <td>12</td>
+                <td>8</td>
+                <td>24</td>
+                <td>12</td>
+                <td>12</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>Always Agarwal (always.ag@mail.it)</td>
+                <td>8</td>
+                <td>4</td>
+                <td>12</td>
+                <td>4</td>
+                <td>24</td>
+                <td>10</td>
+                <td>10</td>
+                <td>2</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>Anjali (anjali.sig@mail.it)</td>
+                <td>4</td>
+                <td>4</td>
+                <td>0</td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>Darkhas (darkhas.g@mail.it)</td>
+                <td>11</td>
+                <td>1</td>
+                <td>19</td>
+                <td>1</td>
+                <td>38</td>
+                <td>19</td>
+                <td>18</td>
+                <td>1</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>Darnhead Batra (darnhead.g@mail.it)</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>Geeta Bhati (Geeta.bg@mail.it)</td>
+                <td>7</td>
+                <td>7</td>
+                <td>127</td>
+                <td>7</td>
+                <td>267</td>
+                <td>126</td>
+                <td>126</td>
+                <td>1</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>HIMANSHU SHERMAR (himanshu.sig@mail.it)</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="footer">madhu.gdvp</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h3>User Wise Lead and Application Count</h3>
+                <canvas	id="userChart"
+		                width="400"
+	                    height="200"
+				                ></canvas>
+				            </div>
+				        </div>
+				    </div>
+
+				    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+				    <script>
+				        document.addEventListener("DOMContentLoaded", function () {
+				            const ctx = document.getElementById("userChart").getContext("2d");
+				            const myChart = new Chart(ctx, {
+				                type: "bar",
+				                data: {
+				                    labels: [
+				                        "Anpit",
+				                        "Darshna",
+				                        "Darshnees",
+				                        "Geeta Elhat",
+				                        "Khushy",
+				                        "madhu priya",
+				                        "Marketing",
+				                    ],
+				                    datasets: [
+				                        {
+				                            label: "Leads",
+				                            data: [1167, 1436, 546, 10121, 15378, 12, 10],
+				                            backgroundColor: "rgba(54, 162, 235, 0.5)",
+				                            borderColor: "rgba(54, 162, 235, 1)",
+				                            borderWidth: 1,
+				                        },
+				                        {
+				                            label: "Applications",
+				                            data: [1167, 1436, 546, 10121, 15378, 12, 10],
+				                            backgroundColor: "rgba(255, 99, 132, 0.5)",
+				                            borderColor: "rgba(255, 99, 132, 1)",
+				                            borderWidth: 1,
+				                        },
+				                    ],
+				                },
+				                options: {
+				                    scales: {
+				                        y: {
+				                            beginAtZero: true,
+				                        },
+				                    },
+				                },
+				            });
+				        });
+
+                        function showProductivityReport() {
+                            const report = document.getElementById('productivityReport');
+                            if (report.style.display === 'none' || report.style.display === '') {
+                                report.style.display = 'block';
+                            } else {
+                                report.style.display = 'none';
+                            }
+                        }
+				    </script>
+				</body>
+
+				</html>
