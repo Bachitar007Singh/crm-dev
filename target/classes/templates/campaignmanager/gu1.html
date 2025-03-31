@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV</title>
+    <style>
+        /* ... (Your existing CSS) ... */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload File</h2>
+
+        <div class="form-group">
+            <label for="uploadType">Upload type <span style="font-size: 12px;">&#x24D8;</span></label>
+            <select id="uploadType">
+                <option value="newLeads">Add new leads</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="institute">Institute / Applying For Name</label>
+            <select id="institute">
+                <option value="">Select Institute / Applying For Name</option>
+                <option value="bannity">Bannity</option>
+                <option value="greaterNoida">Greater Noida</option>
+            </select>
+            <div class="description">(Select if leads are collected based on campus, based on selection all leads will be marked for particular campus)</div>
+        </div>
+
+        <div class="form-group">
+            <label for="course">Course Name</label>
+            <select id="course">
+                <option value="">Select Course Name</option>
+            </select>
+            <div class="description">(Select if leads are collected based on course, based on selection all leads will be marked for particular course)</div>
+        </div>
+
+        <div class="form-group">
+            <label for="user">User Name</label>
+            <select id="user">
+                <option value="">Select User Name</option>
+            </select>
+            <div class="description">(Select if you want to assign leads directly to a user)</div>
+        </div>
+
+        <div class="drag-drop-area">
+            <img src="cloud-upload-icon.png" alt="Upload" style="width: 50px; margin-bottom: 10px;">
+            <p>Drag and drop a CSV file here to upload</p>
+            <p>or</p>
+            <button>Select a file</button>
+        </div>
+
+        <div class="sample-download">
+            <a href="#" style="text-decoration: none; color: #007bff;"><img src="download-icon.png" alt="Download" style="width: 20px; margin-right: 5px;"> Sample CSV Download</a>
+        </div>
+
+        <div class="navigation-buttons">
+            <button>&lt; Back</button>
+            <button>Upload Data</button>
+        </div>
+    </div>
+</body>
+</html>

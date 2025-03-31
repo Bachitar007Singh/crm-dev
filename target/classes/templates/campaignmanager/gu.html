@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Main page styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        /* Modal styles */
+        .upload-modal {
+            max-width: 800px;
+        }
+        
+        .upload-option {
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #f1f1f1;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-option:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .upload-option.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .guideline-content {
+            display: none;
+        }
+        
+        .guideline-content.active {
+            display: block;
+        }
+        
+        .download-link {
+            color: #0d6efd;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Campaign Manager Page Content -->
+    <div class="container mt-4">
+        <h1>Campaign Manager</h1>
+        
+        <!-- Bulk Upload Button -->
+        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#uploadGuidelinesModal">
+            Bulk Offline Upload
+        </button>
+    </div>
+
+    <!-- Upload Guidelines Modal -->
+    <div class="modal fade" id="uploadGuidelinesModal" tabindex="-1" aria-labelledby="uploadGuidelinesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg upload-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadGuidelinesModalLabel">Bulk Offline Upload Guidelines</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Upload Type Selection -->
+                    <h6>Select Primary Upload Type:</h6>
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="upload-option active" data-target="emailGuidelines">
+                            Upload with Primary Email
+                        </div>
+                        <div class="upload-option" data-target="mobileGuidelines">
+                            Upload with Primary Mobile
+                        </div>
+                    </div>
+                    
+                    <!-- Email Guidelines (Default) -->
+                    <div id="emailGuidelines" class="guideline-content active">
+                        <p>When you create the CSV file for importing offline leads, make sure that the file meets the following format:</p>
+                        
+                        <ol>
+                            <li>The files to be imported must be in CSV(comma separated values) format. (<a href="#" class="download-link">Download sample data</a>)</li>
+                            
+                            <li>Every column in the CSV file should have a header name. This will help you to identify and map column headers.</li>
+                            
+                            <li>The only field that NoPaperForms requires for import is <strong>Unique Email Address</strong>. Any other fields you want to include are useful for lead allocation, but optional. Your import file must include a column for email address else file will not be imported.</li>
+                            
+                            <li>Remove all blank lines from the file to be imported. A blank line is interpreted as the end of the file.</li>
+                            
+                            <li>If CSV file consist country/state/city or any pre-defined list values then these should match with NoPaperForms defined list values for successful import. In case values don't matches lead will not be imported in system.<br>
+                                <strong>Why this is required:</strong><br>
+                                - To keep sync between data captured though online or offline mode.<br>
+                                - Proper lead allocation to owners based on different parameters.<br>
+                                - Check ROI, Conversion and Application based on different parameters.<br>
+                                (<a href="#" class="download-link">Download Pre-defined List</a>)
+                            </li>
+                            
+                            <li>Optional but important: add lead source column in csv to identify source of lead.</li>
+                            
+                            <li>After the import is complete, a confirmation email is sent to the user who initiated it. The notification includes a summary of the import results.</li>
+                            
+                            <li>The default character for importing multiple entries into a multi select field is a vertical bar (|). For example: RBA|BCA|BCom.</li>
+                            
+                            <li>Users can use a modification attempt field to increase one registration attempt while uploading leads via Run 20Time. Globalized Localization. This ensures accurate tracking and inclusion of application attempts across</li>
+                        </ol>
+                    </div>
+                    
+                    <!-- Mobile Guidelines -->
+                    <div id="mobileGuidelines" class="guideline-content">
+                        <p>When you create the CSV file for importing offline leads, make sure that the file meets the following formatting requirements:</p>
+                        
+                        <ol>
+                            <li>The files to be imported must be in CSV(comma separated values) format. (<a href="#" class="download-link">Download sample data</a>)</li>
+                            
+                            <li>Every column in the CSV file should have a header name. This will help you to identify and map column header names with the existing labels of NoPaperForms system.</li>
+                            
+                            <li>The only field that NoPaperForms requires for import is <strong>Unique Mobile Number</strong>. Any other fields you want to include are useful for lead allocation, but optional. Your import file must include a column for mobile number else file will not be imported. In case you want to upload both email and mobile number or only with email switch to "Upload with primary Email".</li>
+                            
+                            <li>Remove all blank lines from the file to be imported. A blank line is interpreted as the end of the file.</li>
+                            
+                            <li>If CSV file consist country/state/city or any pre-defined list values then these should match with NoPaperForms defined list values for successful import. In case values don't matches lead will not be imported in system.<br>
+                                <strong>Why this is required:</strong><br>
+                                - To keep sync between data captured though online or offline mode.<br>
+                                - Proper lead allocation to owners based on different parameters.<br>
+                                - Check ROI, Conversion and Applicants based on different parameters.<br>
+                                (<a href="#" class="download-link">Download Pre-defined List</a>)
+                            </li>
+                            
+                            <li>After the import is complete, a confirmation email is sent to the user who initiated it. The notification includes a summary of the import results.</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Proceed to Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle upload option selection
+            const options = document.querySelectorAll('.upload-option');
+            
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    options.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Hide all guideline contents
+                    document.querySelectorAll('.guideline-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show selected guideline content
+                    const targetId = this.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

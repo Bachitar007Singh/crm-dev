@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Guidelines</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc; /* Light background */
+        }
+
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .dropdown-container {
+            margin-bottom: 30px;
+        }
+
+        .dropdown-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select {
+            width: 300px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            appearance: none; /* Remove default arrow */
+            background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom arrow */
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        .content-section {
+            border: 1px solid #e1e4e8;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+            background-color: #fcfcfc;
+        }
+
+        .content-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #24292e;
+        }
+
+        .content-section ol {
+            padding-left: 20px;
+        }
+
+        .content-section li {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #586069;
+        }
+
+        .content-section li ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .content-section li ul li {
+            margin-bottom: 8px;
+        }
+
+        .navigation-buttons {
+            text-align: right;
+        }
+
+        .navigation-buttons button {
+            padding: 12px 25px;
+            font-size: 16px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #0366d6;
+            color: white;
+        }
+
+        .navigation-buttons button:first-child {
+            background-color: #e1e4e8;
+            color: #24292e;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dropdown-container">
+            <label for="uploadType">Select Primary Upload Type:</label>
+            <select id="uploadType" onchange="updateContent()">
+                <option value="mobile">Mobile</option>
+                <option value="email">Email</option>
+                <option value="primary">Upload with Primary</option>
+                <option value="userid">User ID (Updates only)</option>
+            </select>
+        </div>
+
+        <div class="content-section" id="contentArea">
+            </div>
+
+        <div class="navigation-buttons">
+            <button id="backButton">&lt; Back</button>
+        <button id="nextButton">Next &gt;</button>
+          
+        </div>
+
+        <div class="footer">
+            Copyright © 2023 NoPaperForms Solutions Pvt. Ltd. All Rights Reserved | Location (IP address): 47.247.42.178
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for dynamic content update (same as before)
+        function updateContent() {
+            // ... (same JavaScript code as in the previous example) ...
+            const uploadType = document.getElementById('uploadType').value;
+            const contentArea = document.getElementById('contentArea');
+
+            if (uploadType === 'mobile') {
+                contentArea.innerHTML = `
+                    <h2>User Guideline for Upload</h2>
+                    <p>When you create the CSV file for importing offline leads, make sure that the file meets the following formatting requirements:</p>
+                    <ol>
+                        <li>The files to be imported must be in CSV (comma separated values) format. (Download sample data)</li>
+                        <li>Every column in the CSV file should have a header name. This will help you to identify and map column header names with the existing labels of NoPaperForms system.</li>
+                        <li>The only field that NoPaperForms requires for import is Unique Mobile Number. Any other fields you want to include are useful for lead allocation, but optional. Your import file must include a column for mobile number else file will not be imported. In case you want to upload both email and mobile number or only with email switch to "Upload with primary Email".</li>
+                        <li>Remove all blank lines from the file to be imported. A blank line is interpreted as the end of the file.</li>
+                        <li>If CSV file consist country/state/city or any pre-defined list values then these should match with NoPaperForms defined list values for successful import. In case values don't matches lead will not be imported in system. Why this is required:
+                            <ul>
+                                <li>To keep sync between data captured though online or offline mode.</li>
+                                <li>Proper lead allocation to owners based on different parameters.</li>
+                                <li>Check ROI, Conversion and Applicants based on different parameters.</li>
+                                <li>(Download Pre-defined List)</li>
+                            </ul>
+                        </li>
+                        <li>After the import is complete, a confirmation email is sent to the user who initiated it. The notification includes a summary of the import results.</li>
+                        <li>Optional but Important: add lead source column in csv to identify source of lead.</li>
+                        <li>The default character for importing multiple entries into a multi select field is a vertical bar (|). For example: BEA/BCAB/Com.</li>
+                    </ol>
+                `;
+            } else if (uploadType === 'email') {
+                contentArea.innerHTML = `
+                    <h2>User Guideline for Upload</h2>
+                    <p>When you create the CSV file for importing offline leads, make sure that the file meets the following formatting requirements:</p>
+                    <ol>
+                        <li>The files to be imported must be in CSV (comma separated values) format. (Download sample data)</li>
+                        <li>Every column in the CSV file should have a header name. This will help you to identify and map column header names with the existing labels of NoPaperForms system.</li>
+                        <li>The only field that NoPaperForms requires for import is Unique Email Address. Any other fields you want to include are useful for lead allocation, but optional. Your import file must include a column for email address else file will not be imported. In case you want to upload both email and mobile number or only with mobile switch to "Mobile".</li>
+                        <li>Remove all blank lines from the file to be imported. A blank line is interpreted as the end of the file.</li>
+                        <li>If CSV file consist country/state/city or any pre-defined list values then these should match with NoPaperForms defined list values for successful import. In case values don't matches lead will not be imported in system. Why this is required:
+                            <ul>
+                                <li>To keep sync between data captured though online or offline mode.</li>
+                                <li>Proper lead allocation to owners based on different parameters.</li>
+                                <li>Check ROI, Conversion and Applicants based on different parameters.</li>
+                                <li>(Download Pre-defined List)</li>
+                            </ul>
+                        </li>
+                        <li>After the import is complete, a confirmation email is sent to the user who initiated it. The notification includes a summary of the import results.</li>
+                        <li>Optional but Important: add lead source column in csv to identify source of lead.</li>
+                        <li>The default character for importing multiple entries into a multi select field is a vertical bar (|). For example: BEA/BCAB/Com.</li>
+                    </ol>
+                `;
+
+            } else if (uploadType === 'primary') {
+                 contentArea.innerHTML = `
+                    <h2>User Guideline for Upload with Primary</h2>
+                    <p>This option allows you to upload leads using either email or mobile as the primary identifier. Please ensure your CSV file includes a column labeled 'Primary' containing either email or mobile values.</p>
+                    <ol>
+                        <li>The 'Primary' column must contain valid email addresses or mobile numbers.</li>
+                        <li>You can include additional columns for other lead information.</li>
+                        <li>The system will automatically detect if the 'Primary' value is an email or mobile.</li>
+                        <li>Ensure that all email and mobile values are unique.</li>
+                    </ol>
+                `;
+            } else if (uploadType === 'userid') {
+                 contentArea.innerHTML = `
+                    <h2>User Guideline for User ID Updates</h2>
+                    <p>This option is used to update existing lead records based on their unique User ID. Your CSV file must contain a 'User ID' column.</p>
+                    <ol>
+                        <li>The 'User ID' column must match existing User IDs in the system.</li>
+                        <li>You can include other columns with updated data.</li>
+                        <li>Only rows with matching User IDs will be updated.</li>
+                        <li>If a User ID is not found, the row will be skipped.</li>
+                    </ol>
+                `;
+            }
+        
+        }
+
+        // Initial content load
+        updateContent();
+
+        document.getElementById('backButton').addEventListener('click', function() {
+            window.location.href = 'CampaignManager.html';
+        });
+
+        document.getElementById('nextButton').addEventListener('click', function() {
+            window.location.href = 'UploadCSV.html';
+        });
+    </script>
+</body>
+</html>

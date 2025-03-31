@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Manager</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* --- Styles you provided --- */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #f0f8ff;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .notifications {
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item .icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .notification-item.success .icon {
+            color: green;
+        }
+
+        .notification-item.failed .icon {
+            color: red;
+        }
+
+        .notification-item .status {
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .notification-item.success .status {
+            color: green;
+        }
+
+        .notification-item.failed .status {
+            color: red;
+        }
+
+        .show-all {
+            text-align: center;
+            padding-top: 10px;
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 250px;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .profile-info {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+
+        .profile-detail-label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            padding: 8px 10px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .sign-out-btn {
+            color: red;
+        }
+
+        /* --- Sidebar Styles --- */
+        .sidebar {
+            height: 100vh;
+            width: 60px;
+            background-color: #2c3e50;
+            /* lighter sidebar color */
+            color: #ffffff;
+            /* White text color */
+            position: fixed;
+            top: 60px;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: width 0.3s;
+            overflow: hidden;
+            padding-top: 10px;
+        }
+
+        .sidebar:hover {
+            width: 200px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #ffffff;
+            padding: 15px 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #34495e;
+            /*rgb(72, 142, 166); diif*/
+            /* Slightly lighter line color */
+            transition: background-color 0.3s;
+            padding-left: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+            /*rgb(45, 45, 45);/* Hover color */
+        }
+
+        .sidebar .material-icons {
+            font-size: 24px;
+            transition: margin-right 0.3s;
+            color: #ffffff;
+        }
+
+        .sidebar a span.text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .sidebar:hover a span.text {
+            display: inline;
+        }
+
+        .sidebar:hover a {
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+
+        /*--- Main Content Styles --- */
+        .profile-section {
+            margin-left: 60px;
+            padding: 20px;
+            width: 100%;
+            transition: margin-left 0.3s;
+            margin-top: 60px;
+        }
+
+        .sidebar:hover~.profile-section {
+            margin-left: 200px;
+        }
+
+        .main-header {
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .main-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .dashboard-box,
+        .funnel-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px green;
+                /*#333;*/
+            margin-bottom: 1px ;
+        }
+
+        .hero {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1px;
+        }
+
+        .stats-box,
+        .funnel-box-bottom {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .lead-funnel {
+            width: 50%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .dashboard-box h3,
+        .stats-box h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+
+        .date-range {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .date-range input {
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stats-item {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .stats-item span {
+            display: block;
+            color: #333;
+            font-weight: normal;
+            margin-top: 5px;
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: relative;
+            flex-direction: column;
+            background-color: #2c3e50;
+            /* same color  dropdown background */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
+
+        .dropdown-menu a {
+            text-decoration: none;
+            color: #ffffff;
+            padding: 10px 20px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #3c556f;
+            /*rgb(45, 45, 45); /* Slightly lighter hover */
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: flex;
+        }
+
+        .sidebar a,
+        .dropdown>.menu-item {
+            text-decoration: none;
+            color: #ffffff;
+            padding: 15px 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #34495e;
+            transition: background-color 0.3s;
+            padding-left: 0.3s;
+            position: relative;
+        }
+
+        .sidebar a:hover,
+        .dropdown>.menu-item:hover {
+            background-color: #34495e;
+        }
+
+        .sidebar a span.text,
+        .dropdown>.menu-item span.text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .sidebar:hover a span.text,
+        .sidebar:hover .dropdown>.menu-item span.text {
+            display: inline;
+        }
+
+        .sidebar:hover a,
+        .sidebar:hover .dropdown>.menu-item {
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+    
+        /* Main Content Styles */
+        .content {
+            margin-left: 60px; /* Sidebar width */
+            padding: 20px;
+            width: 100%;
+            transition: margin-left 0.3s;
+            padding-top: 80px; /* Add padding to push content down */
+        }
+        .main-header {
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+        
+        .filters-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .main-header h2 {
+            
+            margin-top: 20px;
+            color: #333;
+        }
+        .filter-options {
+            display: flex;
+            align-items: center;
+        }
+        .filter-options select {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .filter-actions a {
+            margin-left: 10px;
+            text-decoration: none;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+        }
+        .filter-actions a:hover {
+            background-color: #f0f0f0;
+        }
+        
+        table thead th {
+            text-align: left; /* Or center, as needed */
+            padding: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .action-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .action-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        
+        .action-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .action-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .action-dropdown:hover .action-dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-right">
+            <div class="notifications">
+                <i class="fas fa-bell notification-icon"></i>
+                <div class="notification-dropdown">
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+                    </div>
+                    <div class="notification-item failed">
+                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
+                    </div>
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+                    </div>
+                    <div class="notification-item failed">
+                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="text">Lorem, ipsum dolor. <span class="status">Failed</span></div>
+                    </div>
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">Lorem, ipsum dolor. <span class="status">Success</span></div>
+                    </div>
+                    <div class="show-all">Show All Activities</div>
+                </div>
+            </div>
+            <div class="profile">
+                <img src="profile-placeholder.jpg" alt="Profile" class="profile-img">
+                <span class="profile-name">John Alex</span>
+                <div class="profile-dropdown">
+                    <div class="profile-info">
+                        <span class="profile-detail-label">Name:</span> John Alex<br>
+                        <span class="profile-detail-label">Mobile:</span> 123-456-7890<br>
+                        <span class="profile-detail-label">Email:</span> john.alex@example.com<br>
+                        <span class="profile-detail-label">Designation:</span> Manager<br>
+                        <span class="profile-detail-label">Department:</span> Sales
+                    </div>
+                    <a href="#">Settings</a>
+                    <a href="#" class="sign-out-btn">Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sidebar">
+        <div class="dropdown">
+            <a href="/admin/adminhome" class="menu-item">
+                <span class="material-icons">dashboard</span>
+                <span class="text">Dashboard</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="/admin/adminhome">Admin Dashboard</a>
+                <a href="/admin/user_dashboard">User Dashboard</a>
+                <a href="/admin/Student_QI">Student Quality Index</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="leadmanager" class="menu-item">
+                <span class="material-icons">supervisor_account</span>
+                <span class="text">Lead Manager</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="/admin/adminhome">Manage Leads</a>
+                <a href="/user-dashboard">Offline Upload Logs</a>
+            </div>
+        </div>
+        <a href="/admin/calendarpro">
+            <span class="material-icons">calendar_month</span>
+            <span class="text">Calendar Pro</span>
+        </a>
+        <a href="formdesk">
+            <span class="material-icons">description</span>
+            <span class="text">Formdesk</span>
+        </a>
+        <a href="/admin/counselor">
+            <span class="material-icons">person</span>
+            <span class="text">Counselor</span>
+        </a>
+        <a href="opportunity">
+            <span class="material-icons">assignment</span>
+            <span class="text">Opportunity</span>
+        </a>
+        <a href="applicationmanager">
+            <span class="material-icons">folder</span>
+            <span class="text">Application Manager</span>
+        </a>
+        <a href="marketing">
+            <span class="material-icons">campaign</span>
+            <span class="text">Marketing</span>
+        </a>
+        <a href="/admin/campaignmanager">
+            <span class="material-icons">send</span>
+            <span class="text">Campaign Manager</span>
+        </a>
+        <a href="querymanager">
+            <span class="material-icons">help</span>
+            <span class="text">Query Manager</span>
+        </a>
+        <a href="paymentmanager">
+            <span class="material-icons">payment</span>
+            <span class="text">Payment Manager</span>
+        </a>
+        <a href="reportanalytics">
+            <span class="material-icons">bar_chart</span>
+            <span class="text">Reports & Analytics</span>
+        </a>
+        <a href="templatemanager">
+            <span class="material-icons">widgets</span>
+            <span class="text">Template Manager</span>
+        </a>
+        <a href="logout">
+            <span class="material-icons">logout</span>
+            <span class="text">Logout</span>
+        </a>
+    </div>
+
+    <div class="content">
+        <div class="main-header">
+            <h2>Lead Manager</h2>
+        </div>
+    
+        <div class="filters-container">
+            <div class="filter-options">
+                </div>
+            <div class="filter-actions">
+                </div>
+        </div>
+    
+        <!--div class="filter-actions">
+            <a href="#"><i class="fas fa-search"></i></a>
+            <a href="#"><i class="fas fa-filter"></i></a>
+            <a href="#"><i class="fas fa-upload"></i> Bulk Offline Upload</a>
+            <a href="#">Add Quick Lead</a>
+        </div-->
+
+        <div class="filter-actions">
+            <a href="#"><i class="fas fa-search"></i></a>
+            <a href="#"><i class="fas fa-filter"></i></a>
+            <div class="action-dropdown">
+                <a href="#"><i class="fas fa-upload"></i></a>
+                <div class="action-dropdown-content">
+                    <a href="gu2.html">Bulk Offline Upload</a>
+                    <a href="test.html">Add Quick Lead</a>
+                </div>
+            </div>
+        </div-->
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Registered Name</th>
+                    <th>Registered Email</th>
+                    <th>Registered Mobile</th>
+                    <th>State</th>
+                    <th>City</th>
+                    <th>Primary Registration Campaign</th>
+                    <th>User Registration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>K studio</td>
+                    <td>suang83624@gmail.com</td>
+                    <td>+91-8030837099</td>
+                    <td>State Not Available</td>
+                    <td>City Not Available</td>
+                    <td>Adwords/Lead/NA</td>
+                    <td>25/03/2023, 02:09:49 PM</td>
+                </tr>
+                <tr>
+                    <td>Applicant</td>
+                    <td></td>
+                    <td>+91-6973938990</td>
+                    <td>State Not Available</td>
+                    <td>City Not Available</td>
+                    <td>Inbound Call/110043828882/Inbound Call</td>
+                    <td>25/03/2023, 02:04:33 PM</td>
+                </tr>
+                <tr>
+                    <td>Md Samim</td>
+                    <td></td>
+                    <td>+91-9234241650</td>
+                    <td>State Not Available</td>
+                    <td>City Not Available</td>
+                    <td>Adwords/Lead/NA</td>
+                    <td>25/03/2023, 01:57:18 PM</td>
+                </tr>
+                <tr>
+                    <td>Rahul Kr</td>
+                    <td></td>
+                    <td>+91-8933506684</td>
+                    <td>State Not Available</td>
+                    <td>City Not Available</td>
+                    <td>Adwords/Lead/NA</td>
+                    <td>25/03/2023, 01:56:17 PM</td>
+                </tr>
+                <tr>
+                    <td>Abhimanyu Singh</td>
+                    <td>abhimanyusingh1895@gmail.com</td>
+                    <td>+91-9247617919</td>
+                    <td>State Not Available</td>
+                    <td>City Not Available</td>
+                    <td>Adwords/Lead/NA</td>
+                    <td>25/03/2023, 01:54:28 PM</td>
+                </tr>
+                <tr>
+                    <td>Anita rajput</td>
+                    <td>anitarajput806099@gmail.com</td>
+                    <td>+91-725153850</td>
+                    <td>State Not Available</td>
+                    <td>City Not Available</td>
+                    <td>Adwords/Lead/NA</td>
+                    <td>25/03/2023, 01:53:08 PM</td>
+                </tr>
+                <tr>
+                    <td>Amit Karay</td>
+                    <td></td>
+                    <td>+91-9756664543</td>
+                    <td>State Not Available</td>
+                    <td>City Not Available</td>
+                    <td>Adwords/Lead/NA</td>
+                    <td>25/03/2023, 01:50:03 PM</td>
+                </tr>
+                <tr>
+                    <td>Applicant</td>
+                    <td></td>
+                    <td>+91-9751401902</td>
+                    <td>State Not Available</td>
+                    <td>City Not Available</td>
+                    <td>Inbound Call/110043828882/Inbound Call</td>
+                    <td>25/03/2023, 01:43:56 PM</td>
+                </tr>
+                <tr>
+                    <td>Md Dawad</td>
+                    <td></td>
+                    <td>+91-9815922295</td>
+                    <td>State Not Available</td>
+                    <td>City Not Available</td>
+                    <td>Adwords/Lead/NA</td>
+                    <td>25/03/2023, 01:40:35 PM</td>
+                </tr>
+                <tr>
+                    <td>Roshan Krroy</td>
+                    <td>roshankrroy756@gmail.com</td>
+                    <td>+91-9434120551</td>
+                    <td>State Not Available</td>
+                    <td>City Not Available</td>
+                    <td>Adwords/Lead/NA</td>
+                    <td>25/03/2023, 01:35:53 PM</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+            <a href="#">Show More Leads</a>
+            <div>
+                Show Total Records<span style="margin-left: 10px;">Show Rows: 10</span>
+            </div>
+        </div>
+    </div>
+    
+
+    <select id="pageSelector">
+        <option value="">Select a page</option>
+        <option value="gu1.html">Page 1</option>
+        <option value="test.html">Page 2</option>
+
+
+    <script>
+
+        document.getElementById('pageSelector').addEventListener('change', function() {
+            var selectedPage = this.value;
+            if (selectedPage) {
+              window.location.href = gu1.html;
+            }
+          });
+        // JavaScript for Navbar and Sidebar functionality (add your logic here)
+        document.addEventListener('DOMContentLoaded', function () {
+            const notifications = document.querySelector('.notifications');
+            const notificationDropdown = document.querySelector('.notification-dropdown');
+            const profile = document.querySelector('.profile');
+            const profileDropdown = document.querySelector('.profile-dropdown');
+
+            notifications.addEventListener('click', () => {
+                notificationDropdown.classList.toggle('show');
+            });
+
+            profile.addEventListener('click', () => {
+                profileDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!notifications.contains(event.target) && !notificationDropdown.contains(event.target)) {
+                    notificationDropdown.classList.remove('show');
+                }
+                if (!profile.contains(event.target) && !profileDropdown.contains(event.target)) {
+                    profileDropdown.classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
