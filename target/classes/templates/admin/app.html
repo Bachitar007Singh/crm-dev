@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Demo</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            height: 100vh;
+            width: 60px;
+            background-color: #2c3e50;
+            color: white;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s;
+            overflow: hidden;
+            z-index: 999;
+        }
+
+        .sidebar.expanded {
+            width: 200px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            border-bottom: 1px solid #34495e;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        .sidebar .material-icons {
+            font-size: 24px;
+            min-width: 24px;
+        }
+
+        .sidebar a span.text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .sidebar.expanded a span.text {
+            display: inline;
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-icon {
+            position: absolute;
+            right: 15px;
+            transition: all 0.3s;
+            opacity: 0;
+        }
+
+        .sidebar.expanded .dropdown-icon {
+            opacity: 1;
+        }
+
+        .sidebar:hover .dropdown-icon {
+            opacity: 1;
+            transition-delay: 0.1s;
+        }
+
+        .dropdown-menu {
+            display: none;
+            background-color: #34495e;
+        }
+
+        .dropdown-menu a {
+            padding-left: 40px;
+            font-size: 14px;
+        }
+
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Main Content */
+        .content {
+            margin-left: 60px;
+            padding: 20px;
+            margin-top: 60px;
+            transition: margin-left 0.3s;
+        }
+
+        .sidebar.expanded ~ .content {
+            margin-left: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="profile">
+            <img src="profile-placeholder.jpg" alt="Profile" class="profile-img">
+            <span>Admin User</span>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="dropdown">
+            <a href="#" onclick="toggleDropdown(event)">
+                <span class="material-icons">dashboard</span>
+                <span class="text">Dashboard</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="#">
+                    <span class="material-icons">space_dashboard</span>
+                    <span class="text">Admin Dashboard</span>
+                </a>
+                <a href="#">
+                    <span class="material-icons">person</span>
+                    <span class="text">User Dashboard</span>
+                </a>
+                <a href="#">
+                    <span class="material-icons">school</span>
+                    <span class="text">Student Quality</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <a href="#" onclick="toggleDropdown(event)">
+                <span class="material-icons">supervisor_account</span>
+                <span class="text">Lead Manager</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="#">
+                    <span class="material-icons">add</span>
+                    <span class="text">New Lead</span>
+                </a>
+                <a href="#">
+                    <span class="material-icons">upload</span>
+                    <span class="text">Import Leads</span>
+                </a>
+                <a href="#">
+                    <span class="material-icons">assessment</span>
+                    <span class="text">Reports</span>
+                </a>
+            </div>
+        </div>
+
+        <a href="#">
+            <span class="material-icons">calendar_month</span>
+            <span class="text">Calendar</span>
+        </a>
+
+        <a href="#">
+            <span class="material-icons">description</span>
+            <span class="text">Formdesk</span>
+        </a>
+
+        <a href="#">
+            <span class="material-icons">logout</span>
+            <span class="text">Logout</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Blank Page with Sidebar</h1>
+        <p>This page demonstrates just the sidebar functionality.</p>
+        <p>Try hovering over the sidebar to expand it, and clicking the dropdown arrows.</p>
+        <p>Notice how the arrows fade out when collapsed and reappear when hovered.</p>
+    </div>
+
+    <script>
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        let sidebarTimeout;
+        
+        // Expand sidebar on hover
+        sidebar.addEventListener('mouseenter', () => {
+            clearTimeout(sidebarTimeout);
+            sidebar.classList.add('expanded');
+        });
+        
+        // Collapse sidebar when mouse leaves
+        sidebar.addEventListener('mouseleave', () => {
+            sidebarTimeout = setTimeout(() => {
+                sidebar.classList.remove('expanded');
+                // Close all dropdowns when sidebar collapses
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }, 300);
+        });
+        
+        // Keep expanded if mouse moves back quickly
+        sidebar.addEventListener('mousemove', () => {
+            clearTimeout(sidebarTimeout);
+        });
+
+        // Toggle dropdown menus
+        function toggleDropdown(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const dropdown = event.currentTarget.closest('.dropdown');
+            const wasActive = dropdown.classList.contains('active');
+            
+            // Close all dropdowns first
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+            });
+            
+            // Open current one if it wasn't active
+            if (!wasActive) {
+                dropdown.classList.add('active');
+            }
+        }
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -91,7 +91,7 @@ public class AdminController {
                 session.setAttribute("adminid", admin.getUserid());
                 session.setAttribute("role", admin.getRole());
                 if ("Employee".equals(admin.getRole())) {
-                    session.setAttribute("counselorId", admin.getId());
+                    session.setAttribute("counselorId", admin.getUserid());
                 }
 
                 // Debug: Print session attributes after setting
@@ -112,62 +112,10 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/calendarpro")
-    public String showcalendarpro(HttpSession session, HttpServletResponse response, Model model) {
-        try {
-            response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-
-            // Debug logs
-            System.out.println("Session - adminid: " + session.getAttribute("adminid"));
-            System.out.println("Session - counselorId: " + session.getAttribute("counselorId"));
-            System.out.println("Session - role: " + session.getAttribute("role"));
-
-            if (session.getAttribute("adminid") != null || session.getAttribute("counselorId") != null) {
-                String role = (String) session.getAttribute("role");
-                if (role == null || (!role.equals("Admin") && !role.equals("Manager") && !role.equals("Employee"))) {
-                    System.out.println("Invalid role: Redirecting to login page");
-                    return "redirect:/adminlogin";
-                }
-
-                List<Registration> leadlist;
-                if ("Employee".equals(role)) {
-                    Integer counselorId = (Integer) session.getAttribute("counselorId");
-                    leadlist = rrepo.findByCounselorId(counselorId);
-                } else {
-                    leadlist = rrepo.findAll();
-                }
-
-                // Filter and sort leads
-                leadlist = leadlist.stream()
-                    .filter(registration -> registration.getRegistrationDate() != null)
-                    .collect(Collectors.toList());
-
-                leadlist.sort((r1, r2) -> {
-                    Date date1 = r1.getRegistrationDate();
-                    Date date2 = r2.getRegistrationDate();
-                    if (date1 == null && date2 == null) return 0;
-                    if (date1 == null) return -1;
-                    if (date2 == null) return 1;
-                    return date2.compareTo(date1);
-                });
-
-                // Fetch active counselors
-                List<Counselor> counselors = crepo.findByActiveTrue();
-                model.addAttribute("counselors", counselors);
-                model.addAttribute("leadlist", leadlist);
-                return "admin/calendarpro"; // Ensure this matches the template path
-            } else {
-                System.out.println("Session validation failed: Redirecting to login page");
-                return "redirect:/adminlogin";
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return "redirect:/adminlogin";
-        }
-    }
+   
 
     @GetMapping("/lead-details")
-    public String showLeadDetails(@RequestParam("id") int leadId, Model model) {
+    public String showLeadDetails(@RequestParam("id") Long leadId, Model model) {
         // Fetch the lead details from the repository using the leadId
         Registration lead = rrepo.findById(leadId)
                 .orElseThrow(() -> new EntityNotFoundException("Lead not found with id: " + leadId));
@@ -191,7 +139,7 @@ public class AdminController {
             System.out.println("Update lead stage endpoint called with data: " + data);
 
             // Parse the data
-            int leadId = Integer.parseInt(data.get("leadId"));
+            Long leadId = (long) Integer.parseInt(data.get("leadId"));
             String leadStage = data.get("leadStage");
             String counselorName = data.get("counselorName");
             String followupDateStr = data.get("followupDate"); // Get followupDate as string
@@ -216,7 +164,7 @@ public class AdminController {
             // Parse followupDate from String to LocalDate and then to Date
             if (followupDateStr != null && !followupDateStr.isEmpty()) {
                 LocalDate followupLocalDate = LocalDate.parse(followupDateStr); // Parse the date
-                Date followupDate = Date.from(followupLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant()); // Convert to Date
+                Date followupDate = (Date) Date.from(followupLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant()); // Convert to Date
                 lead.setFollowupDate(followupDate); // Set the followupDate
             }
 
@@ -314,62 +262,14 @@ public class AdminController {
         }
     }
     @GetMapping("/calendarpro")
-    public String showcalendarpro(HttpSession session, HttpServletResponse response, Model model) {
-        try {
-            response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-
-            // Debug logs
-            System.out.println("Session - adminid: " + session.getAttribute("adminid"));
-            System.out.println("Session - counselorId: " + session.getAttribute("counselorId"));
-            System.out.println("Session - role: " + session.getAttribute("role"));
-
-            if (session.getAttribute("adminid") != null || session.getAttribute("counselorId") != null) {
-                String role = (String) session.getAttribute("role");
-                if (role == null || (!role.equals("Admin") && !role.equals("Manager") && !role.equals("Employee"))) {
-                    System.out.println("Invalid role: Redirecting to login page");
-                    return "redirect:/adminlogin";
-                }
-
-                List<Registration> leadlist;
-                if ("Employee".equals(role)) {
-                    Integer counselorId = (Integer) session.getAttribute("counselorId");
-                    leadlist = rrepo.findByCounselorId(counselorId);
-                } else {
-                    leadlist = rrepo.findAll();
-                }
-
-                // Filter and sort leads
-                leadlist = leadlist.stream()
-                    .filter(registration -> registration.getRegistrationDate() != null)
-                    .collect(Collectors.toList());
-
-                leadlist.sort((r1, r2) -> {
-                    Date date1 = r1.getRegistrationDate();
-                    Date date2 = r2.getRegistrationDate();
-                    if (date1 == null && date2 == null) return 0;
-                    if (date1 == null) return -1;
-                    if (date2 == null) return 1;
-                    return date2.compareTo(date1);
-                });
-
-                // Fetch active counselors
-                List<Counselor> counselors = crepo.findByActiveTrue();
-                model.addAttribute("counselors", counselors);
-                model.addAttribute("leadlist", leadlist);
-                return "admin/calendarpro"; // Ensure this matches the template path
-            } else {
-                System.out.println("Session validation failed: Redirecting to login page");
-                return "redirect:/adminlogin";
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return "redirect:/adminlogin";
-        }
+    public String showcalendarpro() {
+        return "calendarpro";
     }
     
-    @GetMapping("/compeignmanager")
-    public String getMethodName() {
-        return "admin/compaignmanager";
+    
+    @GetMapping("/admin/campaignmanager")
+    public String showCampaignManager() {
+        return "campaignmanager/CampaignManager";
     }
     
     

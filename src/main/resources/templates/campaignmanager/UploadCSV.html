@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color:rgb(247, 249, 248);/*f7f9fc;rgba(0, 0, 0, 0.1);*/
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(232, 16, 16, 0.1);
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group .description {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .drag-drop-area {
+            border: 2px dashed #ddd;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .drag-drop-area button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .sample-download a {
+            text-decoration: none;
+            color: #007bff;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .sample-download img {
+            width: 20px;
+            margin-right: 5px;
+        }
+
+        .navigation-buttons {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .navigation-buttons button {
+            padding: 10px 20px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+
+        .navigation-buttons button:first-child {
+            background-color: #e1e4e8;
+            color: #24292e;
+        }
+
+        .navigation-buttons button:last-child {
+            background-color: #28a745;
+            color: white;
+        }
+
+        /* Improved custom select styles */
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-selected {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .select-selected:after {
+            content: "▼";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: #555;
+        }
+
+        .select-items {
+            position: absolute;
+            background-color:white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 1;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .select-items.show {
+            display: block;
+        }
+
+        .select-search {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 2;
+        }
+
+        .select-search input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .select-options {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .select-option {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .select-option:hover {
+            background-color: #f5f5f5;
+        }
+
+        .select-option.highlight {
+            background-color: #e9f5ff;
+            font-weight: bold;
+        }
+
+        .select-option.no-results {
+            color: #888;
+            font-style: italic;
+            pointer-events: none;
+        }
+
+      
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload File</h2>
+
+        <div class="form-group">
+            <label for="uploadType">Upload type <span style="font-size: 12px;">&#x24D8;</span></label>
+            <select id="uploadType">
+                <option value="newLeads">Add new leads</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="institute">Institute / Applying For Name</label>
+            <select id="institute">
+                <option value="">Select Institute / Applying For Name</option>
+                <option value="bannity">Bareilly</option>
+                <option value="greaterNoida">Greater Noida</option>
+            </select>
+            <div class="description">(Select if leads are collected based on campus, based on selection all leads will be marked for particular campus)</div>
+        </div>
+
+        <div class="form-group">
+            <label for="course">Course Name</label>
+            <div class="custom-select">
+                <div class="select-selected" id="course-selected" onclick="toggleDropdown('courseDropdown')">Select Course Name</div>
+                <div id="courseDropdown" class="select-items">
+                    <div class="select-search">
+                        <input type="text" placeholder="Search courses..." oninput="filterOptions('courseDropdown', this.value)">
+                    </div>
+                    <ul class="select-options" id="courseOptions">
+                        <li class="select-option" data-value="advancedDiploma">Advanced Diploma in Deployment Project Controls</li>
+                        <li class="select-option" data-value="bba">Bachelor of Business Administration (BBA)</li>
+                        <li class="select-option" data-value="diplomaControls">Diploma in Project Controls</li>
+                        <li class="select-option" data-value="diplomaManagement">Diploma in Project Management</li>
+                        <li class="select-option" data-value="integratedApprenticeship">Integrated Project Manager Degree Apprenticeship</li>
+                        <li class="select-option" data-value="na">NA</li>
+                        <li class="select-option" data-value="bcom">Bachelor of Commerce (B.Com)</li>
+                        <li class="select-option" data-value="bca">Bachelor of Computer Application (BCA)</li>
+                        <li class="select-option" data-value="bed">Bachelor of Education (B.Ed)</li>
+                    </ul>
+                </div>
+                <select id="course" style="display: none;">
+                    <option value=""></option>
+                    <option value="advancedDiploma">Advanced Diploma in Deployment Project Controls</option>
+                    <option value="bba">Bachelor of Business Administration (BBA)</option>
+                    <option value="diplomaControls">Diploma in Project Controls</option>
+                    <option value="diplomaManagement">Diploma in Project Management</option>
+                    <option value="integratedApprenticeship">Integrated Project Manager Degree Apprenticeship</option>
+                    <option value="na">NA</option>
+                    <option value="bcom">Bachelor of Commerce (B.Com)</option>
+                    <option value="bca">Bachelor of Computer Application (BCA)</option>
+                    <option value="bed">Bachelor of Education (B.Ed)</option>
+                </select>
+            </div>
+            <div class="description">(Select if leads are collected based on course, based on selection all leads will be marked for particular course)</div>
+        </div>
+
+        <div class="form-group">
+            <label for="user">User Name</label>
+            <select id="user">
+                <option value="">Select User Name</option>
+                <option value="aditiSharma">Aditi Sharma</option>
+                <option value="ananyaAgarwal">Ananya Agarwal</option>
+                <option value="anjali">Anjali</option>
+                <option value="darshna">Darshna</option>
+                <option value="darshneelBatra">Darshneel Batra</option>
+                <option value="geetaBhati">Geeta Bhati</option>
+                <option value="himanshuShekhar">HIMANSHU SHEKHAR</option>
+                <option value="madhuPriya">madhu priya</option>
+                <option value="nidaMalik">Nida Malik</option>
+            </select>
+            <div class="description">(Select if you want to assign leads directly to a user)</div>
+        </div>
+
+        <div class="drag-drop-area" id="dropArea">
+            <img src="cloud-upload-icon.png" alt="Upload" style="width: 50px; margin-bottom: 10px;">
+            <p>Drag and drop a CSV file here to upload</p>
+            <p>or</p>
+            <button id="selectFileButton">Select a file</button>
+            <input type="file" id="fileInput" style="display: none;" accept=".csv">
+        </div>
+
+        <div class="sample-download">
+            <a href="Lead_Sample.csv" download="Lead_Sample.csv">
+                <img src="images/pngwing.com.png" alt="Download">Sample CSV Download
+            </a>
+        </div>
+        <div class="navigation-buttons">
+            
+                <button id="backButton">&lt; Back</button>
+            <button id="uploadButton">Upload Data</button>
+        </div>
+    </div>
+
+    <script>
+        //sample download
+        document.querySelector('.sample-download a').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+    
+            // Fetch the CSV data (you'll need to replace this with your actual data source)
+            fetch('Lead_Sample.csv') // Or fetch from an API endpoint 
+                .then(response => response.text())
+                .then(csvData => {
+                    // Create a temporary link element
+                    const link = document.createElement('a');
+                    link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData);
+                    link.download = 'Lead_Sample.csv';
+    
+                    // Trigger a click on the link to start the download
+                    link.click();
+                });
+        });
+                //csv file selection
+        const dropArea = document.getElementById('dropArea');
+        const fileInput = document.getElementById('fileInput');
+        const selectFileButton = document.getElementById('selectFileButton');
+        const uploadButton = document.getElementById('uploadButton');
+        let selectedFile;
+
+        // Drag and Drop functionality
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.style.backgroundColor = '#f0f8ff'; // Highlight drop area
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.style.backgroundColor = ''; // Reset background
+        });
+
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.style.backgroundColor = ''; // Reset background
+            selectedFile = event.dataTransfer.files[0];
+            handleFileSelection(selectedFile);
+        });
+
+        // Select file using button
+        selectFileButton.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            selectedFile = event.target.files[0];
+            handleFileSelection(selectedFile);
+        });
+
+        // Handle file selection
+        function handleFileSelection(file) {
+            if (file && file.type === 'text/csv') {
+                alert('File selected: ' + file.name);
+            } else {
+                alert('Please select a CSV file.');
+                selectedFile = null;
+            }
+        }
+//back button clicked
+document.getElementById('backButton').addEventListener('click', function() {
+    window.location.href = 'gu2.html';
+});
+        // Upload button click
+        uploadButton.addEventListener('click', () => {
+            if (selectedFile) {
+                // You can add logic here to send the file to the server or process it.
+                // For example, using FormData and XMLHttpRequest or fetch.
+
+                // For now, just navigate to map.html
+                window.location.href = 'map.html'; 
+            } else {
+                alert('Please select a file before uploading.');
+            }
+        });
+        // Toggle dropdown visibility
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle('show');
+            
+            // Close other open dropdowns
+            document.querySelectorAll('.select-items').forEach(item => {
+                if (item.id !== id && item.classList.contains('show')) {
+                    item.classList.remove('show');
+                }
+            });
+            
+            // Focus search input when opened
+            if (dropdown.classList.contains('show')) {
+                const searchInput = dropdown.querySelector('input');
+                if (searchInput) {
+                    searchInput.focus();
+                    searchInput.value = '';
+                    filterOptions(id, '');
+                }
+            }
+        }
+
+        // Improved search functionality
+        function filterOptions(dropdownId, searchValue) {
+            const dropdown = document.getElementById(dropdownId);
+            const options = dropdown.querySelectorAll('.select-option');
+            const searchTerm = searchValue.toLowerCase().trim();
+            
+            let hasMatches = false;
+            let exactMatches = [];
+            let partialMatches = [];
+            let otherMatches = [];
+            
+            options.forEach(option => {
+                const text = option.textContent.toLowerCase();
+                option.classList.remove('highlight');
+                
+                if (searchTerm === '') {
+                    option.style.display = 'block';
+                    return;
+                }
+                
+                // Check for exact match at start
+                if (text.startsWith(searchTerm)) {
+                    exactMatches.push(option);
+                    option.classList.add('highlight');
+                } 
+                // Check for exact match anywhere
+                else if (text.includes(searchTerm)) {
+                    partialMatches.push(option);
+                } 
+                // Check for partial word matches
+                else {
+                    const words = text.split(' ');
+                    const searchWords = searchTerm.split(' ');
+                    
+                    let hasPartial = false;
+                    for (const word of words) {
+                        for (const searchWord of searchWords) {
+                            if (word.startsWith(searchWord)) {
+                                hasPartial = true;
+                                break;
+                            }
+                        }
+                        if (hasPartial) break;
+                    }
+                    
+                    if (hasPartial) {
+                        otherMatches.push(option);
+                    }
+                }
+            });
+            
+            // Hide all options first
+            options.forEach(option => {
+                option.style.display = 'none';
+            });
+            
+            // Show exact matches first
+            exactMatches.forEach(option => {
+                option.style.display = 'block';
+            });
+            
+            // Then show partial matches
+            partialMatches.forEach(option => {
+                option.style.display = 'block';
+            });
+            
+            // Then show other matches
+            otherMatches.forEach(option => {
+                option.style.display = 'block';
+            });
+            
+            // Show no results message if no matches
+            hasMatches = exactMatches.length > 0 || partialMatches.length > 0 || otherMatches.length > 0;
+            
+            // Add click handlers
+            options.forEach(option => {
+                option.onclick = function() {
+                    document.getElementById('course-selected').textContent = this.textContent;
+                    document.getElementById('course').value = this.dataset.value;
+                    document.getElementById(dropdownId).classList.remove('show');
+                };
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.custom-select')) {
+                document.querySelectorAll('.select-items').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

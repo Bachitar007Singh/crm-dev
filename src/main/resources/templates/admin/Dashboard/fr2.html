@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            height: 100vh;
+            width: 60px;
+            background-color: #2c3e50;
+            color: #ffffff;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: width 0.3s;
+            overflow: hidden;
+            padding-top: 10px;
+            z-index: 999;
+        }
+
+        .sidebar.expanded {
+            width: 200px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #ffffff;
+            padding: 15px 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            border-bottom: 1px solid #34495e;
+            transition: background-color 0.3s;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        .sidebar .material-icons {
+            font-size: 24px;
+            min-width: 24px;
+        }
+
+        .sidebar a span.text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .sidebar.expanded a span.text {
+            display: inline;
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-icon {
+            position: absolute;
+            right: 15px;
+            transition: transform 0.3s;
+        }
+
+        .dropdown-menu {
+            display: none;
+            background-color: #34495e;
+            width: 100%;
+        }
+
+        .dropdown-menu a {
+            padding-left: 40px;
+            font-size: 14px;
+        }
+
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Main Content Styles */
+        .content {
+            margin-left: 60px;
+            padding: 20px;
+            margin-top: 60px;
+            transition: margin-left 0.3s;
+        }
+
+        .sidebar.expanded ~ .content {
+            margin-left: 200px;
+        }
+
+        .main-header {
+            margin-bottom: 20px;
+        }
+
+        .main-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .dashboard-options {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .dashboard-option {
+            padding: 8px 16px;
+            margin-right: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .dashboard-option.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .dashboard-option:hover:not(.active) {
+            background-color: #f0f0f0;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Chart Styles */
+        #userChart {
+            width: 100%;
+            height: 400px;
+        }
+        
+        .legend-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-right">
+            <div class="profile">
+                <img src="profile-placeholder.jpg" alt="Profile" class="profile-img">
+                <span class="profile-name">John Alex</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="dropdown">
+            <a href="#" class="menu-item dropdown-toggle" onclick="toggleDropdown(event)">
+                <span class="material-icons">dashboard</span>
+                <span class="text">Dashboard</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="/admin/adminhome">Admin Dashboard</a>
+                <a href="/admin/user_dashboard">User Dashboard</a>
+                <a href="/admin/Student_QI">Student Quality Index</a>
+            </div>
+        </div>
+        
+        <div class="dropdown">
+            <a href="#" class="menu-item dropdown-toggle" onclick="toggleDropdown(event)">
+                <span class="material-icons">supervisor_account</span>
+                <span class="text">Lead Manager</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="/admin/adminhome">Manage Leads</a>
+                <a href="/user-dashboard">Offline Upload Logs</a>
+            </div>
+        </div>
+        
+        <a href="/admin/calendarpro">
+            <span class="material-icons">calendar_month</span>
+            <span class="text">Calendar Pro</span>
+        </a>
+        
+        <a href="formdesk">
+            <span class="material-icons">description</span>
+            <span class="text">Formdesk</span>
+        </a>
+        
+        <a href="/admin/counselor">
+            <span class="material-icons">person</span>
+            <span class="text">Counselor</span>
+        </a>
+        
+        <a href="logout">
+            <span class="material-icons">logout</span>
+            <span class="text">Logout</span>
+        </a>
+    </div>
+
+    <div class="content">
+        <div class="main-header">
+            <h2>Leads</h2>
+        </div>
+
+        <div class="dashboard-options">
+            <a href="#" class="dashboard-option active" id="userDashboardBtn">Applications</a>
+            <a href="#" class="dashboard-option" id="productivityReportBtn">Productivity Report</a>
+        </div>
+
+        
+    <script>
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        let sidebarTimeout;
+        
+        // Expand sidebar on hover
+        sidebar.addEventListener('mouseenter', () => {
+            clearTimeout(sidebarTimeout);
+            sidebar.classList.add('expanded');
+        });
+        
+        // Collapse sidebar when mouse leaves
+        sidebar.addEventListener('mouseleave', () => {
+            sidebarTimeout = setTimeout(() => {
+                sidebar.classList.remove('expanded');
+                // Close all dropdowns when sidebar collapses
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }, 300);
+        });
+        
+        // Keep expanded if mouse moves back quickly
+        sidebar.addEventListener('mousemove', () => {
+            clearTimeout(sidebarTimeout);
+        });
+
+        // Toggle dropdown menus
+        function toggleDropdown(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const dropdown = event.currentTarget.closest('.dropdown');
+            const wasActive = dropdown.classList.contains('active');
+            
+            // Close all dropdowns first
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+            });
+            
+            // Open current one if it wasn't active
+            if (!wasActive) {
+                dropdown.classList.add('active');
+            }
+        }
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+
+        // Chart initialization
+        document.addEventListener("DOMContentLoaded", function () {
+            const ctx = document.getElementById("userChart").getContext("2d");
+            const myChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: ["Amplt", "Darshma", "Darshnees", "Geeta Einaf", "Khushy", "madhu priya", "Marketing"],
+                    datasets: [
+                        {
+                            label: "Applications",
+                            data: [1167, 1436, 546, 10121, 15378, 12, 10],
+                            backgroundColor: "rgba(54, 162, 235, 0.5)",
+                            borderColor: "rgba(54, 162, 235, 1)",
+                            borderWidth: 1,
+                        }
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: "rgba(0, 0, 0, 0.1)",
+                                drawBorder: false
+                            },
+                            ticks: {
+                                stepSize: 2000,
+                                max: 16000,
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Manager | Lead Management System</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --dark-color: #2b2d42;
+            --light-color: #f8f9fa;
+            --success-color: #4bb543;
+            --warning-color: #f0ad4e;
+            --danger-color: #d9534f;
+            --sidebar-width: 60px;
+            --sidebar-expanded: 220px;
+            --navbar-height: 60px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* --- Navbar Styles --- */
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 25px;
+            height: var(--navbar-height);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notifications {
+            position: relative;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--dark-color);
+            transition: transform 0.3s ease;
+        }
+
+        .notification-icon:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s;
+        }
+
+        .notification-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item .icon {
+            margin-right: 12px;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .notification-item.success .icon {
+            color: var(--success-color);
+        }
+
+        .notification-item.failed .icon {
+            color: var(--danger-color);
+        }
+
+        .notification-item .text {
+            flex-grow: 1;
+            font-size: 14px;
+        }
+
+        .notification-item .status {
+            font-weight: 600;
+            margin-left: 10px;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background-color: #f0f0f0;
+        }
+
+        .notification-item.success .status {
+            color: var(--success-color);
+            background-color: rgba(75, 181, 67, 0.1);
+        }
+
+        .notification-item.failed .status {
+            color: var(--danger-color);
+            background-color: rgba(217, 83, 79, 0.1);
+        }
+
+        .notification-time {
+            display: block;
+            font-size: 12px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        .show-all {
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            color: var(--primary-color);
+            font-weight: 500;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .show-all:hover {
+            background-color: #f0f0f0;
+        }
+
+        .profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 30px;
+            transition: background-color 0.3s;
+        }
+
+        .profile:hover {
+            background-color: #f0f0f0;
+        }
+
+        .profile-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+            border: 2px solid #e1e1e1;
+        }
+
+        .profile-name {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .profile-info {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-header-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+        }
+
+        .profile-header-info h4 {
+            margin: 0;
+            color: var(--dark-color);
+            font-size: 16px;
+        }
+
+        .profile-header-info p {
+            margin: 3px 0 0;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .profile-detail {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .profile-detail-label {
+            font-weight: 600;
+            color: #555;
+            display: inline-block;
+            width: 80px;
+        }
+
+        .profile-dropdown a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #555;
+            transition: all 0.2s;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #f9f9f9;
+            color: var(--primary-color);
+            padding-left: 20px;
+        }
+
+        .profile-dropdown a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sign-out-btn {
+            color: var(--danger-color);
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* --- Sidebar Styles --- */
+        .sidebar {
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+            color: #ffffff;
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            padding-top: 15px;
+            z-index: 999;
+        }
+
+        .sidebar:hover {
+            width: var(--sidebar-expanded);
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 12px 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .sidebar a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .sidebar a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: #fff;
+        }
+
+        .sidebar .material-icons {
+            font-size: 22px;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.9);
+            flex-shrink: 0;
+        }
+
+        .sidebar a span.text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 15px;
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover a span.text {
+            display: inline;
+            opacity: 1;
+        }
+
+        .sidebar:hover a {
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: relative;
+            flex-direction: column;
+            background-color: rgba(0, 0, 0, 0.1);
+            box-shadow: none;
+            width: 100%;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: flex;
+            max-height: 500px;
+        }
+
+        .dropdown-menu a {
+            padding-left: 50px;
+            font-size: 13px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: transparent;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content Styles */
+        .content {
+            margin-left: var(--sidebar-width);
+            padding: 25px;
+            width: calc(100% - var(--sidebar-width));
+            transition: margin-left 0.3s ease;
+            padding-top: calc(var(--navbar-height) + 20px);
+            min-height: 100vh;
+        }
+
+        .sidebar:hover ~ .content,
+        .content.expanded {
+            margin-left: var(--sidebar-expanded);
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .main-header h2 {
+            margin: 0;
+            color: var(--dark-color);
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .main-header .breadcrumb {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Filters Container */
+        .filters-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-options {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-group label {
+            margin-right: 8px;
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .filter-options select,
+        .filter-options input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+
+        .filter-options select:focus,
+        .filter-options input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+
+        .filter-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border-color: #ddd;
+            color: #555;
+        }
+
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+            border-color: #ccc;
+        }
+
+        .btn-icon {
+            padding: 8px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+        }
+
+        .btn-icon:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Action Dropdown */
+        .action-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .action-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 100;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .action-dropdown-content a {
+            color: #555;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .action-dropdown-content a:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            padding-left: 20px;
+        }
+
+        .action-dropdown:hover .action-dropdown-content {
+            display: block;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        table thead th {
+            background-color: #f8f9fa;
+            color: #555;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 2px solid #eee;
+            position: sticky;
+            top: 0;
+        }
+
+        table tbody tr {
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+
+        table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        table td {
+            padding: 12px 15px;
+            color: #333;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: rgba(75, 181, 67, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-inactive {
+            background-color: rgba(217, 83, 79, 0.1);
+            color: var(--danger-color);
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: transparent;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .pagination-info {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .pagination-links {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .page-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .page-link:hover {
+            background-color: #f0f0f0;
+        }
+
+        .page-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: var(--sidebar-expanded);
+            }
+            .content {
+                margin-left: var(--sidebar-expanded);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filters-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .filter-options {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .filter-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            table thead {
+                display: none;
+            }
+            table tbody tr {
+                display: block;
+                margin-bottom: 15px;
+                border: 1px solid #eee;
+                border-radius: 8px;
+            }
+            table tbody td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 15px;
+                border-bottom: 1px solid #eee;
+            }
+            table tbody td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #555;
+                margin-right: 15px;
+            }
+            table tbody tr:last-child td:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-right">
+            <div class="notifications">
+                <i class="fas fa-bell notification-icon"></i>
+                <div class="notification-dropdown">
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">
+                            New lead added successfully
+                            <span class="notification-time">2 minutes ago</span>
+                            <span class="status">Success</span>
+                        </div>
+                    </div>
+                    <div class="notification-item failed">
+                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="text">
+                            Campaign sync failed
+                            <span class="notification-time">15 minutes ago</span>
+                            <span class="status">Failed</span>
+                        </div>
+                    </div>
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">
+                            Email campaign sent to 1,200 contacts
+                            <span class="notification-time">1 hour ago</span>
+                            <span class="status">Success</span>
+                        </div>
+                    </div>
+                    <div class="notification-item failed">
+                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="text">
+                            API connection timeout
+                            <span class="notification-time">3 hours ago</span>
+                            <span class="status">Failed</span>
+                        </div>
+                    </div>
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">
+                            Database backup completed
+                            <span class="notification-time">Yesterday</span>
+                            <span class="status">Success</span>
+                        </div>
+                    </div>
+                    <div class="show-all">View All Notifications</div>
+                </div>
+            </div>
+            <div class="profile">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-img">
+                <span class="profile-name">John Alex</span>
+                <div class="profile-dropdown">
+                    <div class="profile-info">
+                        <div class="profile-header">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-header-img">
+                            <div class="profile-header-info">
+                                <h4>John Alex</h4>
+                                <p>Sales Manager</p>
+                            </div>
+                        </div>
+                        <div class="profile-detail">
+                            <span class="profile-detail-label">Email:</span> john.alex@example.com
+                        </div>
+                        <div class="profile-detail">
+                            <span class="profile-detail-label">Phone:</span> (123) 456-7890
+                        </div>
+                        <div class="profile-detail">
+                            <span class="profile-detail-label">Last Login:</span> Today, 10:45 AM
+                        </div>
+                    </div>
+                    <a href="#"><i class="fas fa-user-cog"></i> My Profile</a>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+                    <a href="#" class="sign-out-btn"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sidebar">
+        <div class="dropdown">
+            <a href="/admin/adminhome" class="menu-item">
+                <span class="material-icons">dashboard</span>
+                <span class="text">Dashboard</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="/admin/adminhome">Admin Dashboard</a>
+                <a href="/admin/user_dashboard">User Dashboard</a>
+                <a href="/admin/Student_QI">Student Quality Index</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="leadmanager" class="menu-item">
+                <span class="material-icons">supervisor_account</span>
+                <span class="text">Lead Manager</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="/admin/adminhome">Manage Leads</a>
+                <a href="/user-dashboard">Offline Upload Logs</a>
+            </div>
+        </div>
+        <a href="/admin/calendarpro">
+            <span class="material-icons">calendar_month</span>
+            <span class="text">Calendar Pro</span>
+        </a>
+        <a href="formdesk">
+            <span class="material-icons">description</span>
+            <span class="text">Formdesk</span>
+        </a>
+        <a href="/admin/counselor">
+            <span class="material-icons">person</span>
+            <span class="text">Counselor</span>
+        </a>
+        <a href="opportunity">
+            <span class="material-icons">assignment</span>
+            <span class="text">Opportunity</span>
+        </a>
+        <a href="applicationmanager">
+            <span class="material-icons">folder</span>
+            <span class="text">Application Manager</span>
+        </a>
+        <a href="marketing">
+            <span class="material-icons">campaign</span>
+            <span class="text">Marketing</span>
+        </a>
+        <a href="compeignmanager" class="active">
+            <span class="material-icons">send</span>
+            <span class="text">Campaign Manager</span>
+        </a>
+        <a href="querymanager">
+            <span class="material-icons">help</span>
+            <span class="text">Query Manager</span>
+        </a>
+        <a href="paymentmanager">
+            <span class="material-icons">payment</span>
+            <span class="text">Payment Manager</span>
+        </a>
+        <a href="reportanalytics">
+            <span class="material-icons">bar_chart</span>
+            <span class="text">Reports & Analytics</span>
+        </a>
+        <a href="templatemanager">
+            <span class="material-icons">widgets</span>
+            <span class="text">Template Manager</span>
+        </a>
+        <a href="logout">
+            <span class="material-icons">logout</span>
+            <span class="text">Logout</span>
+        </a>
+    </div>
+
+    <div class="content">
+        <div class="main-header">
+            <h2>Campaign Manager</h2>
+            <div class="breadcrumb">
+                <a href="#">Home</a> / <a href="#">Marketing</a> / Campaign Manager
+            </div>
+        </div>
+    
+        <div class="filters-container">
+            <div class="filter-options">
+                <div class="filter-group">
+                    <label for="campaign-type">Type:</label>
+                    <select id="campaign-type">
+                        <option value="">All Campaigns</option>
+                        <option value="email">Email</option>
+                        <option value="sms">SMS</option>
+                        <option value="social">Social Media</option>
+                        <option value="adwords">AdWords</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="campaign-status">Status:</label>
+                    <select id="campaign-status">
+                        <option value="">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="paused">Paused</option>
+                        <option value="completed">Completed</option>
+                        <option value="draft">Draft</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="date-range">Date Range:</label>
+                    <input type="date" id="date-range">
+                </div>
+            </div>
+            <div class="filter-actions">
+                <a href="#" class="btn btn-icon btn-outline" title="Search">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="#" class="btn btn-icon btn-outline" title="Filter">
+                    <i class="fas fa-filter"></i>
+                </a>
+                <div class="action-dropdown">
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Campaign
+                    </a>
+                    <div class="action-dropdown-content">
+                        <a href="#"><i class="fas fa-envelope"></i> Email Campaign</a>
+                        <a href="#"><i class="fas fa-sms"></i> SMS Campaign</a>
+                        <a href="#"><i class="fas fa-ad"></i> AdWords Campaign</a>
+                        <a href="#"><i class="fas fa-upload"></i> Bulk Upload</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campaign Name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Target Audience</th>
+                        <th>Leads Generated</th>
+                        <th>Conversion Rate</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Spring 2023 Admission Drive</td>
+                        <td>Email</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>2023-03-01</td>
+                        <td>2023-04-30</td>
+                        <td>Prospective Students</td>
+                        <td>1,245</td>
+                        <td>12.5%</td>
+                        <td>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Duplicate"><i class="fas fa-copy"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Summer Workshop Promo</td>
+                        <td>SMS</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>2023-04-15</td>
+                        <td>2023-05-15</td>
+                        <td>Existing Leads</td>
+                        <td>892</td>
+                        <td>8.3%</td>
+                        <td>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Duplicate"><i class="fas fa-copy"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>International Student Recruitment</td>
+                        <td>Social Media</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>2023-03-20</td>
+                        <td>2023-06-20</td>
+                        <td>International Students</td>
+                        <td>2,156</td>
+                        <td>15.2%</td>
+                        <td>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Duplicate"><i class="fas fa-copy"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Scholarship Awareness</td>
+                        <td>AdWords</td>
+                        <td><span class="status-badge status-inactive">Paused</span></td>
+                        <td>2023-02-10</td>
+                        <td>2023-03-10</td>
+                        <td>High School Seniors</td>
+                        <td>3,421</td>
+                        <td>18.7%</td>
+                        <td>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Duplicate"><i class="fas fa-copy"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Alumni Networking Event</td>
+                        <td>Email</td>
+                        <td><span class="status-badge status-inactive">Completed</span></td>
+                        <td>2023-01-05</td>
+                        <td>2023-02-05</td>
+                        <td>Alumni</td>
+                        <td>756</td>
+                        <td>22.4%</td>
+                        <td>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Duplicate"><i class="fas fa-copy"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fall 2023 Early Bird</td>
+                        <td>Email</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>2023-05-01</td>
+                        <td>2023-07-31</td>
+                        <td>Prospective Students</td>
+                        <td>1,089</td>
+                        <td>9.8%</td>
+                        <td>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Duplicate"><i class="fas fa-copy"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Webinar Series Promotion</td>
+                        <td>SMS</td>
+                        <td><span class="status-badge status-inactive">Draft</span></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>Existing Leads</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Duplicate"><i class="fas fa-copy"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <div class="pagination-info">
+                Showing 1 to 7 of 24 campaigns
+            </div>
+            <div class="pagination-links">
+                <a href="#" class="page-link"><i class="fas fa-angle-left"></i></a>
+                <a href="#" class="page-link active">1

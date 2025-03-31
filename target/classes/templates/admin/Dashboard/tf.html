@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            height: 100vh;
+            width: 60px;
+            background-color: #2c3e50;
+            color: #ffffff;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: width 0.3s;
+            overflow: hidden;
+            padding-top: 10px;
+        }
+
+        .sidebar:hover {
+            width: 200px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #ffffff;
+            padding: 15px 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #34495e;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        .sidebar .material-icons {
+            font-size: 24px;
+            transition: margin-right 0.3s;
+        }
+
+        .sidebar a span.text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .sidebar:hover a span.text {
+            display: inline;
+        }
+
+        .sidebar:hover a {
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+
+        /* Main Content Styles */
+        .content {
+            margin-left: 60px;
+            padding: 20px;
+            margin-top: 60px;
+            transition: margin-left 0.3s;
+        }
+
+        .sidebar:hover ~ .content {
+            margin-left: 200px;
+        }
+
+        .main-header {
+            margin-bottom: 20px;
+        }
+
+        .main-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .dashboard-options {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .dashboard-option {
+            padding: 8px 16px;
+            margin-right: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .dashboard-option.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .dashboard-option:hover:not(.active) {
+            background-color: #f0f0f0;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Productivity Report Styles */
+        .productivity-report {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .quick-views {
+            display: flex;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quick-view-item {
+            margin-right: 10px;
+            padding: 5px 10px;
+            background-color: #e9e9e9;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: right;
+            font-style: italic;
+            color: #666;
+        }
+
+        /* Chart Styles */
+        #userChart {
+            width: 100%;
+            height: 400px;
+        }
+        
+        .legend-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-right">
+            <div class="profile">
+                <img src="profile-placeholder.jpg" alt="Profile" class="profile-img">
+                <span class="profile-name">John Alex</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="#">
+            <span class="material-icons">dashboard</span>
+            <span class="text">Dashboard</span>
+        </a>
+        <a href="#">
+            <span class="material-icons">supervisor_account</span>
+            <span class="text">Lead Manager</span>
+        </a>
+        <a href="#">
+            <span class="material-icons">calendar_month</span>
+            <span class="text">Calendar</span>
+        </a>
+        <a href="#">
+            <span class="material-icons">logout</span>
+            <span class="text">Logout</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="main-header">
+            <h2>Leads</h2>
+        </div>
+
+        <div class="dashboard-options">
+            <a href="#" class="dashboard-option active" id="userDashboardBtn">Applications</a>
+            <a href="#" class="dashboard-option" id="productivityReportBtn">Productivity Report</a>
+        </div>
+
+        <!-- User Dashboard Content -->
+        <div id="userDashboardContent">
+            <div class="chart-container">
+                <div class="chart-title">Applications</div>
+                <canvas id="userChart"></canvas>
+                <div class="legend-container">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(54, 162, 235, 0.5);"></div>
+                        <span>Amplt</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(54, 162, 235, 0.5);"></div>
+                        <span>Darshma</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(54, 162, 235, 0.5);"></div>
+                        <span>Darshnees</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(54, 162, 235, 0.5);"></div>
+                        <span>Geeta Einaf</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(54, 162, 235, 0.5);"></div>
+                        <span>Khushy</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(54, 162, 235, 0.5);"></div>
+                        <span>madhu priya</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: rgba(54, 162, 235, 0.5);"></div>
+                        <span>Marketing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productivity Report (hidden by default) -->
+        <div id="productivityReport" class="productivity-report">
+            <h2>Productivity Report</h2>
+            
+            <div class="quick-views">
+                <div class="quick-view-item">Today</div>
+                <div class="quick-view-item">Lead Summary</div>
+                <div class="quick-view-item">Quick Summary</div>
+                <div class="quick-view-item">Application Summary</div>
+                <div class="quick-view-item">Telephony Status</div>
+                <div class="quick-view-item">Opportunity Missed</div>
+                <div class="quick-view-item">Effort Analysis</div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Owner Name</th>
+                        <th>Lead Assigned</th>
+                        <th>Leads Not Engaged</th>
+                        <th>Leads Engaged</th>
+                        <th>Overall</th>
+                        <th>Untouched Stage</th>
+                        <th>Overall Activities (Lead)</th>
+                        <th>Lead Stage Total</th>
+                        <th>Notes Added (Lead)</th>
+                        <th>Followup Added (Lead)</th>
+                        <th>Followup Overdue (Lead)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Aditi Sharma (aditi.sig@mail.it)</td>
+                        <td>8</td>
+                        <td>8</td>
+                        <td>12</td>
+                        <td>8</td>
+                        <td>24</td>
+                        <td>12</td>
+                        <td>12</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Always Agarwal (always.ag@mail.it)</td>
+                        <td>8</td>
+                        <td>4</td>
+                        <td>12</td>
+                        <td>4</td>
+                        <td>24</td>
+                        <td>10</td>
+                        <td>10</td>
+                        <td>2</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Anjali (anjali.sig@mail.it)</td>
+                        <td>4</td>
+                        <td>4</td>
+                        <td>0</td>
+                        <td>4</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Darkhas (darkhas.g@mail.it)</td>
+                        <td>11</td>
+                        <td>1</td>
+                        <td>19</td>
+                        <td>1</td>
+                        <td>38</td>
+                        <td>19</td>
+                        <td>18</td>
+                        <td>1</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Darnhead Batra (darnhead.g@mail.it)</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Geeta Bhati (Geeta.bg@mail.it)</td>
+                        <td>7</td>
+                        <td>7</td>
+                        <td>127</td>
+                        <td>7</td>
+                        <td>267</td>
+                        <td>126</td>
+                        <td>126</td>
+                        <td>1</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>HIMANSHU SHERMAR (himanshu.sig@mail.it)</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="footer">madhu.gdvp</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // User Wise Lead and Application Count Chart
+            const ctx = document.getElementById("userChart").getContext("2d");
+            const myChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: ["Amplt", "Darshma", "Darshnees", "Geeta Einaf", "Khushy", "madhu priya", "Marketing"],
+                    datasets: [
+                        {
+                            label: "Applications",
+                            data: [1167, 1436, 546, 10121, 15378, 12, 10],
+                            backgroundColor: "rgba(54, 162, 235, 0.5)",
+                            borderColor: "rgba(54, 162, 235, 1)",
+                            borderWidth: 1,
+                        }
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: "rgba(0, 0, 0, 0.1)",
+                                drawBorder: false
+                            },
+                            ticks: {
+                                stepSize: 2000,
+                                max: 16000,
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Toggle between User Dashboard and Productivity Report
+            const userDashboardBtn = document.getElementById('userDashboardBtn');
+            const productivityReportBtn = document.getElementById('productivityReportBtn');
+            const userDashboardContent = document.getElementById('userDashboardContent');
+            const productivityReport = document.getElementById('productivityReport');
+
+            productivityReportBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                userDashboardBtn.classList.remove('active');
+                productivityReportBtn.classList.add('active');
+                userDashboardContent.style.display = 'none';
+                productivityReport.style.display = 'block';
+            });
+
+            userDashboardBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                productivityReportBtn.classList.remove('active');
+                userDashboardBtn.classList.add('active');
+                productivityReport.style.display = 'none';
+                userDashboardContent.style.display = 'block';
+            });
+
+            // Initialize with User Dashboard view
+            userDashboardContent.style.display = 'block';
+            productivityReport.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

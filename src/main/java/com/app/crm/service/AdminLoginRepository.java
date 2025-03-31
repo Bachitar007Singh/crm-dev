@@ -6,4 +6,6 @@ import com.app.crm.model.AdminLogin;
 
 public interface AdminLoginRepository extends JpaRepository<AdminLogin, String> {
 
+	AdminLogin findByUserid(String userid);
+
 }

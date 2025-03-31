@@ -185,11 +185,17 @@
 			transition: width 0.3s;
 			overflow: hidden;
 			padding-top: 10px;
+			z-index: 999;
 		}
 
-		.sidebar:hover {
+		.sidebar.expanded {
+            width: 200px;
+        }
+
+
+		/*.sidebar:hover {
 			width: 200px;
-		}
+		}*/
 
 		.sidebar a {
 			text-decoration: none;
@@ -227,10 +233,15 @@
 			display: inline;
 		}
 
-		.sidebar:hover a {
+		/*.sidebar:hover a {
 			justify-content: flex-start;
 			padding-left: 20px;
-		}
+		}*/
+		.sidebar.expanded a span.text {
+            display: inline;
+        }
+
+		
 
 		/* --- Main Content Styles --- */
 		.profile-section {
@@ -333,7 +344,11 @@
 			position: relative;
 			width: 100%;
 		}
-
+		.dropdown-icon {
+            position: absolute;
+            right: 15px;
+            transition: transform 0.3s;
+        }
 		.dropdown-menu {
 			display: none;
 			position: relative;
@@ -350,6 +365,8 @@
 			padding: 10px 20px;
 			display: block;
 			transition: background-color 0.3s;
+			padding-left: 40px;
+            font-size: 14px;
 		}
 
 		.dropdown-menu a:hover {
@@ -357,47 +374,26 @@
 			/*rgb(45, 45, 45); /* Slightly lighter hover */
 		}
 
-		.dropdown:hover .dropdown-menu {
-			display: flex;
-		}
+	/*	.dropdown:hover .dropdown-menu {
+			display: flex;*/
+		
+		.dropdown.active .dropdown-menu {
+            display: block;
+        }
 
-		.sidebar a,
-		.dropdown>.menu-item {
-			text-decoration: none;
-			color: #ffffff;
-			padding: 15px 0;
-			width: 100%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			border-bottom: 1px solid #34495e;
-			transition: background-color 0.3s;
-			padding-left: 0.3s;
-			position: relative;
-		}
+        .dropdown.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+        /* Hide the arrow when the sidebar is collapsed */
+        .sidebar:not(.expanded) .dropdown-icon {
+            display: none;
+        }
 
-		.sidebar a:hover,
-		.dropdown>.menu-item:hover {
-			background-color: #34495e;
-		}
-
-		.sidebar a span.text,
-		.dropdown>.menu-item span.text {
-			display: none;
-			white-space: nowrap;
-			margin-left: 10px;
-		}
-
-		.sidebar:hover a span.text,
-		.sidebar:hover .dropdown>.menu-item span.text {
-			display: inline;
-		}
-
-		.sidebar:hover a,
-		.sidebar:hover .dropdown>.menu-item {
-			justify-content: flex-start;
-			padding-left: 20px;
-		}
+        /* Show the arrow when the sidebar is expanded */
+        .sidebar.expanded .dropdown-icon {
+            display: inline-block; /* Or display: block; */
+        }
+		
 
 		/* Funnel Box Bottom Styles */
 		.funnel-box-bottom {
@@ -785,30 +781,33 @@
 			</div>
 		</div>
 	</nav>
-
-	<div class="sidebar">
-		<div class="dropdown">
-			<a href="/admin/adminhome" class="menu-item">
-				<span class="material-icons">dashboard</span>
-				<span class="text">Dashboard</span>
-			</a>
-			<div class="dropdown-menu">
-				<a href="/admin/adminhome">Admin Dashboard</a>
-				<a href="/admin/user_dashboard">User Dashboard</a>
-				<a href="/admin/Student_QI">Student Quality Index</a>
-			</div>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+	<div class="dropdown">
+		<a href="#" class="menu-item" onclick="toggleDropdown(event)">
+			<span class="material-icons">dashboard</span>
+			<span class="text">Dashboard</span>
+			<span class="material-icons dropdown-icon">arrow_drop_down</span>
+		</a>
+		<div class="dropdown-menu">
+			<a href="/admin/adminhome">Admin Dashboard</a>
+			<a href="/admin/user_dashboard">User Dashboard</a>
+			<a href="/admin/Student_QI">Student Quality Index</a>
 		</div>
-		<div class="dropdown">
-					<a href="leadmanager" class="menu-item">
-						<span class="material-icons">supervisor_account</span>
-						<span class="text">Lead Manager</span>
-					</a>
-					<div class="dropdown-menu">
-							<a href="/admin/adminhome">Manage Leads</a>
-							<a href="/user-dashboard">Offline Upload Logs</a>
-						</div>
-					</div>
-		<a href="/admin/calendarpro">
+	</div>
+	
+	<div class="dropdown">
+		<a href="#" class="menu-item" onclick="toggleDropdown(event)">
+			<span class="material-icons">supervisor_account</span>
+			<span class="text">Lead Manager</span>
+			<span class="material-icons dropdown-icon">arrow_drop_down</span>
+		</a>
+		<div class="dropdown-menu">
+			<a href="/admin/adminhome">Manage Leads</a>
+			<a href="/user-dashboard">Offline Upload Logs</a>
+		</div>
+	</div>
+		<a href="calendarpro">
 			<span class="material-icons">calendar_month</span>
 			<span class="text">Calendar Pro</span>
 		</a>
@@ -832,7 +831,7 @@
 			<span class="material-icons">campaign</span>
 			<span class="text">Marketing</span>
 		</a>
-		<a href="compeignmanager">
+		<a href="/admin/campaignmanager">
 			<span class="material-icons">send</span>
 			<span class="text">Campaign Manager</span>
 		</a>
@@ -959,6 +958,60 @@
             </div>
         </div>
 	<script>
+		 // Sidebar functionality
+		 const sidebar = document.getElementById('sidebar');
+		 let sidebarTimeout;
+		 
+		 // Expand sidebar on hover
+		 sidebar.addEventListener('mouseenter', () => {
+			 clearTimeout(sidebarTimeout);
+			 sidebar.classList.add('expanded');
+		 });
+		 
+		 // Collapse sidebar when mouse leaves
+		 sidebar.addEventListener('mouseleave', () => {
+			 sidebarTimeout = setTimeout(() => {
+				 sidebar.classList.remove('expanded');
+				 // Close all dropdowns when sidebar collapses
+				 document.querySelectorAll('.dropdown').forEach(dropdown => {
+					 dropdown.classList.remove('active');
+				 });
+			 }, 300);
+		 });
+		 
+		 // Keep expanded if mouse moves back quickly
+		 sidebar.addEventListener('mousemove', () => {
+			 clearTimeout(sidebarTimeout);
+		 });
+ 
+		 // Toggle dropdown menus
+		 function toggleDropdown(event) {
+			 event.preventDefault();
+			 event.stopPropagation();
+			 
+			 const dropdown = event.currentTarget.closest('.dropdown');
+			 const wasActive = dropdown.classList.contains('active');
+			 
+			 // Close all dropdowns first
+			 document.querySelectorAll('.dropdown').forEach(d => {
+				 d.classList.remove('active');
+			 });
+			 
+			 // Open current one if it wasn't active
+			 if (!wasActive) {
+				 dropdown.classList.add('active');
+			 }
+		 }
+		 
+		 // Close dropdowns when clicking outside
+		 document.addEventListener('click', function(event) {
+			 if (!event.target.closest('.dropdown')) {
+				 document.querySelectorAll('.dropdown').forEach(dropdown => {
+					 dropdown.classList.remove('active');
+				 });
+			 }
+		 });
+ 
 		document.addEventListener('DOMContentLoaded', function () {
 			const notifications = document.querySelector('.notifications');
 			const notificationDropdown = document.querySelector('.notification-dropdown');

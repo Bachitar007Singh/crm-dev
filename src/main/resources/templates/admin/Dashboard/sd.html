@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBMI Group of Institutions</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f5f5f5;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            height: 100vh;
+            width: 70px;
+            background-color: #333;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: width 0.3s;
+            overflow: hidden;
+        }
+
+        .sidebar:hover {
+            width: 200px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 15px 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #444;
+            transition: background-color 0.3s, padding-left 0.3s;
+            position: relative;
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        .sidebar .material-icons {
+            font-size: 24px;
+            transition: margin-right 0.3s;
+        }
+
+        .sidebar a span.text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .sidebar:hover a span.text {
+            display: inline;
+        }
+
+        .sidebar:hover a {
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+
+        /* Main Content */
+        .profile-section {
+            margin-left: 60px;
+            padding: 20px;
+            width: 100%;
+            transition: margin-left 0.3s;
+        }
+
+        .sidebar:hover ~ .profile-section {
+            margin-left: 200px;
+        }
+
+        .main-header {
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .main-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .dashboard-box, .funnel-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1px;
+        }
+
+        .hero {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1px;
+        }
+
+        .stats-box, .funnel-box-bottom {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .dashboard-box h3, .stats-box h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+
+        .date-range {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .date-range input {
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stats-item {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .stats-item span {
+            display: block;
+            color: #333;
+            font-weight: normal;
+            margin-top: 5px;
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown .dropdown-icon {
+            position: absolute;
+            right: 10px;
+            transition: transform 0.3s;
+        }
+
+        .dropdown.has-submenu .dropdown-icon {
+            display: inline;
+        }
+
+        .dropdown-menu {
+            display: none;
+            background-color: #444;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
+
+        .dropdown-menu a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #575757;
+        }
+
+        .dropdown.active .dropdown-menu {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dropdown.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Dashboard Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">dashboard</span>
+                <span class="text">Dashboard</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="/admin/adminhome">Admin Dashboard</a>
+                <a href="/admin/user_dashboard">User Dashboard</a>
+                <a href="/admin/Student_QI">Student Quality Index</a>
+            </div>
+        </div>
+
+        <!-- Formdesk Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">description</span>
+                <span class="text">Formdesk</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="formdesk/new">New Form</a>
+                <a href="formdesk/templates">Templates</a>
+                <a href="formdesk/submissions">Submissions</a>
+            </div>
+        </div>
+
+        <!-- Counselor Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">person</span>
+                <span class="text">Counselor</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="/admin/counselor/list">Counselor List</a>
+                <a href="/admin/counselor/performance">Performance</a>
+                <a href="/admin/counselor/assignments">Assignments</a>
+            </div>
+        </div>
+
+        <!-- Lead Manager Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">supervisor_account</span>
+                <span class="text">Lead Manager</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="leadmanager/new">New Lead</a>
+                <a href="leadmanager/import">Import Leads</a>
+                <a href="leadmanager/reports">Lead Reports</a>
+            </div>
+        </div>
+
+        <!-- Opportunity Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">assignment</span>
+                <span class="text">Opportunity</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="opportunity/new">New Opportunity</a>
+                <a href="opportunity/pipeline">Pipeline</a>
+                <a href="opportunity/conversions">Conversions</a>
+            </div>
+        </div>
+
+        <!-- Application Manager Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">folder</span>
+                <span class="text">Application Manager</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="applicationmanager/new">New Application</a>
+                <a href="applicationmanager/status">Status</a>
+                <a href="applicationmanager/reports">Reports</a>
+            </div>
+        </div>
+
+        <!-- Marketing Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">campaign</span>
+                <span class="text">Marketing</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="marketing/campaigns">Campaigns</a>
+                <a href="marketing/leads">Leads</a>
+                <a href="marketing/analytics">Analytics</a>
+            </div>
+        </div>
+
+        <!-- Campaign Manager Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">send</span>
+                <span class="text">Campaign Manager</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="compeignmanager/new">New Campaign</a>
+                <a href="compeignmanager/templates">Templates</a>
+                <a href="compeignmanager/performance">Performance</a>
+            </div>
+        </div>
+
+        <!-- Query Manager Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">help</span>
+                <span class="text">Query Manager</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="querymanager/new">New Query</a>
+                <a href="querymanager/open">Open Queries</a>
+                <a href="querymanager/resolved">Resolved Queries</a>
+            </div>
+        </div>
+
+        <!-- Payment Manager Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">payment</span>
+                <span class="text">Payment Manager</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="paymentmanager/transactions">Transactions</a>
+                <a href="paymentmanager/invoices">Invoices</a>
+                <a href="paymentmanager/reports">Reports</a>
+            </div>
+        </div>
+
+        <!-- Reports & Analytics Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">bar_chart</span>
+                <span class="text">Reports & Analytics</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="reportanalytics/leads">Lead Reports</a>
+                <a href="reportanalytics/conversions">Conversion Reports</a>
+                <a href="reportanalytics/performance">Performance Analytics</a>
+            </div>
+        </div>
+
+        <!-- Template Manager Dropdown -->
+        <div class="dropdown has-submenu">
+            <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+                <span class="material-icons">widgets</span>
+                <span class="text">Template Manager</span>
+                <span class="material-icons dropdown-icon">arrow_drop_down</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="templatemanager/email">Email Templates</a>
+                <a href="templatemanager/sms">SMS Templates</a>
+                <a href="templatemanager/documents">Document Templates</a>
+            </div>
+        </div>
+
+        <!-- Logout (no dropdown) -->
+        <a href="logout">
+            <span class="material-icons">logout</span>
+            <span class="text">Logout</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-section">
+        <div class="hero">
+            <nav>
+                <span class="material-icons" style="float: right;">help</span>
+                <span class="material-icons" style="float: right;">notifications</span>
+            </nav>
+        </div>
+        
+        <div class="main-header">
+            <h2>Admin Dashboard</h2>
+        </div>
+
+        <div class="dashboard-box">
+            <h3>Score Board</h3>
+            <div class="date-range">
+                <label for="date-range">Date Range:</label>
+                <input type="date" id="start-date"> to
+                <input type="date" id="end-date">
+            </div>
+        </div>
+
+        <div class="stats-box">
+            <h3>Statistics</h3>
+            <div class="stats-container">
+                <div class="stats-item">
+                    Total Leads
+                    <span th:text="${totalLeads}">0</span>
+                </div>
+                <div class="stats-item">
+                    Total Free/Paid Applications
+                    <span>800</span>
+                </div>
+                <div class="stats-item">
+                    Total Unpaid Courses
+                    <span>200</span>
+                </div>
+                <div class="stats-item">
+                    Total Queries
+                    <span>150</span>
+                </div>
+                <div class="stats-item">
+                    Communications
+                    <span>1,000</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown(event) {
+            event.preventDefault();
+            const dropdown = event.currentTarget.closest('.dropdown');
+            dropdown.classList.toggle('active');
+            
+            // Close other open dropdowns
+            document.querySelectorAll('.dropdown').forEach(otherDropdown => {
+                if (otherDropdown !== dropdown && otherDropdown.classList.contains('active')) {
+                    otherDropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

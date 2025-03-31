@@ -14,6 +14,8 @@ public class AdminLogin {
 	private String userid;
 	@Column(length=30, nullable = false)
 	private String password;
+	private String Role;
+
 	public String getUserid() {
 		return userid;
 	}
@@ -26,4 +28,13 @@ public class AdminLogin {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public String getRole() {
+		// TODO Auto-generated method stub
+		return null;
+	
+//	public Object getId() {
+		// TODO Auto-generated method stub
+		//return null;
+	}
+	
 }
