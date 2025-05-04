@@ -1,0 +1,12 @@
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/CrmApplication.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/controller/AdminController.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/controller/Maincontroller.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/dto/AdminLoginDto.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/dto/CounselorDto.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/dto/RegistrationDto.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/model/AdminLogin.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/model/Counselor.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/model/Registration.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/service/AdminLoginRepository.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/service/CounselorRepository.java
+/Users/bachitar/projects/crm-dev/src/main/java/com/app/crm/service/RegistrationRepository.java

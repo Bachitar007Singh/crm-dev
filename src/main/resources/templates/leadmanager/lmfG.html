@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Manager | CRM System</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --dark-color: #2b2d42;
+            --light-color: #f8f9fa;
+            --success-color: #4bb543;
+            --warning-color: #f0ad4e;
+            --danger-color: #d9534f;
+            --sidebar-width: 60px;
+            --sidebar-expanded: 220px;
+            --navbar-height: 60px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* --- Navbar Styles --- */
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 25px;
+            height: var(--navbar-height);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notifications {
+            position: relative;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--dark-color);
+            transition: transform 0.3s ease;
+        }
+
+        .notification-icon:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s;
+        }
+
+        .notification-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item .icon {
+            margin-right: 12px;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .notification-item.success .icon {
+            color: var(--success-color);
+        }
+
+        .notification-item.failed .icon {
+            color: var(--danger-color);
+        }
+
+        .notification-item .text {
+            flex-grow: 1;
+            font-size: 14px;
+        }
+
+        .notification-item .status {
+            font-weight: 600;
+            margin-left: 10px;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background-color: #f0f0f0;
+        }
+
+        .notification-item.success .status {
+            color: var(--success-color);
+            background-color: rgba(75, 181, 67, 0.1);
+        }
+
+        .notification-item.failed .status {
+            color: var(--danger-color);
+            background-color: rgba(217, 83, 79, 0.1);
+        }
+
+        .notification-time {
+            display: block;
+            font-size: 12px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        .show-all {
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            color: var(--primary-color);
+            font-weight: 500;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .show-all:hover {
+            background-color: #f0f0f0;
+        }
+
+        .profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 30px;
+            transition: background-color 0.3s;
+        }
+
+        .profile:hover {
+            background-color: #f0f0f0;
+        }
+
+        .profile-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+            border: 2px solid #e1e1e1;
+        }
+
+        .profile-name {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .profile-info {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-header-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+        }
+
+        .profile-header-info h4 {
+            margin: 0;
+            color: var(--dark-color);
+            font-size: 16px;
+        }
+
+        .profile-header-info p {
+            margin: 3px 0 0;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .profile-detail {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .profile-detail-label {
+            font-weight: 600;
+            color: #555;
+            display: inline-block;
+            width: 80px;
+        }
+
+        .profile-dropdown a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #555;
+            transition: all 0.2s;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #f9f9f9;
+            color: var(--primary-color);
+            padding-left: 20px;
+        }
+
+        .profile-dropdown a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sign-out-btn {
+            color: var(--danger-color);
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* --- Sidebar Styles --- */
+        .sidebar {
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+            color: #ffffff;
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            padding-top: 15px;
+            z-index: 999;
+        }
+
+        .sidebar:hover {
+            width: var(--sidebar-expanded);
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 12px 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .sidebar a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .sidebar a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: #fff;
+        }
+
+        .sidebar .material-icons {
+            font-size: 22px;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.9);
+            flex-shrink: 0;
+        }
+
+        .sidebar a span.text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 15px;
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover a span.text {
+            display: inline;
+            opacity: 1;
+        }
+
+        .sidebar:hover a {
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: relative;
+            flex-direction: column;
+            background-color: rgba(0, 0, 0, 0.1);
+            box-shadow: none;
+            width: 100%;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: flex;
+            max-height: 500px;
+        }
+
+        .dropdown-menu a {
+            padding-left: 50px;
+            font-size: 13px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: transparent;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content Styles */
+        .content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            width: calc(100% - var(--sidebar-width));
+            transition: margin-left 0.3s ease;
+            padding-top: calc(var(--navbar-height) + 1px);
+            min-height: 100vh;
+        }
+
+        .sidebar:hover ~ .content,
+        .content.expanded {
+            margin-left: var(--sidebar-expanded);
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .main-header h2 {
+            margin: 0;
+            color: var(--dark-color);
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .main-header .breadcrumb {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Filters Container */
+        .filters-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-options {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-group label {
+            margin-right: 8px;
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .filter-options select,
+        .filter-options input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+
+        .filter-options select:focus,
+        .filter-options input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+
+        .filter-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border-color: #ddd;
+            color: #555;
+        }
+
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+            border-color: #ccc;
+        }
+
+        .btn-icon {
+            padding: 8px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+        }
+
+        .btn-icon:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Action Dropdown */
+        .action-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .action-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 100;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .action-dropdown-content a {
+            color: #555;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .action-dropdown-content a:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            padding-left: 20px;
+        }
+
+        .action-dropdown:hover .action-dropdown-content {
+            display: block;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+		.table-container {
+		    overflow-x: auto; /* Enable horizontal scrolling */
+		}
+
+		#lead-table {
+		    min-width: 100%; /* Ensure the table can expand beyond the container width */
+		}
+        table thead th {
+            background-color: #f8f9fa;
+            color: #555;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 2px solid #eee;
+            position: sticky;
+            top: 0;
+        }
+
+        table tbody tr {
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+
+        table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        table td {
+            padding: 12px 15px;
+            color: #333;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-new {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+
+        .status-contact {
+            background-color: rgba(240, 173, 78, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-qualified {
+            background-color: rgba(75, 181, 67, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-lost {
+            background-color: rgba(217, 83, 79, 0.1);
+            color: var(--danger-color);
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: transparent;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+        }
+
+        /* Lead Quick View */
+        .lead-quick-view {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .lead-quick-view.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .lead-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .lead-header h3 {
+            margin: 0;
+            color: var(--dark-color);
+        }
+
+        .close-quick-view {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .lead-details {
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+            width: 120px;
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .pagination-info {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .pagination-links {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .page-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .page-link:hover {
+            background-color: #f0f0f0;
+        }
+
+        .page-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+			margin-top: 1px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card h4 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .stat-card .trend {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .trend.up {
+            color: var(--success-color);
+        }
+
+        .trend.down {
+            color: var(--danger-color);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: var(--sidebar-expanded);
+            }
+            .content {
+                margin-left: var(--sidebar-expanded);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filters-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .filter-options {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .filter-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .stats-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+            table thead {
+                display: none;
+            }
+            table tbody tr {
+                display: block;
+                margin-bottom: 15px;
+                border: 1px solid #eee;
+                border-radius: 8px;
+            }
+            table tbody td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 15px;
+                border-bottom: 1px solid #eee;
+            }
+            table tbody td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #555;
+                margin-right: 15px;
+            }
+            table tbody tr:last-child td:last-child {
+                border-bottom: none;
+            }
+            .lead-quick-view {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-right">
+            <div class="notifications">
+                <i class="fas fa-bell notification-icon"></i>
+                <div class="notification-dropdown">
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">
+                            New lead added successfully
+                            <span class="notification-time">2 minutes ago</span>
+                            <span class="status">Success</span>
+                        </div>
+                    </div>
+                    <div class="notification-item failed">
+                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="text">
+                            Lead import failed
+                            <span class="notification-time">15 minutes ago</span>
+                            <span class="status">Failed</span>
+                        </div>
+                    </div>
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">
+                            5 new leads assigned to you
+                            <span class="notification-time">1 hour ago</span>
+                            <span class="status">Success</span>
+                        </div>
+                    </div>
+                    <div class="notification-item failed">
+                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="text">
+                            API connection timeout
+                            <span class="notification-time">3 hours ago</span>
+                            <span class="status">Failed</span>
+                        </div>
+                    </div>
+                    <div class="notification-item success">
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="text">
+                            Lead status updated
+                            <span class="notification-time">Yesterday</span>
+                            <span class="status">Success</span>
+                        </div>
+                    </div>
+                    <div class="show-all">View All Notifications</div>
+                </div>
+            </div>
+            <div class="profile">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-img">
+                <span class="profile-name">John Alex</span>
+                <div class="profile-dropdown">
+                    <div class="profile-info">
+                        <div class="profile-header">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-header-img">
+                            <div class="profile-header-info">
+                                <h4>John Alex</h4>
+                                <p>Sales Manager</p>
+                            </div>
+                        </div>
+                        <div class="profile-detail">
+                            <span class="profile-detail-label">Email:</span> john.alex@example.com
+                        </div>
+                        <div class="profile-detail">
+                            <span class="profile-detail-label">Phone:</span> (123) 456-7890
+                        </div>
+                        <div class="profile-detail">
+                            <span class="profile-detail-label">Last Login:</span> Today, 10:45 AM
+                        </div>
+                    </div>
+                    <a href="#"><i class="fas fa-user-cog"></i> My Profile</a>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+                    <a href="#" class="sign-out-btn"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+<!--sidebar-->>
+<div class="sidebar" id="sidebar">
+       <div class="dropdown">
+           <a href="#" class="menu-item active" onclick="toggleDropdown(event)">
+               <span class="material-icons">dashboard</span>
+               <span class="text">Dashboard</span>
+               <span class="material-icons dropdown-icon">arrow_drop_down</span>
+           </a>
+           <div class="dropdown-menu">
+               <a href="/admin/adminhome">Admin Dashboard</a>
+               <a href="/admin/user_dashboard">User Dashboard</a>
+               <a href="/admin/Student_QI">Student Quality Index</a>
+           </div>
+       </div>
+       <div class="dropdown">
+           <a href="#" class="menu-item" onclick="toggleDropdown(event)">
+               <span class="material-icons">supervisor_account</span>
+               <span class="text">Lead Manager</span>
+               <span class="material-icons dropdown-icon">arrow_drop_down</span>
+           </a>
+           <div class="dropdown-menu">
+               <a href="/admin/manageleads">Manage Leads</a>
+               <a href="/admin/offlineuploadlogs">Offline Upload Logs</a>
+           </div>
+       </div>
+       <a href="/admin/calendarpro">
+           <span class="material-icons">calendar_month</span>
+           <span class="text">Calendar Pro</span>
+       </a>
+       <a href="formdesk">
+           <span class="material-icons">description</span>
+           <span class="text">Formdesk</span>
+       </a>
+       <a href="/admin/counselor">
+           <span class="material-icons">person</span>
+           <span class="text">Counselor</span>
+       </a>
+       <a href="opportunity">
+           <span class="material-icons">assignment</span>
+           <span class="text">Opportunity</span>
+       </a>
+       <a href="applicationmanager">
+           <span class="material-icons">folder</span>
+           <span class="text">Application Manager</span>
+       </a>
+       <a href="marketing">
+           <span class="material-icons">campaign</span>
+           <span class="text">Marketing</span>
+       </a>
+       <a href="/admin/campaignmanager">
+           <span class="material-icons">send</span>
+           <span class="text">Campaign Manager</span>
+       </a>
+       <a href="querymanager">
+           <span class="material-icons">help</span>
+           <span class="text">Query Manager</span>
+       </a>
+       <a href="paymentmanager">
+           <span class="material-icons">payment</span>
+           <span class="text">Payment Manager</span>
+       </a>
+       <a href="reportanalytics">
+           <span class="material-icons">bar_chart</span>
+           <span class="text">Reports & Analytics</span>
+       </a>
+       <a href="templatemanager">
+           <span class="material-icons">widgets</span>
+           <span class="text">Template Manager</span>
+       </a>
+       <a href="logout">
+           <span class="material-icons">logout</span>
+           <span class="text">Logout</span>
+       </a>
+   </div>
+
+    <div class="content">
+        <div class="main-header">
+            <h2>Lead Managers</h2>
+            <div class="breadcrumb">
+                <a href="#">Home</a> / <a href="#">Leads</a> / Lead Managers
+            </div>
+        </div>
+
+    
+    <div class="content">
+        <div class="stats-cards">
+            <div class="stat-card">
+                <h4>Total Leads</h4>
+                <div class="value" id="total-leads">0</div>  <div class="trend up">
+                    <i class="fas fa-arrow-up"></i> <span id="total-leads-trend"></span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h4>New Today</h4>
+                <div class="value" id="new-today">0</div>   <div class="trend up">
+                    <i class="fas fa-arrow-up"></i> <span id="new-today-trend"></span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h4>Contacted</h4>
+                <div class="value" id="contacted">0</div>   <div class="trend up">
+                    <i class="fas fa-arrow-up"></i> <span id="contacted-trend"></span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h4>Qualified</h4>
+                <div class="value" id="qualified">0</div>   <div class="trend down">
+                    <i class="fas fa-arrow-down"></i> <span id="qualified-trend"></span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h4>Conversion Rate</h4>
+                <div class="value" id="conversion-rate">0%</div>  <div class="trend up">
+                    <i class="fas fa-arrow-up"></i> <span id="conversion-rate-trend"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="filters-container">
+            <div class="filter-options">
+                <div class="filter-group">
+                    <label for="registration-date">Registration Date:</label>
+                    <input type="date" class="form-control" id="registration-date">
+                </div>
+
+                <div class="filter-group">
+                    <label for="lead-stage">Lead Stage:</label>
+                    <select class="form-select" id="lead-stage">
+                        <option value="" selected>Select</option>
+                        <option value="Hot">Hot</option>
+                        <option value="Cold">Cold</option>
+                        <option value="Warm">Warm</option>
+                        <option value="Untouched">Untouched</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Closed">Closed</option>
+                        <option value="Form Sold">Form Sold</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="lead-owner">Lead Owner/Teams:</label>
+                    <select id="lead-owner" class="form-control">
+                        <option value="">Select Owner</option>
+                        </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="campaign-source">Campaign Source:</label>
+                    <select class="form-select" id="campaign-source">
+                        <option value="" selected>Select</option>
+                        <option value="email">Email Campaign</option>
+                        <option value="social">Social Media</option>
+                        <option value="referral">Referral</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="search">Search:</label>
+                    <input type="text" id="search" placeholder="Name, email, phone...">
+                </div>
+            </div>
+            <div class="filter-actions">
+                <a href="#" class="btn btn-icon btn-outline" title="Search">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="#" class="btn btn-icon btn-outline" title="Filter">
+                    <i class="fas fa-filter"></i>
+                </a>
+                <div class="action-dropdown">
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Lead
+                    </a>
+                    <div class="action-dropdown-content">
+                        <a href="test.html"><i class="fas fa-user-plus"></i> Quick Add Lead</a>
+                        <a href="/admin/gu2"><i class="fas fa-upload"></i> Bulk Upload</a>
+                        <a href="#"><i class="fas fa-file-import"></i> Import from CSV</a>
+                        <a href="#"><i class="fas fa-users"></i> Add Multiple Leads</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="lead-table">
+                <thead>
+                    <tr>
+                        <th>Assigned Counselor</th>
+                        <th>Registered Name</th>
+                        <th>Registered Email</th>
+                        <th>Registered Mobile</th>
+                        <th>State</th>
+                        <th>City</th>
+                        <th>Course</th>
+                        <th>Student Remark</th>
+                        <th>Lead Stage</th>
+                        <th>Followup Date</th>
+                        <th>Followup End Date</th>
+                        <th>Registration Date</th>
+                       
+                        <th>Campaign Source</th>
+                        <th>Actions</th>   </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <div class="pagination-info" id="pagination-info">
+                </div>
+            <div class="pagination-links" id="pagination-links">
+                </div>
+        </div>
+    </div>
+
+    <div class="lead-quick-view" id="leadQuickView">
+        <div class="lead-header">
+            <h3>Lead Details</h3>
+            <button class="close-quick-view" onclick="hideLeadQuickView()">&times;</button>
+        </div>
+        <div class="lead-details">
+            <div class="detail-row">
+                <div class="detail-label">Name:</div>
+                <div class="detail-value" id="detail-name"></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Email:</div>
+                <div class="detail-value" id="detail-email"></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Phone:</div>
+                <div class="detail-value" id="detail-phone"></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Location:</div>
+                <div class="detail-value" id="detail-location"></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Status:</div>
+                <div class="detail-value" id="detail-status"></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Source:</div>
+                <div class="detail-value" id="detail-source"></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Registered:</div>
+                <div class="detail-value" id="detail-registered"></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Last Contact:</div>
+                <div class="detail-value" id="detail-last-contact"></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Notes:</div>
+                <div class="detail-value" id="detail-notes"></div>
+            </div>
+        </div>
+        <div style="margin-top: 20px;">
+            <button class="btn btn-primary" style="margin-right: 10px;">
+                <i class="fas fa-phone"></i> Call Lead
+            </button>
+            <button class="btn btn-outline">
+                <i class="fas fa-envelope"></i> Send Email
+            </button>
+        </div>
+    </div>
+</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Navbar dropdown functionality (Unchanged)
+            const notifications = document.querySelector('.notifications');
+            const notificationDropdown = document.querySelector('.notification-dropdown');
+            const profile = document.querySelector('.profile');
+            const profileDropdown = document.querySelector('.profile-dropdown');
+            const sidebar = document.querySelector('.sidebar');
+            const content = document.querySelector('.content');
+
+            notifications.addEventListener('click', (e) => {
+                e.stopPropagation();
+                notificationDropdown.classList.toggle('show');
+                profileDropdown.classList.remove('show');
+            });
+
+            profile.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('show');
+                notificationDropdown.classList.remove('show');
+            });
+
+            document.addEventListener('click', () => {
+                notificationDropdown.classList.remove('show');
+                profileDropdown.classList.remove('show');
+            });
+
+            // Prevent dropdown from closing when clicking inside
+            notificationDropdown.addEventListener('click', (e) => e.stopPropagation());
+            profileDropdown.addEventListener('click', (e) => e.stopPropagation());
+
+            // Lead quick view functionality (Unchanged)
+            const leadQuickView = document.getElementById('leadQuickView');
+
+            // Close quick view when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.action-btn') && !e.target.closest('.lead-quick-view')) {
+                    leadQuickView.classList.remove('show');
+                }
+            });
+
+            // Fetch and display leads
+            fetchLeads();
+            fetchCounselors();  // Populate counselor dropdown
+
+            // Add event listeners to filter inputs
+            document.getElementById('registration-date').addEventListener('change', filterTable);
+            document.getElementById('lead-stage').addEventListener('change', filterTable);
+            document.getElementById('lead-owner').addEventListener('change', filterTable);
+            document.getElementById('campaign-source').addEventListener('change', filterTable);
+            document.getElementById('search').addEventListener('input', filterTable); // Live search
+
+            // Responsive table adjustments (Unchanged)
+            adjustTableForMobile();
+            window.addEventListener('resize', adjustTableForMobile);
+
+            // Page selector functionality (If you have it)
+            if (document.getElementById('pageSelector')) {
+                document.getElementById('pageSelector').addEventListener('change', function () {
+                    var selectedPage = this.value;
+                    if (selectedPage) {
+                        window.location.href = selectedPage;
+                    }
+                });
+            }
+        });
+
+        // Function to fetch leads from the server
+ /**  async function fetchLeads() {
+            try {
+                const response = await fetch('/admin/api/leads'); //  <--  **IMPORTANT:** Adjust this URL to your API endpoint
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                displayLeads(data);
+                updateLeadStats(data);
+            } catch (error) {
+                console.error('Error fetching leads:', error);
+                document.getElementById('lead-table').querySelector('tbody').innerHTML = '<tr><td colspan="15">Error loading leads.</td></tr>';
+            }
+        }
+**/
+		//another code to fetch leads
+		
+		function fetchLeads() {
+		    fetch('http://localhost:8087/api/leads') // Correct API endpoint
+		        .then(response => response.json())
+		        .then(data => {
+		            displayLeads(data);
+		            updateLeadStats(data);
+		        })
+		        .catch(error => {
+		            console.error('Error fetching leads:', error);
+		            document.getElementById('lead-table').querySelector('tbody').innerHTML = '<tr><td colspan="15">Error loading leads.</td></tr>';
+		        });
+		}
+        // Function to fetch counselors for the dropdown
+     /**   async function fetchCounselors() {
+            try {
+                const response = await fetch('/admin/api/counselors'); // <-- **IMPORTANT:** Adjust this URL to your API endpoint
+                if (!response.ok) {
+                    throw new Error('HTTP error! status: ${response.status}');
+                }
+                const counselors = await response.json();
+                populateCounselorDropdown(counselors);
+            } catch (error) {
+                console.error('Error fetching counselors:', error);
+            }
+        }**/
+
+        // Function to populate the counselor dropdown
+        function populateCounselorDropdown(counselors) {
+            const select = document.getElementById('lead-owner');
+            select.innerHTML = '<option value="">Select Owner</option>'; // Clear existing options
+            counselors.forEach(counselor => {
+                const option = document.createElement('option');
+                option.value = counselor.name;
+                option.textContent = counselor.name;
+                select.appendChild(option);
+            });
+        }
+
+
+        // Function to display leads in the table
+   /** function displayLeads(leads) {
+            const tableBody = document.getElementById('lead-table').querySelector('tbody');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            leads.forEach(lead => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td><span class="math-inline">\{lead\.counselorName \|\| ''\}</td\>
+<td\><a href\="\#" onclick\="showLeadDetails\('</span>{encodeURIComponent(JSON.stringify(lead))}')"><span class="math-inline">\{lead\.name\}</a\></td\>
+<td\></span>{lead.email || ''}</td>
+                    <td><span class="math-inline">\{lead\.contactno \|\| ''\}</td\>
+<td\></span>{lead.state || ''}</td>
+                    <td><span class="math-inline">\{lead\.city \|\| ''\}</td\>
+<td\></span>{lead.course || ''}</td>
+                    <td><span class="math-inline">\{lead\.remark \|\| ''\}</td\>
+<td\></span>{lead.leadRemark || ''}</td>
+                    <td><span class="math-inline">\{lead\.followupDate ? new Date\(lead\.followupDate\)\.toLocaleDateString\(\) \: ''\}</td\>
+<td\></span>{lead.followupEndDate ? new Date(lead.followupEndDate).toLocaleDateString() : ''}</td>
+                    <td><span class="math-inline">\{lead\.registrationDate ? new Date\(lead\.registrationDate\)\.toLocaleDateString\(\) \: ''\}</td\>
+<td\></span>{lead.leadStage || ''}</td>
+                    <td><span class="math-inline">\{lead\.campaignSource \|\| ''\}</td\>
+<td\>
+<button class\="action\-btn" title\="View" onclick\="showLeadDetails\('</span>{encodeURIComponent(JSON.stringify(lead))}')"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>  <button class="action-btn" title="Call"><i class="fas fa-phone"></i></button>  </td>
+                `;
+            });
+
+            updatePaginationInfo(leads.length);  // Update pagination info
+            generatePaginationLinks(leads.length); // Generate pagination links (if needed)
+        }**/
+		function displayLeads(leads) {
+		    const tableBody = document.getElementById('lead-table').querySelector('tbody');
+		    tableBody.innerHTML = ''; // Clear existing rows <td><a href="/admin/leaddetails" onclick="showLeadDetails('{encodeURIComponent(JSON.stringify(lead))}')">${lead.name || ''}</a></td>
+
+		    leads.forEach(lead => {
+		        const row = tableBody.insertRow();
+
+                // Add click event to show quick view
+                row.addEventListener('click', () => {
+                    showLeadQuickView(lead);
+                });
+		        row.innerHTML = `
+		            <td><span class="math-inline">${lead.counselorName || ''}</td>
+						<td><a href="/admin/leaddetails"  onclick="showLeadDetails('{encodeURIComponent(JSON.stringify(lead))}')">${lead.name || ''}</a></td>
+						<td>${lead.email || ''}</td>
+						
+						</td><td>${lead.contactno || ''}</td>
+						
+						 </td><td>${lead.state || ''}</td>
+						 </td><td>${lead.city|| ''}</td>
+						 					
+						
+												
+												
+						 </td><td>${lead.course || ''}</td>
+						 <td>${lead.remark || ''}
+						
+						 </td><td>${lead.leadStage || ''}</td>
+						
+						<td>${lead.followupDate ? new Date(lead.followupDate).toLocaleDateString() : 'N/A'}</td>
+						<td>${lead.followupEndDate ? new Date(lead.followupEndDate).toLocaleDateString() : 'N/A'}</td>
+						<td>${lead.registrationDate ? new Date(lead.registrationDate).toLocaleDateString() : 'N/A'}</td>
+						<td>${lead.campaignSource || ''}</td>
+						 <td><buttonclass="action−btn"title="View" onclick="showLeadDetails( 
+						
+						 ${encodeURIComponent(JSON.stringify(lead).replace(/"/g, '&quot;'))}); event.stopPropagation()"><i class="fas fa-eye"></i></button>
+						<button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+						<button class="action-btn" title="Call"><i class="fas fa-phone"></i></button>
+						</td>
+						`;
+						});
+						 updatePaginationInfo(leads.length);
+						    generatePaginationLinks(leads.length);
+						}
+						
+
+						//**Explanation of Changes:**
+
+					//	* **String Interpolation:** Instead of `\{lead.counselorName \|\| ''\}`, we use `${lead.counselorName || ''}`. This is the correct syntax for string interpolation in template literals. The expressions inside `${}` are evaluated, and their results are inserted into the string.
+        // Function to update the lead statistics cards
+        function updateLeadStats(leads) {
+            const totalLeads = leads.length;
+            const newToday = leads.filter(lead => isToday(new Date(lead.registrationDate))).length;
+            const contacted = leads.filter(lead => lead.leadStage === 'Contacted').length;
+            //const qualified = leads
+            const qualified = leads.filter(lead => lead.leadStage === 'Qualified').length;
+            const conversionRate = totalLeads > 0 ? ((qualified / totalLeads) * 100).toFixed(1) + '%' : '0%';
+
+            document.getElementById('total-leads').textContent = totalLeads;
+            document.getElementById('new-today').textContent = newToday;
+            document.getElementById('contacted').textContent = contacted;
+            document.getElementById('qualified').textContent = qualified;
+            document.getElementById('conversion-rate').textContent = conversionRate;
+
+            // Add trend data here, if available from your API.
+            // Example:
+            // document.getElementById('total-leads-trend').textContent = '12% from last month';
+        }
+
+        // Function to check if a date is today
+        function isToday(date) {
+            const today = new Date();
+            return date.getDate() === today.getDate() &&
+                date.getMonth() === today.getMonth() &&
+                date.getFullYear() === today.getFullYear();
+        }
+
+        // Function to filter the table
+        function filterTable() {
+            const registrationDate = document.getElementById('registration-date').value;
+            const leadStage = document.getElementById('lead-stage').value.toLowerCase();
+            const leadOwner = document.getElementById('lead-owner').value.toLowerCase();
+            const campaignSource = document.getElementById('campaign-source').value.toLowerCase();
+            const searchText = document.getElementById('search').value.toLowerCase();
+
+            const table = document.getElementById('lead-table');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (let row of rows) {
+                const rowRegistrationDate = row.cells[11].textContent;
+                const rowLeadStage = row.cells[12].textContent.toLowerCase();
+                const rowCounselorName = row.cells[0].textContent.toLowerCase();
+                const rowCampaignSource = row.cells[13].textContent.toLowerCase();
+
+                // Search logic
+                const rowText = row.textContent.toLowerCase();
+                const textMatch = searchText === '' || rowText.includes(searchText);
+
+                const dateMatch = registrationDate === '' || rowRegistrationDate === registrationDate;
+                const stageMatch = leadStage === '' || rowLeadStage === leadStage;
+                const ownerMatch = leadOwner === '' || rowCounselorName === leadOwner;
+                const sourceMatch = campaignSource === '' || rowCampaignSource === campaignSource;
+
+                if (dateMatch && stageMatch && ownerMatch && sourceMatch && textMatch) {
+                    row.style.display = ''; // Show the row
+                } else {
+                    row.style.display = 'none'; // Hide the row
+                }
+            }
+        }
+
+        function showLeadDetails(leadString) {
+            const lead = JSON.parse(decodeURIComponent(leadString));
+
+            document.getElementById('detail-name').textContent = lead.name;
+            document.getElementById('detail-email').textContent = lead.email || '';
+            document.getElementById('detail-phone').textContent = lead.contactno || '';
+            document.getElementById('detail-location').textContent = lead.city || lead.state || '';
+            document.getElementById('detail-status').innerHTML = `<span class="status-badge status-${lead.leadStage.toLowerCase()}">${lead.leadStage}</span>`;
+            document.getElementById('detail-source').textContent = lead.campaignSource || '';
+            document.getElementById('detail-registered').textContent = lead.registrationDate ? new Date(lead.registrationDate).toLocaleString() : '';
+            document.getElementById('detail-last-contact').textContent = 'Never'; // Replace with actual data if available
+            document.getElementById('detail-notes').textContent = lead.remark || '';
+
+            document.getElementById('leadQuickView').classList.add('show');
+        }
+
+        function hideLeadQuickView() {
+            document.getElementById('leadQuickView').classList.remove('show');
+        }
+
+        // Responsive table adjustments (Unchanged)
+        function adjustTableForMobile() {
+            if (window.innerWidth <= 768) {
+                const headers = document.querySelectorAll('table thead th');
+                const cells = document.querySelectorAll('table tbody td');
+
+                headers.forEach((header, index) => {
+                    const text = header.textContent;
+                    cells.forEach(cell => {
+                        if (cell.cellIndex === index) {
+                            cell.setAttribute('data-label', text);
+                        }
+                    });
+                });
+            }
+        }
+
+        function updatePaginationInfo(totalLeads) {
+            const infoElement = document.getElementById('pagination-info');
+            if (infoElement) {
+                infoElement.textContent = `Showing 1 to ${totalLeads > 10 ? 10 : totalLeads} of ${totalLeads} leads`;
+            }
+        }
+
+        function generatePaginationLinks(totalLeads) {
+            const linksElement = document.getElementById('pagination-links');
+            if (linksElement) {
+                linksElement.innerHTML = ''; // Clear existing links
+                if (totalLeads > 10) {
+                    // Basic example, enhance as needed
+                    linksElement.innerHTML = `
+                        <a href="#" class="page-link"><i class="fas fa-angle-left"></i></a>
+                        <a href="#" class="page-link active">1</a>
+                        <a href="#" class="page-link">2</a>
+                        <a href="#" class="page-link">3</a>
+                        <a href="#" class="page-link">4</a>
+                        <a href="#" class="page-link"><i class="fas fa-angle-right"></i></a>
+                    `;
+                }
+            }
+        }
+// Add event listeners to filter inputs
+document.getElementById('registration-date').addEventListener('change', filterTable);
+document.getElementById('lead-stage').addEventListener('change', filterTable);
+document.getElementById('lead-owner').addEventListener('change', filterTable);
+document.getElementById('campaign-source').addEventListener('change', filterTable);
+    </script>
+</body>
+
+</html>

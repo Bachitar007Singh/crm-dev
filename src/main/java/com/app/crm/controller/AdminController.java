@@ -56,7 +56,7 @@ public class AdminController {
             if (session.getAttribute("adminid") != null) {
                 long totalLeads = rrepo.count();
                 model.addAttribute("totalLeads", totalLeads);
-                return "admin/adminhome"; // Ensure this matches the template path
+                return "admin/adminDashboard"; // Ensure this matches the template path
             } else {
                 return "redirect:/adminlogin";
             }
@@ -245,7 +245,7 @@ public class AdminController {
         return "admin/Dashboard/Student_QI";
     }
 
-    @GetMapping("/leadmanager")
+    @GetMapping("/manageleads")
     public String showLead(HttpSession session, HttpServletResponse response, Model model) {
         try {
             response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
@@ -253,7 +253,7 @@ public class AdminController {
             if (session.getAttribute("adminid") != null) {
                 List<Registration> leadlist = rrepo.findAll();
                 model.addAttribute("leadlist", leadlist);
-                return "/admin/leadmanager"; // Adjust according to your view structure
+                return "/leadmanager/lmfG"; // Adjust according to your view structure
             } else {
                 return "redirect:/adminlogin";
             }
@@ -261,16 +261,40 @@ public class AdminController {
             return "redirect:/adminlogin";
         }
     }
+    @GetMapping("/offlineuploadlogs") 
+    public String showoimportleads() {
+        return "/leadmanager/ilD2";
+    }
     @GetMapping("/calendarpro")
     public String showcalendarpro() {
         return "calendarpro";
     }
     
     
-    @GetMapping("/admin/campaignmanager")
+    @GetMapping("/campaignmanager")
     public String showCampaignManager() {
-        return "campaignmanager/CampaignManager";
+        return "campaignmanager/cm";
+        
+    }
+    @GetMapping("/formdesk") 
+    public String showformdesk() {
+        return "admin/adminDashboard";
     }
     
-    
+    @GetMapping("/marketing") 
+    public String showmarketing() {
+        return "admin/adminDashboard";
+    }
+    @GetMapping("/gu2")
+    public String showoffgu2() {
+        return "campaignmanager/gu2";
+    }
+    @GetMapping("/UploadCSV")
+    public String showUploadCSV() {
+        return "campaignmanager/UploadCSV";   
+    }
+    @GetMapping("/map")
+    public String showmap() {
+        return "campaignmanager/map";
+    }
 }

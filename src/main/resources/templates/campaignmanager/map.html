@@ -201,10 +201,19 @@
                 </tr>
             </tbody>
         </table>
-        <div class="navigation-buttons">
-            <button>&lt; Back</button>
-            <button>Start Import</button>
+		<div class="navigation-buttons">
+		            <button id="backButton">&lt; Back</button>
+		        <button id="nextButton">Next &gt;</button>
+            <button id="startbutton">Start Import</button>
         </div>
     </div>
+	<script>
+		updateContent();
+
+		        document.getElementById('backButton').addEventListener('click', function() {
+		            window.location.href = '/admin/UploadCSV';
+		        });
+
+	</script>
 </body>
 </html>
